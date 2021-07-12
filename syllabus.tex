@@ -1,0 +1,648 @@
+\documentclass{article}
+
+% Fonts
+\usepackage{fontspec}
+
+% General formatting
+\usepackage[margin=1.3in, headheight=3ex, headsep=3ex]{geometry}
+\usepackage{fancyhdr}
+\usepackage{parskip}
+
+% Colour
+\usepackage[usenames,dvipsnames]{xcolor}
+
+% Hyperlinks
+\usepackage{url}
+\usepackage{hyperref}
+
+% Table stuff
+\usepackage{booktabs}
+\usepackage{longtable}
+
+
+% Course details
+
+\newcommand{\longcoursename}{
+    Student Taught Courses (StuCo): Shilling the Rust Programming Language
+}
+
+\newcommand{\shortcoursename}{STUCO: RUSTLANG}
+\newcommand{\courselocation}{TBD}
+\newcommand{\meetingstarttime}{19}
+\newcommand{\meetingendtime}{19:50}
+\newcommand{\meetingdays}{Wednesday}
+\newcommand{\longsemester}{Spring 2022}
+\newcommand{\shortsemester}{S22}
+\newcommand{\academicyear}{2021-22}
+\newcommand{\deptcode}{98}
+\newcommand{\coursecode}{XXX}
+\newcommand{\fullcoursecode}{\deptcode-\coursecode}
+
+% Headers and Footers
+\pagestyle{fancy}
+\lhead{Pierce; Duvall}
+\rhead{\fullcoursecode\ \shortsemester}
+
+% Rust code
+\usepackage{listings}
+\definecolor{GrayCodeBlock}{RGB}{241,241,241}
+\definecolor{BlackText}{RGB}{110,107,94}
+\definecolor{OrangeTypename}{RGB}{182,86,17}
+\definecolor{RedMacro}{RGB}{230,36,0}
+\definecolor{GreenString}{RGB}{96,172,57}
+\definecolor{PurpleKeyword}{RGB}{184,84,212}
+\definecolor{GrayComment}{RGB}{170,170,170}
+\definecolor{GoldDocumentation}{RGB}{180,165,45}
+\definecolor{YellowAttrMacro}{RGB}{180,180,0}
+
+%%
+% Following component licensed as
+% <https://github.com/denki/listings-rust/blob/master/LICENSE>:
+%
+% BSD 3-Clause License
+% 
+% Copyright (c) 2018, Tobias Denkinger
+% All rights reserved.
+% 
+% Redistribution and use in source and binary forms, with or without
+% modification, are permitted provided that the following conditions are met:
+% 
+% * Redistributions of source code must retain the above copyright notice, this
+%   list of conditions and the following disclaimer.
+% 
+% * Redistributions in binary form must reproduce the above copyright notice,
+%   this list of conditions and the following disclaimer in the documentation
+%   and/or other materials provided with the distribution.
+% 
+% * Neither the name of the copyright holder nor the names of its
+%   contributors may be used to endorse or promote products derived from
+%   this software without specific prior written permission.
+% 
+% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+% AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+% IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+% DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+% FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+% DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+% SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+% CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+% OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+% OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+%
+\lstdefinelanguage{rust}{%
+    sensitive,
+    alsodigit={},
+    alsoother={},
+    alsoletter={!?},
+    %
+    % [1] reserved keywords
+    % [2] traits
+    % [3] primitive types
+    % [4] type and value constructors
+    % [5] identifier
+    %
+    % control flow
+    morekeywords={
+        break, continue, else, for, if, in, loop, match, return, while, await
+    }, 
+    % variable related
+    morekeywords={as, const, let, move, mut, ref, static},
+    % declaration related
+    morekeywords={
+        dyn, enum, fn, impl, Self, self, struct, trait, type, union, use, where
+    },
+    % modules
+    morekeywords={crate, extern, mod, pub, super},
+    % markers
+    morekeywords={unsafe, async},
+    % reserved identifiers
+    morekeywords={
+        abstract, alignof, become, box, do, final, macro, offsetof, override,
+        priv, proc, pure, sizeof, typeof, unsized, virtual, yield
+    },
+    % grep 'pub trait [A-Za-z][A-Za-z0-9]*' -r . | sed 's/^.*pub trait \([A-Za-z][A-Za-z0-9]*\).*/\1/g' | sort -u | tr '\n' ',' | sed 's/^\(.*\),$/{\1}\n/g' | sed 's/,/, /g'
+    morekeywords=[2]{
+        Add, AddAssign, Any, AsciiExt, AsInner, AsInnerMut, AsMut, AsRawFd,
+        AsRawHandle, AsRawSocket, AsRef, Binary, BitAnd, BitAndAssign, Bitor,
+        BitOr, BitOrAssign, BitXor, BitXorAssign, Borrow, BorrowMut, Boxed,
+        BoxPlace, BufRead, BuildHasher, CastInto, CharExt, Clone, CoerceUnsized,
+        CommandExt, Copy, Debug, DecodableFloat, Default, Deref, DerefMut,
+        DirBuilderExt, DirEntryExt, Display, Div, DivAssign,
+        DoubleEndedIterator, DoubleEndedSearcher, Drop, EnvKey, Eq, Error,
+        ExactSizeIterator, ExitStatusExt, Extend, FileExt, FileTypeExt, Float,
+        Fn, FnBox, FnMut, FnOnce, Freeze, From, FromInner, FromIterator,
+        FromRawFd, FromRawHandle, FromRawSocket, FromStr, FullOps,
+        FusedIterator, Generator, Hash, Hasher, Index, IndexMut, InPlace, Int,
+        Into, IntoCow, IntoInner, IntoIterator, IntoRawFd, IntoRawHandle,
+        IntoRawSocket, IsMinusOne, IsZero, Iterator, JoinHandleExt, LargeInt,
+        LowerExp, LowerHex, MetadataExt, Mul, MulAssign, Neg, Not, Octal,
+        OpenOptionsExt, Ord, OsStrExt, OsStringExt, Packet, PartialEq,
+        PartialOrd, Pattern, PermissionsExt, Place, Placer, Pointer, Product,
+        Put, RangeArgument, RawFloat, Read, Rem, RemAssign, Seek, Shl,
+        ShlAssign, Shr, ShrAssign, Sized, SliceConcatExt, SliceExt, SliceIndex,
+        Stats, Step, StrExt, Sub, SubAssign, Sum, Sync, TDynBenchFn, Terminal,
+        Termination, ToOwned, ToSocketAddrs, ToString, Try, TryFrom, TryInto,
+        UnicodeStr, Unsize, UpperExp, UpperHex, WideInt, Write
+    },
+    % additional traits
+    morekeywords=[2]{Send, Unpin},
+    % primitive types
+    morekeywords=[3]{
+        bool, char, f32, f64, i8, i16, i32, i64, isize, str, u8, u16, u32, u64,
+        unit, usize, i128, u128
+    },
+    % prelude value constructors
+    morekeywords=[4]{Err, false, None, Ok, Some, true},  
+    % grep 'pub \(type\|struct\|enum\) [A-Za-z][A-Za-z0-9]*' -r . | sed 's/^.*pub \(type\|struct\|enum\) \([A-Za-z][A-Za-z0-9]*\).*/\2/g' | sort -u | tr '\n' ',' | sed 's/^\(.*\),$/{\1}\n/g' | sed 's/,/, /g'    
+    morekeywords=[3]{
+        AccessError, Adddf3, AddI128, AddoI128, AddoU128, ADDRESS, ADDRESS64,
+        addrinfo, ADDRINFOA, AddrParseError, Addsf3, AddU128, advice, aiocb,
+        Alignment, AllocErr, AnonPipe, Answer, Arc, Args, ArgsInnerDebug,
+        ArgsOs, Argument, Arguments, ArgumentV1, Ashldi3, Ashlti3, Ashrdi3,
+        Ashrti3, AssertParamIsClone, AssertParamIsCopy, AssertParamIsEq,
+        AssertUnwindSafe, AtomicBool, AtomicPtr, Attr, auxtype, auxv, BackPlace,
+        BacktraceContext, Barrier, BarrierWaitResult, Bencher, BenchMode,
+        BenchSamples, BinaryHeap, BinaryHeapPlace, blkcnt, blkcnt64, blksize,
+        BOOL, boolean, BOOLEAN, BoolTrie, BorrowError, BorrowMutError, Bound,
+        Box, bpf, BTreeMap, BTreeSet, Bucket, BucketState, Buf, BufReader,
+        BufWriter, Builder, BuildHasherDefault, BY, BYTE, Bytes,
+        CannotReallocInPlace, cc, Cell, Chain, CHAR, CharIndices,
+        CharPredicateSearcher, Chars, CharSearcher, CharsError,
+        CharSliceSearcher, CharTryFromError, Child, ChildPipes, ChildStderr,
+        ChildStdin, ChildStdio, ChildStdout, Chunks, ChunksMut, ciovec, clock,
+        clockid, Cloned, cmsgcred, cmsghdr, CodePoint, Color, ColorConfig,
+        Command, CommandEnv, Component, Components, CONDITION, condvar, Condvar,
+        CONSOLE, CONTEXT, Count, Cow, cpu, CRITICAL, CStr, CString,
+        CStringArray, Cursor, Cycle, CycleIter, daddr, DebugList, DebugMap,
+        DebugSet, DebugStruct, DebugTuple, Decimal, Decoded, DecodeUtf16,
+        DecodeUtf16Error, DecodeUtf8, DefaultEnvKey, DefaultHasher, dev, device,
+        Difference, Digit32, DIR, DirBuilder, dircookie, dirent, dirent64,
+        DirEntry, Discriminant, DISPATCHER, Divdf3, Divdi3, Divmoddi4,
+        Divmodsi4, Divsf3, Divsi3, Divti3, dl, Dl, Dlmalloc, Dns, DnsAnswer,
+        DnsQuery, dqblk, Drain, DrainFilter, Dtor, Duration, DwarfReader, DWORD,
+        DWORDLONG, DynamicLibrary, Edge, EHAction, EHContext, Elf32, Elf64,
+        Empty, EmptyBucket, EncodeUtf16, EncodeWide, Entry, EntryPlace,
+        Enumerate, Env, epoll, errno, Error, ErrorKind, EscapeDebug,
+        EscapeDefault, EscapeUnicode, event, Event, eventrwflags, eventtype,
+        ExactChunks, ExactChunksMut, EXCEPTION, Excess, ExchangeHeapSingleton,
+        exit, exitcode, ExitStatus, Failure, fd, fdflags, fdsflags, fdstat, ff,
+        fflags, File, FILE, FileAttr, filedelta, FileDesc, FilePermissions,
+        filesize, filestat, FILETIME, filetype, FileType, Filter, FilterMap,
+        Fixdfdi, Fixdfsi, Fixdfti, Fixsfdi, Fixsfsi, Fixsfti, Fixunsdfdi,
+        Fixunsdfsi, Fixunsdfti, Fixunssfdi, Fixunssfsi, Fixunssfti, Flag,
+        FlatMap, Floatdidf, FLOATING, Floatsidf, Floatsisf, Floattidf,
+        Floattisf, Floatundidf, Floatunsidf, Floatunsisf, Floatuntidf,
+        Floatuntisf, flock, ForceResult, FormatSpec, Formatted, Formatter, Fp,
+        FpCategory, fpos, fpos64, fpreg, fpregset, FPUControlWord, Frame,
+        FromBytesWithNulError, FromUtf16Error, FromUtf8Error, FrontPlace,
+        fsblkcnt, fsfilcnt, fsflags, fsid, fstore, fsword, FullBucket,
+        FullBucketMut, FullDecoded, Fuse, GapThenFull, GeneratorState, gid,
+        glob, glob64, GlobalDlmalloc, greg, group, GROUP, Guard, GUID, Handle,
+        HANDLE, Handler, HashMap, HashSet, Heap, HINSTANCE, HMODULE, hostent,
+        HRESULT, id, idtype, if, ifaddrs, IMAGEHLP, Immut, in, in6, Incoming,
+        Infallible, Initializer, ino, ino64, inode, input, InsertResult,
+        Inspect, Instant, int16, int32, int64, int8, integer, IntermediateBox,
+        Internal, Intersection, intmax, IntoInnerError, IntoIter,
+        IntoStringError, intptr, InvalidSequence, iovec, ip, IpAddr, ipc,
+        Ipv4Addr, ipv6, Ipv6Addr, Ipv6MulticastScope, Iter, IterMut, itimerspec,
+        itimerval, jail, JoinHandle, JoinPathsError, KDHELP64, kevent, kevent64,
+        key, Key, Keys, KV, l4, LARGE, lastlog, launchpad, Layout, Lazy, lconv,
+        Leaf, LeafOrInternal, Lines, LinesAny, LineWriter, linger, linkcount,
+        LinkedList, load, locale, LocalKey, LocalKeyState, Location, lock,
+        LockResult, loff, LONG, lookup, lookupflags, LookupHost, LPBOOL, LPBY,
+        LPBYTE, LPCSTR, LPCVOID, LPCWSTR, LPDWORD, LPFILETIME, LPHANDLE,
+        LPOVERLAPPED, LPPROCESS, LPPROGRESS, LPSECURITY, LPSTARTUPINFO, LPSTR,
+        LPVOID, LPWCH, LPWIN32, LPWSADATA, LPWSAPROTOCOL, LPWSTR, Lshrdi3,
+        Lshrti3, lwpid, M128A, mach, major, Map, mcontext, Metadata, Metric,
+        MetricMap, mflags, minor, mmsghdr, Moddi3, mode, Modsi3, Modti3,
+        MonitorMsg, MOUNT, mprot, mq, mqd, msflags, msghdr, msginfo, msglen,
+        msgqnum, msqid, Muldf3, Mulodi4, Mulosi4, Muloti4, Mulsf3, Multi3, Mut,
+        Mutex, MutexGuard, MyCollection, n16, NamePadding, NativeLibBoilerplate,
+        nfds, nl, nlink, NodeRef, NoneError, NonNull, NonZero, nthreads,
+        NulError, OccupiedEntry, off, off64, oflags, Once, OnceState,
+        OpenOptions, Option, Options, OptRes, Ordering, OsStr, OsString, Output,
+        OVERLAPPED, Owned, Packet, PanicInfo, Param, ParseBoolError,
+        ParseCharError, ParseError, ParseFloatError, ParseIntError, ParseResult,
+        Part, passwd, Path, PathBuf, PCONDITION, PCONSOLE, Peekable, PeekMut,
+        Permissions, PhantomData, pid, Pin, Pipes, PlaceBack, PlaceFront, PLARGE,
+        PoisonError, pollfd, PopResult, port, Position, Powidf2, Powisf2,
+        Prefix, PrefixComponent, PrintFormat, proc, Process, PROCESS,
+        processentry, protoent, PSRWLOCK, pthread, ptr, ptrdiff, PVECTORED,
+        Queue, radvisory, RandomState, Range, RangeFrom, RangeFull,
+        RangeInclusive, RangeMut, RangeTo, RangeToInclusive, RawBucket, RawFd,
+        RawHandle, RawPthread, RawSocket, RawTable, RawVec, Rc, ReadDir,
+        Receiver, recv, RecvError, RecvTimeoutError, ReentrantMutex,
+        ReentrantMutexGuard, Ref, RefCell, RefMut, REPARSE, Repeat, Result, Rev,
+        Reverse, riflags, rights, rlim, rlim64, rlimit, rlimit64, roflags, Root,
+        RSplit, RSplitMut, RSplitN, RSplitNMut, RUNTIME, rusage, RwLock, RWLock,
+        RwLockReadGuard, RwLockWriteGuard, sa, SafeHash, Scan, sched, scope,
+        sdflags, SearchResult, SearchStep, SECURITY, SeekFrom, segment, Select,
+        SelectionResult, sem, sembuf, send, Sender, SendError, servent, sf,
+        Shared, shmatt, shmid, ShortReader, ShouldPanic, Shutdown, siflags,
+        sigaction, SigAction, sigevent, sighandler, siginfo, Sign, signal,
+        signalfd, SignalToken, sigset, sigval, Sink, SipHasher, SipHasher13,
+        SipHasher24, size, SIZE, Skip, SkipWhile, Slice, SmallBoolTrie,
+        sockaddr, SOCKADDR, sockcred, Socket, SOCKET, SocketAddr, SocketAddrV4,
+        SocketAddrV6, socklen, speed, Splice, Split, SplitMut, SplitN,
+        SplitNMut, SplitPaths, SplitWhitespace, spwd, SRWLOCK, ssize, stack,
+        STACKFRAME64, StartResult, STARTUPINFO, stat, Stat, stat64, statfs,
+        statfs64, StaticKey, statvfs, StatVfs, statvfs64, Stderr, StderrLock,
+        StderrTerminal, Stdin, StdinLock, Stdio, StdioPipes, Stdout, StdoutLock,
+        StdoutTerminal, StepBy, String, StripPrefixError, StrSearcher,
+        subclockflags, Subdf3, SubI128, SuboI128, SuboU128, subrwflags,
+        subscription, Subsf3, SubU128, Summary, suseconds, SYMBOL, SYMBOLIC,
+        SymmetricDifference, SyncSender, sysinfo, System, SystemTime,
+        SystemTimeError, Take, TakeWhile, tcb, tcflag, TcpListener, TcpStream,
+        TempDir, TermInfo, TerminfoTerminal, termios, termios2, TestDesc,
+        TestDescAndFn, TestEvent, TestFn, TestName, TestOpts, TestResult,
+        Thread, threadattr, threadentry, ThreadId, tid, time, time64, timespec,
+        TimeSpec, timestamp, timeval, timeval32, timezone, tm, tms, ToLowercase,
+        ToUppercase, TraitObject, TryFromIntError, TryFromSliceError, TryIter,
+        TryLockError, TryLockResult, TryRecvError, TrySendError, TypeId, U64x2,
+        ucontext, ucred, Udivdi3, Udivmoddi4, Udivmodsi4, Udivmodti4, Udivsi3,
+        Udivti3, UdpSocket, uid, UINT, uint16, uint32, uint64, uint8, uintmax,
+        uintptr, ulflags, ULONG, ULONGLONG, Umoddi3, Umodsi3, Umodti3,
+        UnicodeVersion, Union, Unique, UnixDatagram, UnixListener, UnixStream,
+        Unpacked, UnsafeCell, UNWIND, UpgradeResult, useconds, user, userdata,
+        USHORT, Utf16Encoder, Utf8Error, Utf8Lossy, Utf8LossyChunk,
+        Utf8LossyChunksIter, utimbuf, utmp, utmpx, utsname, uuid, VacantEntry,
+        Values, ValuesMut, VarError, Variables, Vars, VarsOs, Vec, VecDeque, vm,
+        Void, WaitTimeoutResult, WaitToken, wchar, WCHAR, Weak, whence, WIN32,
+        WinConsole, Windows, WindowsEnvKey, winsize, WORD, Wrapping, wrlen,
+        WSADATA, WSAPROTOCOL, WSAPROTOCOLCHAIN, Wtf8, Wtf8Buf, Wtf8CodePoints,
+        xsw, xucred, Zip, zx
+    },
+    % prelude macros
+    morekeywords=[5]{
+        assert!, assert_eq!, assert_ne!, cfg!, column!, compile_error!, concat!,
+        concat_idents!, debug_assert!, debug_assert_eq!, debug_assert_ne!, env!,
+        eprint!, eprintln!, file!, format!, format_args!, include!,
+        include_bytes!, include_str!, line!, module_path!, option_env!, panic!,
+        print!, println!, select!, stringify!, thread_local!, try!,
+        unimplemented!, unreachable!, vec!, write!, writeln!, ?,
+    },
+% end licensed code
+    columns=fullflexible,
+    keepspaces=true,
+    frame=single,
+    framesep=0pt,
+    framerule=0pt,
+    framexleftmargin=4pt,
+    framexrightmargin=4pt,
+    framextopmargin=5pt,
+    framexbottommargin=3pt,
+    xleftmargin=4pt,
+    xrightmargin=4pt,
+    backgroundcolor=\color{GrayCodeBlock},
+    basicstyle=\ttfamily\color{BlackText},
+    % [1] reserved keywords
+    % [2] traits
+    % [3] primitive types
+    % [4] type and value constructors
+    % [5] identifier
+    keywordstyle=\bfseries\color{PurpleKeyword},
+    keywordstyle=[2]\color{BlueViolet},
+    keywordstyle=[3]\color{BlueViolet},
+    keywordstyle=[4]\color{OrangeTypename},
+    keywordstyle=[5]\color{RedMacro},
+    comment=[l][\color{GrayComment}\slshape]{//},
+    morecomment=[s][\color{GrayComment}\slshape]{/*}{*/},
+    morecomment=[l][\color{GoldDocumentation}\slshape]{///},
+    morecomment=[s][\color{GoldDocumentation}\slshape]{/*!}{*/},
+    morecomment=[l][\color{GoldDocumentation}\slshape]{//!},
+    moredelim=[s][{\itshape\bfseries\color{YellowAttrMacro}}]{\#[}{]},
+    moredelim=[s][{\itshape\bfseries\color{YellowAttrMacro}}]{\#![}{]},
+    stringstyle=\color{GreenString},
+    string=[b]"
+}%
+
+
+\lstnewenvironment{codeblock}[1][]{\lstset{language=rust,#1}}{}
+
+% code inline
+\newcommand{\code}[2][]{{\sloppy
+\ifmmode
+\text{\lstinline[language=rust,#1]`#2`}
+\else
+{\lstinline[language=rust,#1]`#2`}%
+\fi}}
+
+
+\begin{document}
+
+\thispagestyle{empty}
+\begin{center}
+\begin{minipage}{.85\textwidth}
+    \centering
+    {\huge {\fullcoursecode: \longcoursename}}
+
+    \vspace{1em}
+
+    \begin{tabular}{@{}rl@{}}
+        Cooper Pierce & \href{mailto:cppierce@andrew.cmu.edu}{\texttt{cppierce@andrew.cmu.edu}} \\ 
+        Jack Duvall & \href{mailto:jrduvall@andrew.cmu.edu}{\texttt{jrduvall@andrew.cmu.edu}} \\
+    \end{tabular}
+
+    \vspace{1em}
+
+    \longsemester
+\end{minipage}
+\end{center}
+
+\vspace{3em}
+
+
+\begin{tabular*}{.93\textwidth}{@{\extracolsep{\fill}}ll}
+    \toprule
+    Office Hours: By appointment & Web: \url{https://andrew.cmu.edu/course/\fullcoursecode} \\
+    Time: \meetingdays\ \meetingstarttime-\meetingendtime & Location: \courselocation \\
+    \bottomrule
+\end{tabular*}
+
+\vspace{5em}
+
+\section*{Course Description}
+
+This course is an introduction to the Rust programming language, a memory-safe
+systems programming language. Topics covered include memory safety, ownership \&
+lifetimes, the Rust stdlib, concurrency, traits, macros, and unsafe. Outside of
+class, there will be basic programming exercises and during the second half of
+the semester, a student-defined project.
+
+This course assumes knowledge of topics covered by 15--122/15--150. Knowledge of
+the systems programming related topics covered in 15--213 is a bonus, but not
+required.
+
+This course is taught in Rust, and you are not expected to have any prior
+exposure to Rust. However, we will refer to examples written in C and/or SML
+throughout the class to compare different approaches.
+
+
+\section*{Learning Objectives}
+
+Successful students in this course will
+
+\begin{itemize}
+    \item be able to read and write Rust code which includes:
+        \begin{itemize}
+            \item core language constructs such as: structs, enums, and impl
+                blocks; ownership, borrowing, and lifetimes; pattern matching;
+                traits; polymorphism, including trait objects
+            \item common standard library types and functions, e.g.,
+                \code{Option<T>}, \code{Result<T, E>}, \code{Vec<T>},
+                \code{String} and \code{&str}
+            \item common standard library traits, e.g., \code{Iterator<Item =
+                T>}, \code{Copy}, \code{Clone}, \code{Debug}
+        \end{itemize}
+    \item understand some intermediate to advanced Rust topics such as:
+            \begin{itemize}
+                \item declarative and procedural macros
+                \item Rust's approaches to concurrency and parallelism
+                \item \code{unsafe} semantics
+            \end{itemize}
+    \item complete a substantial (6-9 hour) project in Rust either individually,
+        or with a partner
+    \item be able to use tools common in the Rust ecosystem, including
+        Cargo, \texttt{rustfmt}, \texttt{clippy}, and \texttt{rustdoc}
+    \item understand how to use \url{crates.io} and be familiar with common
+        crates such as
+        \href{https://github.com/rust-random/rand}{\textit{rand}},
+        \href{https://github.com/rust-lang/regex}{\textit{regex}} and
+        \href{https://github.com/chronotope/chrono}{\textit{chrono}}
+    \item be able to locate and read Rust documentation
+\end{itemize}
+
+\section*{Additional Materials}
+
+Access to a computer able to run \texttt{rustc} (the Rust compiler) and Cargo
+(the standard build system) is required for this course. We'll go over how to
+set these up in class.
+
+\section*{Attendance Policy}
+
+Attendance is mandatory. \textbf{As per StuCo guidelines, if you have three
+unexcused absences, you will automatically fail this course}.
+
+\section*{Grading}
+
+The final course grade will be calculated using the following categories. The
+course is out of 1000 points.
+
+\begin{center}
+    \begin{tabular}{@{}lr@{}}
+    Assessment Type     & Total Points \\ \toprule
+    Participation       &          500 \\
+    Homework            &          100 \\
+    Midterm             &           50 \\
+    Final               &          350 \\ \midrule
+    Total               &         1000 \\ \bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Participation}
+
+Attendance is mandatory. As per StuCo guidelines, if you have three unexcused
+absences, you will automatically fail this course. We will take attendance with
+a sign-in sheet.
+
+If you need to miss a session for a reason we can reasonably excuse contact us
+and we will determine an appropriate alternative so you don't miss out on that
+week's content.
+
+\subsection*{Homework}
+ 
+Most homework assignments will be given in the form of puzzles. Puzzles are
+incomplete code that, initially, doesn't compile. By editing certain lines, you
+must make the program compile and produce the expected behavior.
+
+Homeworks are designed to not take more than an hour (if they are, talk to us!),
+and be done between the meeting after which they're released and the next
+meeting.
+
+We expect you to turn in a submission for every homework, but they are graded
+for effort, not correctness. This means that you should attempt to correctly
+complete every homework, but if you put in a good faith effort and do not manage
+to finish it correctly, you will still recieve credit.
+
+\subsection*{Midterm}
+
+You will be choosing your project for the final. Individually or in a team of
+two people, you will be expected to include a short writeup of what you plan to
+do, including details about how you will structure your code and what
+third-party libraries you plan on using.
+
+\subsection*{Final}
+
+You will be completing a small to medium-sized programming project in Rust using
+what you've learned from the course. The project will showcase Rust's elegance
+for systems engineering and teach you valuable life lessons.
+
+\subsection*{Late-work}
+
+All homework released prior to the midterm will be due when the midterm is, and
+similarly for the final. Beyond this, no late work is accepted.
+
+\section*{Academic Integrity}
+
+Discussion of homework problems, written or verbal, is always permitted. That
+said, verbatim or like-verbatim copying of answers over any medium is expressly
+forbidden.
+
+For the final project, external dependencies are allowed (so long as you
+acknowledge them, though an entry in a manifest file like \texttt{Cargo.toml}
+will suffice), and we'll discuss what's appropriate there during project
+proposals.
+
+\section*{Course Schedule}
+
+\begin{longtable}{rp{.5\textwidth}@{\hskip .05\textwidth}p{.3\textwidth}}
+    Date        & Topic(s)                          & Assignments Released  \\
+    \toprule
+    2022-01-19  & Tour of Rust; Motivation; Rust environment setup and tooling
+                 (\texttt{rustup}, Cargo, \texttt{rustfmt})
+                & Rust setup and environment check                          \\
+    2022-01-26  & \code{struct}, \code{enum}, pattern matching, \code{impl}
+                  blocks; introduction to ownership, lifetimes and the borrow
+                  system
+                & Pattern Matching Puzzle                                   \\
+    2022-02-02  & Function types, closures; more advanced ownership semantics
+                & Function Types Puzzle                                     \\
+    2022-02-09  & Polymorphism, bounded (traits) and unbounded; trait objects
+                  and dynamic dispatch
+                & Polymorphism Puzzle                                       \\
+    2022-02-16  & Cargo, modules (access modifiers and file structure),
+                 crates, \texttt{rustdoc}
+                & Midterm                                                   \\
+    2022-02-23  & \code{std}, feat. \begin{itemize}
+                        \item \code{Vec<T>};
+                        \item \code{Iterator}, \code{IntoIterator};
+                        \item \code{Debug}, \code{Display};
+                        \item \code{Copy}, \code{Clone};
+                        \item \code{BTreeMap}, \code{HashMap} (and sets);
+                        \item \code{Ord}, \code{Eq}, \code{Hash};
+                        \item \code{From}, \code{Into};
+                        \item \code{Box}, \code{Rc}, \code{Arc};
+                        \item \code{Cell}, \code{RefCell}
+                    \end{itemize}
+                & Graph Algorithms with \code{std}                          \\
+    2022-03-02  & Livecoding a student decided crate
+                & Note: all prior released assignments due at this point    \\
+    2022-03-09  & Spring Break (no class)
+                & ---                                                       \\
+    2022-03-16  & Error handling: \code{panic!}, \code{?}, testing: unit tests,
+                  property based testing
+                  (\href{https://github.com/AltSysrq/proptest}{\textit{proptest}})
+                  and fuzzing
+                  (\href{https://github.com/rust-fuzz/cargo-fuzz}{\textit{cargo-fuzz}})
+                & ---                                                       \\
+    2022-03-23  & Macros: built-in, declarative, procedural
+                & Macro Puzzle                                              \\
+    2022-03-30  & \code{unsafe}: \begin{itemize}
+                        \item Why have \code{unsafe}?
+                        \item Raw pointers
+                        \item \code{UnsafeCell}
+                        \item \code{unsafe} functions and traits
+                        \item \code{static mut}
+                        \item Variance and the drop check
+                        \item FFI (\code{extern},
+                            \href{https://github.com/rust-lang/rust-bindgen}{\textit{bindgen}},
+                            \href{https://github.com/dtolnay/cxx}{\textit{cxx}})
+                    \end{itemize}
+                & ---                                                       \\
+    2022-04-06  & Concurrency/Parallelism 1: threads, mutexes, atomics,
+                  \code{Sync}, \code{Send},
+                  \href{https://github.com/rayon-rs/rayon}{\textit{rayon}},
+                  \href{https://github.com/Amanieu/parking_lot}{\textit{parking\_lot}}
+                & ---                                                       \\
+    2022-04-13  & Concurrency/Parallelism 2: \code{Pin}, \code{async},
+                  \code{await}, futures, streams, polling,
+                  \href{https://tokio.rs/}{\textit{tokio}},
+                  \href{https://github.com/taiki-e/pin-project}{\textit{pin\_project}}
+                & ---                                                       \\
+    2022-04-20  & (Other) Common Crates:
+                  \href{https://github.com/rust-random/rand}{\textit{rand}},
+                  \href{https://github.com/rust-lang/regex}{\textit{regex}},
+                  \href{https://github.com/chronotope/chrono}{\textit{chrono}},
+                  \href{https://github.com/dtolnay/thiserror}{\textit{thiserror}},
+                  \href{https://github.com/dtolnay/anyhow}{\textit{anyhow}},
+                  \href{https://github.com/rust-lang-nursery/lazy-static.rs}{\textit{lazy\_static}}, 
+                  \href{https://serde.rs/}{\textit{serde}},
+                  \href{https://github.com/Geal/nom}{\textit{nom}},
+                  \href{https://github.com/lokathor/bytemuck}{\textit{bytemuck}},
+                  and more.
+                & ---                                                       \\
+    2022-04-27  & Additional advanced topics (one of; students decide):
+                    \begin{itemize}
+                        \item \code{#[no_std]}
+                        \item More \code{async}, e.g., \code{async} traits
+                        \item \code{const fn}s and \code{const} generics
+                        \item Limitations with Rust's type system 
+                        \item Web: 
+                            \href{https://rocket.rs/}{\textit{rocket}} /
+                            \href{https://seed-rs.org/}{\textit{seed}} /
+                            \href{https://yew.rs/}{\textit{yew}} /
+                            \href{https://github.com/seanmonstar/warp}{\textit{warp}}
+                    \end{itemize}
+                & Note: all assignments due by this point                   \\
+    \bottomrule
+\end{longtable}
+
+\section*{Course Note}
+
+\subsection*{Academic Integrity \& Collaboration}
+
+\textit{From CMU's Policy on Academic Integrity:} In any manner of presentation,
+it is the responsibility of each student to produce her/his own original
+academic work. Collaboration or assistance on academic work to be graded is not
+permitted unless explicitly authorized by the course instructor(s). Students may
+utilize the assistance provided by Academic Development, the Global
+Communication Center, and the Academic Resource Center (CMU-Q) unless
+specifically prohibited by the course instructor(s). Any other sources of
+collaboration or assistance must be specifically authorized by the course
+instructor(s).
+ 
+In all academic work to be graded, the citation of all sources is required. When
+collaboration or assistance is permitted by the course instructor(s) or when a
+student utilizes the services provided by Academic Development, the Global
+Communication Center, and the Academic Resource Center (CMU-Q), the
+acknowledgement of any collaboration or assistance is likewise required. This
+citation and acknowledgement must be incorporated into the work submitted and
+not separately or at a later point in time. Failure to do so is dishonest and is
+subject to disciplinary action.
+
+Instructors have a duty to communicate their expectations including those
+specific to collaboration, assistance, citation and acknowledgement within each
+course. Students likewise have a duty to ensure that they understand and abide
+by the standards that apply in any course or academic activity. In the absence
+of such understanding, it is the student’s responsibility to seek additional
+information and clarification.
+
+\subsection*{Accommodations for students with disabilities}
+
+If you have a disability and have an accommodations letter from the Disability
+Resources office, I encourage you to discuss your accommodations and needs with
+me as early in the semester as possible. I will work with you to ensure that
+accommodations are provided as appropriate. If you suspect that you may have a
+disability and would benefit from accommodations but are not yet registered with
+the Office of Disability Resources, I encourage you to contact them at
+\href{mailto:access@andrew.cmu.edu}{\texttt{access@andrew.cmu.edu}}.
+
+
+\subsection*{Statement on student wellness}
+
+% TODO: update for in person
+This semester is unlike any other. We are all under a lot of stress and
+uncertainty at this time. Attending Zoom classes all day can take its toll on
+our mental health. Make sure to move regularly, eat well, and reach out to your
+support system or Judy Hallinen
+[\href{mailto:hallinen@cmu.edu}{\texttt{hallinen@cmu.edu}}] if you need to. We
+can all benefit from support in times of stress, and this semester is no
+exception. If you or anyone you know experiences any academic stress, difficult
+life events, or feelings like anxiety or depression, we strongly encourage you
+to seek support. Counseling and Psychological Services (CaPS) is here to help:
+call 412-268-2922 and visit their website at
+\url{http://www.cmu.edu/counseling/}. Consider reaching out to a friend, faculty
+or family member you trust for help getting connected to the support that can
+help.
+
+\end{document}
