@@ -374,7 +374,7 @@ the systems programming related topics covered in 15--213 is a bonus, but not
 required.
 
 This course is taught in Rust, and you are not expected to have any prior
-exposure to Rust. However, we will refer to examples written in C and/or SML
+exposure to Rust. However, we may refer to examples written in C and/or SML
 throughout the class to compare different approaches.
 
 
@@ -457,9 +457,8 @@ week's content.
 
 \subsection*{Homework}
  
-Most homework assignments will be given in the form of puzzles. Puzzles are
-incomplete code that, initially, doesn't compile. By editing certain lines, you
-must make the program compile and produce the expected behavior.
+Homeworks will consist primarily of writing Rust code applying topics we've
+discussed in lecture.
 
 Homeworks are designed to not take more than an hour (if they are, talk to us!),
 and be done between the meeting after which they're released and the next
@@ -475,13 +474,14 @@ to finish it correctly, you will still receive credit.
 You will be choosing your project for the final. Individually or in a team of
 two people, you will be expected to include a short writeup of what you plan to
 do, including details about how you will structure your code and what
-third-party libraries you plan on using.
+third-party libraries you plan on using. Subsequent changes to this are okay,
+but we want you to have a good foundation from which to complete a project.
 
 \subsection*{Final}
 
-You will be completing a small to medium-sized programming project in Rust using
-what you've learned from the course. The project will showcase Rust's elegance
-for systems engineering and teach you valuable life lessons.
+You will be completing a medium-sized programming project in Rust using what
+you've learned from the course. The project will showcase Rust's elegance for
+systems engineering and teach you valuable life lessons.
 
 \subsection*{Late-work}
 
@@ -509,30 +509,28 @@ proposals.
                 & Rust installation and setup                               \\
     2022-09-07  & Pattern matching, \code{impl} blocks; introduction to
                   ownership, lifetimes and the borrow system
-                & Pattern Matching Puzzle                                   \\
+                & PPM Parsing                                               \\
     2022-09-14  & Function types, closures; more advanced ownership semantics
-                & Function Types Puzzle                                     \\
+                & Sudoku Solver                                             \\
     2022-09-21  & Polymorphism, bounded (traits) and unbounded; trait objects
                   and dynamic dispatch
-                & Polymorphism Puzzle                                       \\
+                & Parsing Combinator Library                                \\
     2022-09-28  & Livecoding a library for text iteration: applying lifetimes,
                   polymorphism, traits.
                 & Midterm                                                   \\
     2022-10-05  & The standard library and string handling
-                & \texttt{grep} clone                                       \\
-    2022-10-12  & TBD
-                & Note: all prior released assignments due at this point    \\
-    2022-10-19  & Fall Break (no class)
-                & ---                                                       \\
-    2022-10-26  & Error handling: \code{panic!}, \code{?}, testing: unit tests,
+                & \texttt{egrep} clone                                      \\
+    2022-10-12  & Error handling: \code{panic!}, \code{?}, testing: unit tests,
                   property based testing
                   (\href{https://github.com/AltSysrq/proptest}{\textit{proptest}})
                   and fuzzing
                   (\href{https://github.com/rust-fuzz/cargo-fuzz}{\textit{cargo-fuzz}})
+                & Note: all prior released assignments due at this point    \\
+    2022-10-19  & Fall Break (no class)
                 & ---                                                       \\
-    2022-11-02  & Macros: built-in, declarative, procedural
-                & Macro Puzzle                                              \\
-    2022-11-09  & \code{unsafe}: \begin{itemize}
+    2022-10-26  & Macros: built-in, declarative, procedural
+                & \code{#[derive(Map)]}                                     \\
+    2022-11-02  & \code{unsafe}: \begin{itemize}
                         \item Why have \code{unsafe}?
                         \item Raw pointers
                         \item \code{UnsafeCell}
@@ -543,17 +541,19 @@ proposals.
                             \href{https://github.com/dtolnay/cxx}{\textit{cxx}})
                     \end{itemize}
                 & ---                                                       \\
-    2022-11-16  & Concurrency/Parallelism 1: threads, mutexes,
+    2022-11-09  & Concurrency/Parallelism 1: threads, mutexes,
                   \code{Sync}, \code{Send}
                 & ---                                                       \\
-    2022-11-23  & Thanksgiving Break (no class)
+    2022-11-16  & Thanksgiving Break (no class)
                 & ---                                                       \\
-    2022-11-30  & Concurrency/Parallelism 2: \code{Pin}, \code{async},
+    2022-11-23  & Concurrency/Parallelism 2: \code{Pin}, \code{async},
                   \code{await}, futures, streams, polling,
                   \href{https://tokio.rs/}{\textit{tokio}}
                 & ---                                                       \\
-    2022-12-07  & Concurrency/Parallelism 3: atomic variables, memory orderings
+    2022-11-30  & Concurrency/Parallelism 3: atomic variables, memory orderings
                   and consistency, cmpxchg/cas and ll/sc
+                & ---                                                       \\
+    2022-12-07  & Project presentations
                 & Note: all assignments due by this point                   \\
     \bottomrule
 \end{longtable}
