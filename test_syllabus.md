@@ -13,204 +13,105 @@ Spring 2024 tentative syllabus
 
 # Schedule
 
-
 ## Week 1: Introduction
-
-### Lecture
-- Why Rust? (10 min)
-- Cargo Basics (`new`, `build`, `run`, `check`)
-- Syntax
-  - Variables and Mutability
-  - Data Types
-    - Scalar types
-    - Compound types
-  - Functions
-  - Control Flow
-
-### Reading
-- Rust Book Chapters 1-3
-- Maybe a video about Rust?
-
-### Assignment
-- Guessing game plus
-- 15-112 type problems
-
+- Why Rust? (15 min)
+- Cargo Basics (5 min)
+- Syntax (30 min)
 
 
 ## Week 2: Ownership
-
-### Lecture
-- Ownership
-  - Move semantics
-  - Scope
-  - Why Ownership?
-    - `String` type basics
-    - Memory and Allocation
-  - Copy and Clone Traits
-- References and Borrowing
-  - Reference vs address of
-  - Mutable references
-  - Dangling references and data racing
-  - Automatic referencing and dereferencing sneak peek
-- Slices
-  - Memory layout
-  - `&str`
-
-### Reading
-- Rust Book Chapter 4
-- Probably direct to videos online
-
-### Assignment
-- Move semantics
-- String stuff (rustlings for inspiration?)
-- Something else
-
+- Ownership (28 min)
+- References and Borrowing (14 min)
+- Slices (8 min)
 
 
 ## Week 3: Structs and Enums
-
-### Lecture
-- Structs
-  - Creating Structs
-    - Update syntax
-  - Tuple Structs
-  - Unit Structs
-  - Lifetimes sneak peek
-- `impl` Structs and Methods
-  - Automatic referencing and dereferencing
-  - Associated functions
-- Enum basics
-  - Pattern Matching
-  - Option Type
-  - `if let`
-
-### Reading
-Rust Book Chapters 5-6
-
-### Assignment
-- `struct` problems (15-122 type problems?)
-- 15-150 type problems
+- Structs (10 min)
+- `impl` Structs and Methods (10 min)
+- Enum basics (30 min)
 
 
+## Week 4: Standard Collections and Generics
+- Vectors (8 min)
+- Strings (10 min)
+- Maps (15 min)
+- Generics basics (17 min)
 
 
-## Week 4: Cargo, Testing, Modules, and Crates (TODO)
-Chapters 7, 14, and 11 + maybe the Cargo Reference
-
-- Cargo (TODO)
-- File system
-  - Packages
-  - Crates
-    - Binary vs Library crate
-  - Modules
-    - `mod` keyword
-    - Scope, Privacy, and Paths
-    - Module organization
-- Testing
-  - `#[cfg(test)]` and `#[test]`
-  - `#[should_panic]` and `Result<T, E>` in tests
-  - `cargo test` usage and flags
-  - Unit testing
+## Week 5: Error handling and Traits
+- Error Handling (20 min)
+- Trait basics (15 min)
+- Derivable Traits (10 min)
+- OOP discussion (Chapter 17)??? (remaining time) TODO
 
 
+## Week 6: Cargo, Modules, Crates, and Testing
+- File system (20 min)
+- Testing (30 min)
 
 
+# TODO
 
-## Week 5: Standard Collections and Error Handling
-Chapters 8-9
-
-- Vectors
-- Strings
-  - UTF-8
-  - char length
-- Hash Maps
-  - `Entry` API
-- BTree
-- Error Handling
-  - `panic!()`
-  - `Result<T, E>`
-  - Error propogations with `?`
-
-
-
-## Week 6: Generics and Traits (TODO)
-Chapter 10.1-10.2 + probably more
-
-- Generics basics
-  - Metaprogramming
-  - Structs, Enums, Function definitions
-  - Monomorphization vs. Polymorphism
-  - Performance
-- Trait basics
-- Derivable Traits
-- OOP discussion (Chapter 17)?
-
-
-
-## Week 7: Lifetimes (TODO)
+## Week 7: Lifetimes
 Chapter 10.3 + probably need more
 
 - Very important, need to get this right
 
 
-
-## Week 8: Iterators, Closures, and Advanced Functional (TODO)
+## Week 8: Iterators, Closures, and Advanced Functional
 Chapter 13
-
 
 
 # Remaining topics???
 - Trait Objects
 - Smart Pointers
 - Fearless Concurrency
-  - Locking
-  - Message Passing
+    - Locking
+    - Message Passing
+- Async/Await
 - Macros
 - Unsafe
-  - FFI
+    - FFI
 - API design / Advanced Types?
 - Essential Rust Crates
-  - `anyhow`
-  - `serde`
-  - `chrono`
-  - `tokio`
-  - `log`
-  - `tracing`
+    - `anyhow`
+    - `serde`
+    - `chrono`
+    - `tokio`
+    - `log`
+    - `tracing`
 
 
-## Week 9: Smart Pointers and Trait Objects (TODO)
+## Week 9: Smart Pointers and Trait Objects
 Chapter 15
 
 - `Box<T>`
 - `drop()`
 - `Rc<T>`
 - `RefCell<T>`
-  - `UnsafeCell<T>`
+    - `UnsafeCell<T>`
 - Memory leaks
 - Trait Objects
-  - Wide pointers
-  - Dynamic dispatch with `dyn`
-  - Vtable
-  - Probably need more
+    - Wide pointers
+    - Dynamic dispatch with `dyn`
+    - Vtable
+    - Probably need more
 - Dynamically Sized Types
 - Object safety
 
 
-
-## Week 10: Fearless Concurrency (TODO)
+## Week 10: Fearless Concurrency and Async/Await
 Chapter 16
 
 
-
-## Week 11: Advanced Rust (TODO)
+## Week 11: Macros and Unsafe
 Chapters 17-19
 
-- Unsafe
-  - FFI
 - Macros
+- Unsafe
+    - FFI
 
 
-
-## Week 12: Final Project (TODO)
+## Week 12: Final Project
 - Essential Rust Crates?
 - API design
