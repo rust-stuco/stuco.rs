@@ -23,24 +23,24 @@
 % Course details
 
 \newcommand{\longcoursename}{
-    Student Taught Courses (StuCo): Shilling the Rust Programming Language
+    Student Taught Courses (StuCo): Intro to Rust
 }
 
 \newcommand{\shortcoursename}{STUCO: RUSTLANG}
-\newcommand{\courselocation}{WeH 5403}
-\newcommand{\meetingstarttime}{19:00}
-\newcommand{\meetingendtime}{19:50}
-\newcommand{\meetingdays}{Wednesday}
-\newcommand{\longsemester}{Spring 2023}
-\newcommand{\shortsemester}{S23}
-\newcommand{\academicyear}{2022-23}
+\newcommand{\courselocation}{TBD}
+\newcommand{\meetingstarttime}{7:00}
+\newcommand{\meetingendtime}{7:50}
+\newcommand{\meetingdays}{Tuesday}
+\newcommand{\longsemester}{Spring 2024}
+\newcommand{\shortsemester}{S24}
+\newcommand{\academicyear}{2023-24}
 \newcommand{\deptcode}{98}
 \newcommand{\coursecode}{008}
 \newcommand{\fullcoursecode}{\deptcode-\coursecode}
 
 % Headers and Footers
 \pagestyle{fancy}
-\lhead{Pierce; Duvall}
+\lhead{Owad, Rudo, Tsui}
 \rhead{\fullcoursecode\ \shortsemester}
 
 % Rust code
@@ -340,25 +340,18 @@
     \vspace{1em}
 
     \begin{tabular}{@{}rl@{}}
-        Cooper Pierce & \href{mailto:cppierce@andrew.cmu.edu}{\texttt{cppierce@andrew.cmu.edu}} \\ 
-        Jack Duvall & \href{mailto:jrduvall@andrew.cmu.edu}{\texttt{jrduvall@andrew.cmu.edu}} \\
+        Benjamin Owad & \href{mailto:bowad@andrew.cmu.edu}{\texttt{bowad@andrew.cmu.edu}} \\ 
+        David Rudo & \href{mailto:drudo@andrew.cmu.edu}{\texttt{drudo@andrew.cmu.edu}} \\ 
+        Connor Tsui & \href{mailto:jrduvall@andrew.cmu.edu}{\texttt{cjtsui@andrew.cmu.edu}} \\
     \end{tabular}
 
     \vspace{1em}
 
-    \begin{center}
-        For general questions or concerns any instructor can address, please use 
-        \href{mailto:rust-stuco-staff@lists.andrew.cmu.edu}{\texttt{rust-stuco-staff@lists.andrew.cmu.edu}}
-    \end{center}
-
-    \vspace{1em}
-
-    \longsemester
+    \textbf{\longsemester}
 \end{minipage}
 \end{center}
 
-\vspace{3em}
-
+\vspace{1em}
 
 \begin{tabular*}{.93\textwidth}{@{\extracolsep{\fill}}ll}
     \toprule
@@ -367,79 +360,96 @@
     \bottomrule
 \end{tabular*}
 
-\vspace{5em}
+\vspace{1em}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section*{Course Description}
 
 This course is an introduction to the Rust programming language, a memory-safe
-systems programming language. Topics covered include memory safety, ownership \&
-lifetimes, the Rust stdlib, concurrency, traits, macros, and unsafe. Outside of
-class, there will be basic programming exercises and during the second half of
-the semester, a student-defined project.
+systems programming language. We will cover a range of topics, from the Rust borrow checker
+to parallelism and the \code{unsafe} keyword.
+Outside of class, there will be basic programming exercises, and during the second half of
+the semester there will be a small student-defined project.
 
-This course assumes knowledge of topics covered by 15--122/15--150. Knowledge of
-the systems programming related topics covered in 15--213 is a bonus, but not
-required.
+This course is taught in Rust, and you are not expected to have any prior exposure to Rust.
+However, this course assumes knowledge of topics covered by \textbf{15--122}. 
+Knowledge of functional programming idioms taught in \textbf{15--150}, 
+as well as knowledge of systems programming taught in \textbf{15--213} is a bonus, 
+but not strictly required. 
 
-This course is taught in Rust, and you are not expected to have any prior
-exposure to Rust. However, we may refer to examples written in C and/or SML
-throughout the class to compare different approaches.
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section*{Learning Objectives}
 
-Successful students in this course will
+Students in this course will be able to read, write, and reason about Rust code which includes:
 
 \begin{itemize}
-    \item be able to read and write Rust code which includes:
-        \begin{itemize}
-            \item core language constructs such as: structs, enums, and impl
-                blocks; ownership, borrowing, and lifetimes; pattern matching;
-                traits; polymorphism, including trait objects
-            \item common standard library types and functions, e.g.,
-                \code{Option<T>}, \code{Result<T, E>}, \code{Vec<T>},
-                \code{String} and \code{&str}
-            \item common standard library traits, e.g., \code{Iterator<Item =
-                T>}, \code{Copy}, \code{Clone}, \code{Debug}
-        \end{itemize}
-    \item understand some intermediate to advanced Rust topics such as:
-            \begin{itemize}
-                \item declarative macros
-                \item Rust's approaches to concurrency, parallelis and memory
-                    consistency
-                \item \code{unsafe} semantics
-            \end{itemize}
-    \item complete a substantial (6-9 hour) project in Rust either individually,
-        or with a partner
-    \item be able to use tools common in the Rust ecosystem, including
-        Cargo, \texttt{rustfmt}, \texttt{clippy}, and \texttt{rustdoc}
-    \item be able to locate and read Rust documentation
+    \item Core Rust syntax such as \code{struct}, \code{enum}, \code{impl}
+        blocks, pattern matching, polymorphism, and traits
+    \item Common Rust types such as \code{String}, \code{\&str}, 
+        \code{Option<T>}, \code{Result<T, E>}, and \code{Vec<T>}
+    \item Use of the borrow checker through ownership and \code{move} semantics
+    \item Advanced Rust features such as iterators, lifetimes, closures, and smart pointers.
+    \item Advanced Rust patterns such as parallelism, concurrency, macros, and \code{unsafe}.
 \end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section*{Additional Materials}
 
 Access to a computer able to run \texttt{rustc} (the Rust compiler) and Cargo
-(the standard build system) is required for this course. We'll go over how to
-set these up in class.
+(the Rust package manager) is required for this course. 
+If you are on stable versions of Mac, Windows, or Linux, you should be fine.
+We'll go over how to set these up in class.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Course Schedule}
+
+\begin{longtable}{rp{.6\textwidth}@{\hskip .075\textwidth}p{.5\textwidth}}
+    Date        & Topic(s)      \\ 
+    \toprule
+    Week 1      & Introduction \\
+    Week 2      & Ownership \\
+    Week 3      & Structs \& Enums \\
+    Week 4      & Standard Collections and Generics \\
+    Week 5      & Error handling and Traits \\
+    Week 6      & Cargo, Modules, Traits, and Testing \\
+    Week 7      & Lifetimes \\
+    Week 8      & Iterators, Closures, and Advanced Functional Topics \\
+    Week 9      & Smart Pointers and Trait Objects \\
+    Week 10     & Parallelism \\
+    Week 11     & Concurrency \\
+    Week 12     & Macros \\
+    Week 13     & \code{unsafe} \\
+    \bottomrule
+\end{longtable}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section*{Attendance Policy}
 
-Attendance is mandatory. \textbf{As per StuCo guidelines, if you have three
+Attendance is mandatory, as well as 50\% of your grade. \textbf{As per StuCo guidelines, if you have three
 unexcused absences, you will automatically fail this course}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section*{Grading}
 
-The final course grade will be calculated using the following categories. The
-course is out of 1000 points.
+The final course grade will be calculated using the following categories. 
+% The course is out of 1000 points.
 
 \begin{center}
     \begin{tabular}{@{}lr@{}}
-        Assessment Type     & Total Points \\ \toprule
-        Participation       &          500 \\
-        Homework            &          100 \\
-        Midterm             &           50 \\
-        Final               &          350 \\ \midrule
-        Total               &         1000 \\ \bottomrule
+        Assessment Type                 & Total Points \\ \toprule
+        Participation and Attendance    &          500 \\
+        Programming Assignments         &          500 \\ \midrule
+        Total                           &         1000 \\ \bottomrule
     \end{tabular}
 \end{center}
 
@@ -453,165 +463,65 @@ Grades will be assigned as follows, based on the number of points earned.
     \end{tabular}
 \end{center}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \subsection*{Participation}
 
-Attendance is mandatory. As per StuCo guidelines, if you have three unexcused
-absences, you will automatically fail this course. We will take attendance with
-a sign-in sheet or an interactive activity.
+We will take attendance with a sign-in sheet or an interactive activity.
 
-If you need to miss a session for a reason we can reasonably excuse contact us
+If you need to miss a session for a reason we can reasonably excuse, contact us
 and we will determine an appropriate alternative so you don't miss out on that
 week's content.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \subsection*{Homework}
  
-Homeworks will consist primarily of writing Rust code applying topics we've
-discussed in lecture.
+There will be weekly homeworks where you will write Rust code applying topics we've
+discussed in lecture, and 
 
-Homeworks are designed to not take more than an hour (if they are, talk to us!),
-and be done between the meeting after which they're released and the next
-meeting.
+Homeworks are designed to take no more than 30-45 minutes per week. If they take longer than this, please tell us!
+\textbf{All homeworks are due the week after they are released}.
 
 We expect you to turn in a submission for every homework, but they are graded
-for effort, not correctness. This means that you should attempt to correctly
-complete every homework, but if you put in a good faith effort and do not manage
-to finish it correctly, you will still receive credit.
+for effort, not correctness. If you put in a good faith effort to complete the homework
+and do not manage fully complete it, you will still receive credit.
 
-\subsection*{Midterm}
-
-You will be choosing your project for the final. Individually or in a team of
-two people, you will be expected to include a short writeup of what you plan to
-do, including details about how you will structure your code and what
-third-party libraries you plan on using. Subsequent changes to this are okay,
-but we want you to have a good foundation from which to complete a project.
-
-\subsection*{Final}
-
-You will be completing a medium-sized programming project in Rust using what
-you've learned from the course. The project will showcase Rust's elegance for
-systems engineering and teach you valuable life lessons.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection*{Late work}
 
-All homework released prior to the midterm will be due when the midterm is, and
-similarly for the final. Beyond this, no late work is accepted.
+Students have 7 late days to be used for any assignment. 
+Under special circumstances, if you let us know before hand, you can get more late days.
 
-If you experience extenuating circumstances (e.g., you are hospitalized, have a
-family emergency, a conflict with a university-sponsored event) that prohibit
-you from submitting your assignments on time, please let us know (in advance, if
-possible). We'll evaluate these instances on a case-by-case basis and arrange
-for reasonable accommodations.
-
-\section*{Academic Integrity}
-
-Discussion of homework problems, written or verbal, is always permitted. That
-said, verbatim or like-verbatim copying of answers over any medium is expressly
-forbidden.
-
-For the final project, external dependencies are allowed (so long as you
-acknowledge them, though an entry in a manifest file like \texttt{Cargo.toml}
-will suffice), and we'll discuss what's appropriate there during project
-proposals.
-
-\section*{Course Schedule}
-
-\begin{longtable}{rp{.5\textwidth}@{\hskip .05\textwidth}p{.3\textwidth}}
-    Date        & Topic(s)                          & Assignments Released  \\
-    \toprule
-    2023-01-18  & Tour of Rust; Motivation;
-                  \code{struct}s, \code{enum}s, basic syntax
-                & Rust installation and setup                               \\
-    2023-01-25  & Pattern matching, \code{impl} blocks; introduction to
-                  ownership, lifetimes and the borrow system
-                & PPM Parsing                                               \\
-    2023-02-01  & Polymorphism, bounded (traits) and unbounded; trait objects
-                  and dynamic dispatch
-                & Parsing Combinator Library                                \\
-    2023-02-08  & Function types, closures; more advanced ownership semantics
-                &                                                           \\
-    2023-02-15  & Livecoding a library for text iteration: applying lifetimes,
-                  polymorphism, traits.
-                & Midterm                                                   \\
-    2023-02-22  & The standard library and string handling
-                & \texttt{egrep} clone                                      \\
-    2023-03-01  & Error handling: \code{panic!}, \code{?}, testing: unit tests,
-                  property based testing
-                  (\href{https://github.com/AltSysrq/proptest}{\textit{proptest}})
-                  and fuzzing
-                  (\href{https://github.com/rust-fuzz/cargo-fuzz}{\textit{cargo-fuzz}})
-                & Note: all prior released assignments due at this point    \\
-    2023-03-08  & Spring Break (no class)
-                & ---                                                       \\
-    2023-03-15  & Macros: built-in, declarative, procedural
-                & \code{#[derive(Map)]} \textit{(optional)}                 \\
-    2023-03-22  & \code{unsafe}: \begin{itemize}
-                        \item Why have \code{unsafe}?
-                        \item Raw pointers
-                        \item \code{UnsafeCell}
-                        \item \code{unsafe} functions and traits
-                        \item \code{static mut}
-                        \item FFI (\code{extern},
-                            \href{https://github.com/rust-lang/rust-bindgen}{\textit{bindgen}},
-                            \href{https://github.com/dtolnay/cxx}{\textit{cxx}})
-                    \end{itemize}
-                & ---                                                       \\
-    2023-03-29  & Concurrency/Parallelism 1: threads, mutexes,
-                  \code{Sync}, \code{Send}
-                & ---                                                       \\
-    2023-04-05  & Concurrency/Parallelism 2: \code{Pin}, \code{async},
-                  \code{await}, futures, streams, polling,
-                  \href{https://tokio.rs/}{\textit{tokio}}
-                & ---                                                       \\
-    2023-04-12  & Concurrency/Parallelism 3: atomic variables, memory orderings
-                  and consistency, cmpxchg/cas and ll/sc
-                & ---                                                       \\
-    2023-04-19  & Advanced Topics or Guest Lecture (TBA)
-                & ---                                                       \\
-    2023-04-26  & Project presentations
-                & Note: all assignments due by this point                   \\
-    \bottomrule
-\end{longtable}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section*{Course Note}
 
-\subsection*{Academic Integrity \& Collaboration}
+\subsection*{Academic Integrity}
 
-\textit{From CMU's Policy on Academic Integrity:} In any manner of presentation,
-it is the responsibility of each student to produce her/his own original
-academic work. Collaboration or assistance on academic work to be graded is not
-permitted unless explicitly authorized by the course instructor(s). Students may
-utilize the assistance provided by Academic Development, the Global
-Communication Center, and the Academic Resource Center (CMU-Q) unless
-specifically prohibited by the course instructor(s). Any other sources of
-collaboration or assistance must be specifically authorized by the course
-instructor(s).
- 
-In all academic work to be graded, the citation of all sources is required. When
-collaboration or assistance is permitted by the course instructor(s) or when a
-student utilizes the services provided by Academic Development, the Global
-Communication Center, and the Academic Resource Center (CMU-Q), the
-acknowledgement of any collaboration or assistance is likewise required. This
-citation and acknowledgement must be incorporated into the work submitted and
-not separately or at a later point in time. Failure to do so is dishonest and is
-subject to disciplinary action.
+Discussion of homework problems, written or verbal, is not only permitted, but encouraged. 
+That being said, verbatim or like-verbatim copying of answers over any medium is expressly forbidden.
+If you find yourself needing to do this, talk to us! 
+It might be the case that a change needs to happen on our end, not yours.
 
-Instructors have a duty to communicate their expectations including those
-specific to collaboration, assistance, citation and acknowledgement within each
-course. Students likewise have a duty to ensure that they understand and abide
-by the standards that apply in any course or academic activity. In the absence
-of such understanding, it is the student’s responsibility to seek additional
-information and clarification.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection*{Accommodations for students with disabilities}
 
 If you have a disability and have an accommodations letter from the Disability
-Resources office, I encourage you to discuss your accommodations and needs with
-me as early in the semester as possible. I will work with you to ensure that
+Resources office, we encourage you to discuss your accommodations and needs with
+us as early in the semester as possible. We will work with you to ensure that
 accommodations are provided as appropriate. If you suspect that you may have a
 disability and would benefit from accommodations but are not yet registered with
-the Office of Disability Resources, I encourage you to contact them at
+the Office of Disability Resources, we encourage you to contact them at
 \href{mailto:access@andrew.cmu.edu}{\texttt{access@andrew.cmu.edu}}.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection*{Statement on student wellness}
 
@@ -631,6 +541,8 @@ seek support. Counseling and Psychological Services (CaPS) is here to help: call
 412-268-2922 and visit their website at \url{http://www.cmu.edu/counseling/}.
 Consider reaching out to a friend, faculty or family member you trust for help
 getting connected to the support that can help.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection*{Statement on Diversity, Equity and Inclusion}
 
@@ -673,5 +585,7 @@ All reports will be documented and deliberated to determine if there should be
 any following actions. Regardless of incident type, the university will use all
 shared experiences to transform our campus climate to be more equitable and
 just.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \end{document}
