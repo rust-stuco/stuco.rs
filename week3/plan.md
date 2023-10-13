@@ -1,7 +1,8 @@
 ## Week 3: Structs and Enums
 
 ### Lecture
-- Structs (10 min)
+- Ownership Review (10 min)
+- Structs (8 min)
     - Creating Structs
         - Update syntax
     - Tuple Structs
@@ -11,7 +12,7 @@
     - Automatic referencing and dereferencing
     - `Self` vs `&self`
     - Associated functions
-- Enum basics (30 min)
+- Enum basics (25 min)
     - Pattern Matching
     - Option Type
     - `if let`

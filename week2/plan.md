@@ -1,10 +1,11 @@
 ## Week 2: Ownership
 
 ### Lecture
-- Ownership (30 min)
+- `Vec` type basics (3 min)
+- `String` type basics (3 min)
+- Ownership (24 min)
     - Ownership Rules
     - Scope
-    - `String` type basics
     - Memory and Allocation
     - `Copy` and `Clone` traits
     - Ownership with functions and return values

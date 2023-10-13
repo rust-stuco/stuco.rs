@@ -10,7 +10,6 @@
         - Compound types
     - Functions (5 min)
     - Control Flow (5 min)
-- Structs and Enums basics (5 minutes)
 - Installing Rust and `rustup` (extra time)
 
 ### Extra Material

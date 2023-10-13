@@ -25,6 +25,7 @@
 
 ## Week 2: Ownership
 - Ownership
+- `Vec` and `String` basics
 - References and Borrowing
 - Slices
 
