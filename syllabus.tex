@@ -27,13 +27,13 @@
 }
 
 \newcommand{\shortcoursename}{STUCO: RUSTLANG}
-\newcommand{\courselocation}{BH A36}
+\newcommand{\courselocation}{GHC 4307}
 \newcommand{\meetingstarttime}{7:00}
 \newcommand{\meetingendtime}{7:50}
-\newcommand{\meetingdays}{Tuesday}
-\newcommand{\longsemester}{Spring 2024}
-\newcommand{\shortsemester}{S24}
-\newcommand{\academicyear}{2023-24}
+\newcommand{\meetingdays}{Wednesday}
+\newcommand{\longsemester}{Fall 2024}
+\newcommand{\shortsemester}{F24}
+\newcommand{\academicyear}{2024-25}
 \newcommand{\deptcode}{98}
 \newcommand{\coursecode}{008}
 \newcommand{\fullcoursecode}{\deptcode-\coursecode}
@@ -367,7 +367,7 @@
 This course is an introduction to the Rust programming language, a memory-safe
 systems programming language. We will cover a range of topics, from the Rust borrow checker
 to parallelism and the \code{unsafe} keyword.
-Outside of lecture, there will be basic programming exercises, and during the second half of
+Outside of lecture, there will be basic programming exercises, and in the second half of
 the semester there will be a small student-defined project.
 
 This course is taught in Rust, and you are not expected to have any prior exposure to Rust.
@@ -386,7 +386,7 @@ and reason about Rust code which includes:
 
 \begin{itemize}
     \item Core Rust syntax such as \code{struct}, \code{enum}, \code{impl}
-        blocks, pattern matching, polymorphism, and traits
+        blocks, pattern matching, generics, and traits
     \item Common Rust types such as \code{Vec<T>}, \code{String}, \code{\&str},
         \code{Option<T>}, and \code{Result<T, E>}
     \item Use of the borrow checker through ownership and \code{move} semantics
@@ -398,12 +398,13 @@ and reason about Rust code which includes:
 
 \section*{Additional Materials}
 
-Access to a computer able to run \texttt{rustc} (the Rust compiler) and \texttt{cargo}
-(the Rust package manager) is required for this course.
+Access to a computer able to run \texttt{rustc} (the Rust compiler) and 
+\texttt{cargo} (the Rust package manager) is required for this course.
 If you are on stable versions of Mac, Windows, or Linux, you should be fine.
 We'll go over how to set these up in class with \texttt{rustup},
 Rust's official tool chain manager, or you can follow the steps from
-the official Rust \href{https://www.rust-lang.org/tools/install}{\color{blue}{website}}.
+the official Rust 
+\href{https://www.rust-lang.org/tools/install}{\color{blue}{website}}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -414,7 +415,7 @@ the official Rust \href{https://www.rust-lang.org/tools/install}{\color{blue}{we
 \section*{Course Schedule}
 
 \begin{longtable}{rp{.6\textwidth}@{\hskip .075\textwidth}p{.5\textwidth}}
-    Date        & Topic(s)      \\
+    Week        & Topics \textit{(subject to change)}     \\
     \toprule
     Week 1      & Introduction \\
     Week 2      & Ownership \\
@@ -427,8 +428,8 @@ the official Rust \href{https://www.rust-lang.org/tools/install}{\color{blue}{we
     Week 9      & \code{Box<T>} and Trait Objects \\
     Week 10     & Smart Pointers and \code{unsafe} \\
     Week 11     & Parallelism \\
-    Week 12     & Concurrency \\
-    Week 13     & Macros \\
+    Week 12     & TBD \\
+    Week 13     & TBD \\
     \bottomrule
 \end{longtable}
 
@@ -436,35 +437,10 @@ the official Rust \href{https://www.rust-lang.org/tools/install}{\color{blue}{we
 
 \section*{Attendance Policy}
 
-Attendance is mandatory, as well as 50\% of your grade.
-\textbf{As per StuCo guidelines, if you have three
-unexcused absences, you will automatically fail this course}.
+Attendance is mandatory, and is also worth 50\% of the final grade.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section*{Grading}
-
-The final course grade will be calculated using the following categories.
-% The course is out of 1000 points.
-
-\begin{center}
-    \begin{tabular}{@{}lr@{}}
-        Assessment Type                 & Total Points \\ \toprule
-        Participation and Attendance    &          500 \\
-        Programming Assignments         &          500 \\ \midrule
-        Total                           &         1000 \\ \bottomrule
-    \end{tabular}
-\end{center}
-
-Grades will be assigned as follows, based on the number of points earned.
-
-\begin{center}
-    \begin{tabular}{@{}ll@{}}
-        Grade    & Points    \\ \toprule
-        P (or S) & 600--1000 \\
-        NP       & 0--600    \\ \bottomrule
-    \end{tabular}
-\end{center}
+\textbf{As per StuCo guidelines, if you have three unexcused absences, you will
+automatically fail this course}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -478,28 +454,103 @@ week's content.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section*{Grading}
+
+The final course grade will be calculated using the following categories.
+
+\begin{center}
+    \begin{tabular}{@{}lr@{}}
+        Assessment Type                 & Total Percentage \\ \toprule
+        Participation and Attendance    &          50      \\
+        Programming Assignments         &          50      \\ \bottomrule
+    \end{tabular}
+\end{center}
+
+\vspace{1em}
+
+Grades will be assigned as follows, based on the number of points earned.
+
+\begin{center}
+    \begin{tabular}{@{}ll@{}}
+        Grade    & Points    \\ \toprule
+        P (or S) & 90--100   \\
+        NP       & 0--90     \\ \bottomrule
+    \end{tabular}
+\end{center}
+
+\vspace{1em}
+
+This may seem like a very high percentage requirement for a passing grade, but
+due to the nature of our homeworks and their solutions, it is actually not as
+high as it may seem. See below for more information.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection*{Homework}
 
-There will be weekly homeworks where you will write Rust code applying topics we've
-discussed in lecture.
-Homeworks are designed to take around an hour per week.
-If they take longer than this, please tell us!
-\textbf{All homeworks are due the week after they are released}.
+There will be weekly homeworks where you will write Rust code applying topics
+we've discussed in lecture. Homeworks are designed to take around an hour per
+week. If they take longer than this, please tell us! \textbf{All homeworks are
+due the week after they are released}.
 
-We expect you to turn in a submission for every homework, but they are mainly graded
-for effort, not correctness. If you put in a good faith effort to complete the homework
-and do not manage fully complete it, you will still receive credit.
+Homeworks will be submitted and auto-graded on Gradescope.
+
+\subsection*{Solutions}
+
+We expect you to turn in a submission for every homework, as we believe the
+best way to learn a programming language is to \textit{actually program}.
+You can only learn so much from watching someone else use a language, and this
+is especially true for Rust.
+
+However, we understand that you are all busy students, and we do not want this
+course to be a burden. \textbf{This semester, we will be publishing all of the
+homework solutions \textit{before} the deadline.}
+
+There are a few consequences of this decision. The most obvious is that you will
+have access to a correct solution before you even start. We \textbf{strongly
+encourage} students to avoid looking at these solutions before a good-faith
+attempt at finishing the homeworks themselves. You will not learn much from
+copying and pasting our solutions as your own (and we will be able to see if
+you do that).
+
+Referencing these solutions should be a \textit{last resort} for when you either
+do not have any time to finish the homeworks, or if you are somehow unable to
+get in contact with us to ask for help.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection*{Late work}
 
-Students have 7 late days to be used for any assignment.
-Under special circumstances, if you let us know in advance, you can get more late days.
+Students have 7 late days to be used for any assignment. Under special
+circumstances, if you let us know in advance, you can get more late days.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Passing}
+
+Since attendance is mandatory, students will effectively get 50\% of their grade
+for "free." This means that students must get the remaining 40\% from homework
+assignments (or $\frac{4}{5}$ of the total possible homework points) to pass
+this course. Since all students have access to the solutions, we expect this to
+be manageable.
+
+However, in the case that a student is unable to get to the passing boundary
+for any reason, they can reach out to us and we will make sure to work with
+them and provide secondary paths towards passing.
+
+In other words, there are only two ways to fail this course. The first is
+gaining three unexcused absences, which is due to StuCo guidelines. The second
+is the combination of not completing the homeworks \textit{and} not reaching
+out to us. \textit{Please} always make sure to reach out to us on Piazza or
+over email if you have any concerns!
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -507,11 +558,14 @@ Under special circumstances, if you let us know in advance, you can get more lat
 
 \subsection*{Academic Integrity}
 
-Discussion of homework problems, written or verbal, is not only permitted, but encouraged.
-That being said, verbatim or like-verbatim copying of
-answers over any medium is expressly forbidden.
-If you find yourself needing to do this, talk to us!
-It might be the case that a change needs to happen on our end, not yours.
+Discussion of homework problems, written or verbal, is not only permitted, but 
+encouraged.
+
+That being said, verbatim or like-verbatim copying of answers over any medium 
+is expressly forbidden. This includes copying and pasting our solutions.
+
+If you find yourself needing to do this, talk to us! It might be the case that
+a change needs to happen on our end, not yours.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
