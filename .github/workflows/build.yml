@@ -22,7 +22,7 @@ jobs:
 
       # Needed for wasm-opt
       - name: Install binaryen
-        uses: jaxxstorm/action-install-gh-release@v2
+        uses: jaxxstorm/action-install-gh-release@v1
         with:
           repo: WebAssembly/binaryen
           binaries-location: bin
