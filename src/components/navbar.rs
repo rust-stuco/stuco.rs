@@ -20,7 +20,7 @@ pub fn Navbar() -> Element {
                     }
                 }
                 button {
-                    class: "sm:hidden ml-auto",
+                    class: "sm:hidden ml-auto text-2xl",
                     onclick: move |_| menu_open.toggle(),
                     if menu_open() {
                         "✕"
@@ -32,8 +32,16 @@ pub fn Navbar() -> Element {
                     class: "w-full text-sm font-bold flex-col gap-4 sm:w-auto sm:flex sm:flex-row sm:gap-12 sm:ml-0",
                     class: if menu_open() { "flex" } else { "hidden" },
 
-                    Link { to: Route::About {}, "About" }
-                    Link { to: Route::Schedule {}, "Schedule" }
+                    Link {
+                        to: Route::About {},
+                        onclick: move |_| menu_open.set(false),
+                        "About"
+                    }
+                    Link {
+                        to: Route::Schedule {},
+                        onclick: move |_| menu_open.set(false),
+                        "Schedule"
+                    }
 
                     Link { to: "/syllabus.pdf", new_tab: true, "Syllabus" }
                     Link { to: "https://github.com/rust-stuco", new_tab: true, "GitHub" }
