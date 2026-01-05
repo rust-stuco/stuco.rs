@@ -22,11 +22,10 @@ jobs:
 
       # Needed for wasm-opt
       - name: Install binaryen
-        uses: jaxxstorm/action-install-gh-release@v1
+        uses: sigoden/install-binary@v1
         with:
           repo: WebAssembly/binaryen
-          binaries-location: bin
-          chmod: 0755
+          name: wasm-opt
 
       # Needed to compile the syllabus
       - name: Install typst
