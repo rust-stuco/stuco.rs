@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    tags:
+      - "*"
 
 jobs:
   build_typst:
@@ -18,7 +20,14 @@ jobs:
       - name: Compile Typst
         run: typst compile syllabus.typ syllabus.pdf
 
-      - name: Upload Artifacts
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: syllabus
+          path: syllabus.pdf
+
+      - name: Upload Release
+        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           files: syllabus.pdf
