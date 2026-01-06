@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Week",
+  "type": "object",
+  "properties": {
+    "book_chapters": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      }
+    },
+    "extras": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/Extra"
+      }
+    },
+    "homework": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Homework"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "homework_ec": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Homework"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "rustlings": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      }
+    },
+    "slides": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "videos": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/VideoGroup"
+      }
+    }
+  },
+  "required": [
+    "title",
+    "slides"
+  ],
+  "$defs": {
+    "Extra": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "url"
+      ]
+    },
+    "Homework": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "slug": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "VideoGroup": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "items"
+      ]
+    }
+  }
+}

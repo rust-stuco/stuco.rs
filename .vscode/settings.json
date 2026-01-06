@@ -12,10 +12,12 @@
     // Prevent editing of generated files
     "files.readonlyInclude": {
         "assets/tailwind.css": true,
+        "**/*.schema.json": true,
         "Cargo.lock": true,
     },
     "files.watcherExclude": {
         "assets/tailwind.css": true,
+        "**/*.schema.json": true,
         "Cargo.lock": true,
     }
 }
