@@ -190,7 +190,7 @@ In order to pass this course (grade letter P or S), you must accumulate 1000 poi
     stroke: none,
     table.header([Grade], [Points]),
     table.hline(stroke: 1pt),
-    [NP], [0-1000],
+    [NP], [0-999],
     [P (or S)], [1000+],
     table.hline(stroke: 1pt),
   )
