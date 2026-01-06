@@ -1,6 +1,7 @@
 [formatting]
 trailing_newline = true
 indent_string = "    "
+include = ["resources/*.toml", "schedule/*.toml", "Cargo.toml", ".taplo.toml"]
 
 # the above options agree with .editorconfig and are only specified so that
 # taplo-cli can use them in CI

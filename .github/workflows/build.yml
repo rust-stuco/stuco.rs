@@ -23,10 +23,10 @@ jobs:
           tool: taplo
           fallback: none
 
-      - name: Validate TOML Formatting
+      - name: Validate TOML formatting
         run: taplo fmt --check
 
-      - name: Validate TOML Against Schemas
+      - name: Validate TOML against schemas
         run: taplo check
 
   build:
