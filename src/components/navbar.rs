@@ -38,6 +38,11 @@ pub fn Navbar() -> Element {
                         "About"
                     }
                     Link {
+                        to: Route::Resources {},
+                        onclick: move |_| menu_open.set(false),
+                        "Resources"
+                    }
+                    Link {
                         to: Route::Schedule {},
                         onclick: move |_| menu_open.set(false),
                         "Schedule"
