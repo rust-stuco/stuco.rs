@@ -8,7 +8,7 @@ struct Semester {
 }
 
 const CURRENT_SEMESTER: Semester = Semester {
-    name: "Fall 2025",
+    name: "Spring 2026",
     instructors: &[
         ("Stephen Mao", Some("stmao@andrew.cmu.edu")),
         ("Hugo Latendresse", Some("hlatendr@andrew.cmu.edu")),
