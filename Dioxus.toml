@@ -8,5 +8,8 @@ title = "Intro to Rust Lang"
 style = []
 script = []
 
+[web.watcher]
+index_on_404 = true
+
 [web.resource.dev]
 script = []
