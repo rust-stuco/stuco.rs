@@ -11,6 +11,10 @@
   ("Anish Pallati", "apallati@andrew.cmu.edu"),
 )
 
+#let tas = (
+  ("Max Wen", "maxwen@andrew.cmu.edu"),
+)
+
 // Document setup
 #set document(
   title: "98-008: Student Taught Courses (StuCo): Intro to Rust Lang",
@@ -50,16 +54,32 @@
     #text(size: 10pt, style: "italic")[Updated #datetime.today().display("[month repr:long] [day], [year]")]
 
     #table(
-      columns: 2,
-      align: (right, left),
+      columns: 4,
+      align: (right, center, left, left),
       stroke: none,
       inset: 3pt,
+
+      table.cell(rowspan: instructors.len(), align: right + horizon)[#text(weight: "bold")[Instructors]],
+      table.cell(rowspan: instructors.len(), align: center + horizon)[
+        $lr(brace.l, size: #(instructors.len() * 1em))$
+      ],
       ..instructors
         .map(((name, email)) => (
           [#name],
           [#styled-link("mailto:" + email)[#email]],
         ))
-        .flatten()
+        .flatten(),
+
+      table.cell(rowspan: tas.len(), align: right + horizon)[#text(weight: "bold")[TAs]],
+      table.cell(rowspan: tas.len(), align: center + horizon)[
+        $lr(brace.l, size: #(tas.len() * 1em))$
+      ],
+      ..tas
+        .map(((name, email)) => (
+          [#name],
+          [#styled-link("mailto:" + email)[#email]],
+        ))
+        .flatten(),
     )
 
     *#long-semester*
