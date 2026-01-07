@@ -67,6 +67,9 @@ jobs:
       - name: Build
         run: dx build --release
 
+      - name: Copy index.html to 404.html
+        run: cp dist/index.html dist/404.html
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
