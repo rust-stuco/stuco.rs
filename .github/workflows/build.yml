@@ -68,7 +68,7 @@ jobs:
         run: dx build --release
 
       - name: Copy index.html to 404.html
-        run: cp dist/index.html dist/404.html
+        run: cp target/dx/stuco-rs/release/web/public/index.html target/dx/stuco-rs/release/web/public/4
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
