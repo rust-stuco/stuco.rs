@@ -1,0 +1,1335 @@
+<!DOCTYPE html><html lang="en-US"><head><title>Modules and Testing</title><meta property="og:title" content="Modules and Testing"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0"><meta name="apple-mobile-web-app-capable" content="yes"><meta http-equiv="X-UA-Compatible" content="ie=edge"><meta property="og:type" content="website"><meta name="twitter:card" content="summary"><style>@media screen{body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button{appearance:none;background-color:initial;border:0;color:inherit;cursor:pointer;font-size:inherit;opacity:.8;outline:none;padding:0;transition:opacity .2s linear;-webkit-tap-highlight-color:transparent}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button:disabled,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button:disabled,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button:disabled,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button:disabled{cursor:not-allowed;opacity:.15!important}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button:hover,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button:hover,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button:hover,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button:hover{opacity:1}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button:hover:active,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button:hover:active,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button:hover:active,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button:hover:active{opacity:.6}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button:hover:not(:disabled),body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button:hover:not(:disabled),body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button:hover:not(:disabled),body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button:hover:not(:disabled){transition:none}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=prev],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=prev],body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button.bespoke-marp-presenter-info-page-prev{background:#0000 url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSI1IiBkPSJNNjggOTAgMjggNTBsNDAtNDAiLz48L3N2Zz4=") no-repeat 50%;background-size:contain;overflow:hidden;text-indent:100%;white-space:nowrap}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=next],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=next],body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button.bespoke-marp-presenter-info-page-next{background:#0000 url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSI1IiBkPSJtMzIgOTAgNDAtNDAtNDAtNDAiLz48L3N2Zz4=") no-repeat 50%;background-size:contain;overflow:hidden;text-indent:100%;white-space:nowrap}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=fullscreen],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=fullscreen]{background:#0000 url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48ZGVmcz48c3R5bGU+LmF7ZmlsbDpub25lO3N0cm9rZTojZmZmO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2Utd2lkdGg6NXB4fTwvc3R5bGU+PC9kZWZzPjxyZWN0IHdpZHRoPSI4MCIgaGVpZ2h0PSI2MCIgeD0iMTAiIHk9IjIwIiBjbGFzcz0iYSIgcng9IjUuNjciLz48cGF0aCBkPSJNNDAgNzBIMjBWNTBtMjAgMEwyMCA3MG00MC00MGgyMHYyMG0tMjAgMCAyMC0yMCIgY2xhc3M9ImEiLz48L3N2Zz4=") no-repeat 50%;background-size:contain;overflow:hidden;text-indent:100%;white-space:nowrap}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button.exit[data-bespoke-marp-osc=fullscreen],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button.exit[data-bespoke-marp-osc=fullscreen]{background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48ZGVmcz48c3R5bGU+LmF7ZmlsbDpub25lO3N0cm9rZTojZmZmO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2Utd2lkdGg6NXB4fTwvc3R5bGU+PC9kZWZzPjxyZWN0IHdpZHRoPSI4MCIgaGVpZ2h0PSI2MCIgeD0iMTAiIHk9IjIwIiBjbGFzcz0iYSIgcng9IjUuNjciLz48cGF0aCBkPSJNMjAgNTBoMjB2MjBtLTIwIDAgMjAtMjBtNDAgMEg2MFYzMG0yMCAwTDYwIDUwIiBjbGFzcz0iYSIvPjwvc3ZnPg==")}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=presenter],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=presenter]{background:#0000 url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSI1IiBkPSJNODcuOCA0Ny41Qzg5IDUwIDg3LjcgNTIgODUgNTJIMzVhOC43IDguNyAwIDAgMS03LjItNC41bC0xNS42LTMxQzExIDE0IDEyLjIgMTIgMTUgMTJoNTBhOC44IDguOCAwIDAgMSA3LjIgNC41ek02MCA1MnYzNm0tMTAgMGgyME00NSA0MmgyMCIvPjwvc3ZnPg==") no-repeat 50%;background-size:contain;overflow:hidden;text-indent:100%;white-space:nowrap}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button.bespoke-marp-presenter-note-bigger{background:#0000 url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBzdHJva2U9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSI1IiBkPSJNMTIgNTBoODBNNTIgOTBWMTAiLz48L3N2Zz4=") no-repeat 50%;background-size:contain;overflow:hidden;text-indent:100%;white-space:nowrap}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button.bespoke-marp-presenter-note-smaller{background:#0000 url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSI1IiBkPSJNMTIgNTBoODAiLz48L3N2Zz4=") no-repeat 50%;background-size:contain;overflow:hidden;text-indent:100%;white-space:nowrap}}@keyframes __bespoke_marp_transition_reduced_outgoing__{0%{opacity:1}to{opacity:0}}@keyframes __bespoke_marp_transition_reduced_incoming__{0%{mix-blend-mode:plus-lighter;opacity:0}to{mix-blend-mode:plus-lighter;opacity:1}}.bespoke-marp-note,.bespoke-marp-osc,.bespoke-progress-parent{display:none;transition:none}@media screen{::view-transition-group(*){animation-duration:var(--marp-bespoke-transition-animation-duration,.5s);animation-timing-function:ease}::view-transition-new(*),::view-transition-old(*){animation-delay:0s;animation-direction:var(--marp-bespoke-transition-animation-direction,normal);animation-duration:var(--marp-bespoke-transition-animation-duration,.5s);animation-fill-mode:both;animation-name:var(--marp-bespoke-transition-animation-name,var(--marp-bespoke-transition-animation-name-fallback,__bespoke_marp_transition_no_animation__));mix-blend-mode:normal}::view-transition-old(*){--marp-bespoke-transition-animation-name-fallback:__bespoke_marp_transition_reduced_outgoing__;animation-timing-function:ease}::view-transition-new(*){--marp-bespoke-transition-animation-name-fallback:__bespoke_marp_transition_reduced_incoming__;animation-timing-function:ease}::view-transition-new(root),::view-transition-old(root){animation-timing-function:linear}::view-transition-new(__bespoke_marp_transition_osc__),::view-transition-old(__bespoke_marp_transition_osc__){animation-duration:0s!important;animation-name:__bespoke_marp_transition_osc__!important}::view-transition-new(__bespoke_marp_transition_osc__){opacity:0!important}.bespoke-marp-transition-warming-up::view-transition-group(*),.bespoke-marp-transition-warming-up::view-transition-new(*),.bespoke-marp-transition-warming-up::view-transition-old(*){animation-play-state:paused!important}body,html{height:100%;margin:0}body{background:#000;overflow:hidden}svg.bespoke-marp-slide{content-visibility:hidden;opacity:0;pointer-events:none;z-index:-1}svg.bespoke-marp-slide:not(.bespoke-marp-active) *{view-transition-name:none!important}svg.bespoke-marp-slide.bespoke-marp-active{content-visibility:visible;opacity:1;pointer-events:auto;z-index:0}svg.bespoke-marp-slide.bespoke-marp-active.bespoke-marp-active-ready *{animation-name:__bespoke_marp__!important}@supports not (content-visibility:hidden){svg.bespoke-marp-slide[data-bespoke-marp-load=hideable]{display:none}svg.bespoke-marp-slide[data-bespoke-marp-load=hideable].bespoke-marp-active{display:block}}}@media screen and (prefers-reduced-motion:reduce){svg.bespoke-marp-slide *{view-transition-name:none!important}}@media screen{[data-bespoke-marp-fragment=inactive]{visibility:hidden}body[data-bespoke-view=""] .bespoke-marp-parent,body[data-bespoke-view=next] .bespoke-marp-parent{inset:0;position:absolute}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc{background:#000000a6;border-radius:7px;bottom:50px;color:#fff;contain:paint;display:block;font-family:Helvetica,Arial,sans-serif;font-size:16px;left:50%;line-height:0;opacity:1;padding:12px;position:absolute;touch-action:manipulation;transform:translateX(-50%);transition:opacity .2s linear;-webkit-user-select:none;user-select:none;white-space:nowrap;will-change:transform;z-index:1;view-transition-name:__bespoke_marp_transition_osc__}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>*,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>*{margin-left:6px}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>:first-child,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>:first-child{margin-left:0}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>span,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>span{opacity:.8}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>span[data-bespoke-marp-osc=page],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>span[data-bespoke-marp-osc=page]{display:inline-block;min-width:140px;text-align:center}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=fullscreen],body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=next],body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=presenter],body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=prev],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=fullscreen],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=next],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=presenter],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=prev]{height:32px;line-height:32px;width:32px}body[data-bespoke-view=""] .bespoke-marp-parent.bespoke-marp-inactive,body[data-bespoke-view=next] .bespoke-marp-parent.bespoke-marp-inactive{cursor:none}body[data-bespoke-view=""] .bespoke-marp-parent.bespoke-marp-inactive>.bespoke-marp-osc,body[data-bespoke-view=next] .bespoke-marp-parent.bespoke-marp-inactive>.bespoke-marp-osc{opacity:0;pointer-events:none}body[data-bespoke-view=""] svg.bespoke-marp-slide,body[data-bespoke-view=next] svg.bespoke-marp-slide{height:100%;left:0;position:absolute;top:0;width:100%}body[data-bespoke-view=""] .bespoke-progress-parent{background:#222;display:flex;height:5px;width:100%}body[data-bespoke-view=""] .bespoke-progress-parent+.bespoke-marp-parent{top:5px}body[data-bespoke-view=""] .bespoke-progress-parent .bespoke-progress-bar{background:#0288d1;flex:0 0 0;transition:flex-basis .2s cubic-bezier(0,1,1,1)}body[data-bespoke-view=next]{background:#0000}body[data-bespoke-view=presenter]{background:#161616}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container{display:grid;font-family:Helvetica,Arial,sans-serif;grid-template:"current dragbar next" minmax(140px,1fr) "current dragbar note" 2fr "info    dragbar note" 3em;grid-template-columns:minmax(3px,var(--bespoke-marp-presenter-split-ratio,66%)) 0 minmax(3px,1fr);height:100%;left:0;position:absolute;top:0;width:100%}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-parent{grid-area:current;overflow:hidden;position:relative}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-parent svg.bespoke-marp-slide{height:calc(100% - 40px);left:20px;pointer-events:none;position:absolute;top:20px;-webkit-user-select:none;user-select:none;width:calc(100% - 40px)}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-parent svg.bespoke-marp-slide.bespoke-marp-active{filter:drop-shadow(0 3px 10px rgba(0,0,0,.5))}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-dragbar-container{background:#0288d1;cursor:col-resize;grid-area:dragbar;margin-left:-3px;opacity:0;position:relative;transition:opacity .4s linear .1s;width:6px;z-index:10}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-dragbar-container:hover{opacity:1}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-dragbar-container.active{opacity:1;transition-delay:0s}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-next-container{background:#222;cursor:pointer;display:none;grid-area:next;overflow:hidden;position:relative}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-next-container.active{display:block}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-next-container iframe.bespoke-marp-presenter-next{background:#0000;border:0;display:block;filter:drop-shadow(0 3px 10px rgba(0,0,0,.5));height:calc(100% - 40px);left:20px;pointer-events:none;position:absolute;top:20px;-webkit-user-select:none;user-select:none;width:calc(100% - 40px)}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container{background:#222;color:#eee;grid-area:note;position:relative;z-index:1}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button{height:1.5em;line-height:1.5em;width:1.5em}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-presenter-note-wrapper{display:block;inset:0;position:absolute}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-presenter-note-buttons{background:#000000a6;border-radius:4px;bottom:0;display:flex;gap:4px;margin:12px;opacity:0;padding:6px;pointer-events:none;position:absolute;right:0;transition:opacity .2s linear}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-presenter-note-buttons:focus-within,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-presenter-note-wrapper:focus-within+.bespoke-marp-presenter-note-buttons,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container:hover .bespoke-marp-presenter-note-buttons{opacity:1;pointer-events:auto}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note{box-sizing:border-box;font-size:calc(1.1em*var(--bespoke-marp-note-font-scale, 1));height:calc(100% - 40px);margin:20px;overflow:auto;padding-right:3px;white-space:pre-wrap;width:calc(100% - 40px);word-wrap:break-word;scrollbar-color:#eeeeee80 #0000;scrollbar-width:thin}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note::-webkit-scrollbar{width:6px}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note::-webkit-scrollbar-track{background:#0000}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note::-webkit-scrollbar-thumb{background:#eeeeee80;border-radius:6px}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note:empty{pointer-events:none}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note.active{display:block}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note p:first-child{margin-top:0}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note p:last-child{margin-bottom:0}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container{align-items:center;box-sizing:border-box;color:#eee;display:flex;flex-wrap:nowrap;grid-area:info;justify-content:center;overflow:hidden;padding:0 10px}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-page,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-time,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-timer{box-sizing:border-box;display:block;padding:0 10px;white-space:nowrap;width:100%}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button{height:1.5em;line-height:1.5em;width:1.5em}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-page{order:2;text-align:center}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-page .bespoke-marp-presenter-info-page-text{display:inline-block;min-width:120px;text-align:center}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-time{color:#999;order:1;text-align:left}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-timer{color:#999;order:3;text-align:right}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-timer:hover{cursor:pointer}}@media print{.bespoke-marp-presenter-info-container,.bespoke-marp-presenter-next-container,.bespoke-marp-presenter-note-container{display:none}}</style><style>@import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');div#\:\$p > svg > foreignObject > section{width:1280px;height:720px;box-sizing:border-box;overflow:hidden;position:relative;scroll-snap-align:center center;-webkit-text-size-adjust:100%;text-size-adjust:100%}div#\:\$p > svg > foreignObject > section::after{bottom:0;content:attr(data-marpit-pagination);padding:inherit;pointer-events:none;position:absolute;right:0}div#\:\$p > svg > foreignObject > section:not([data-marpit-pagination])::after{display:none}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1){font-size:2em;margin-block:0.67em}div#\:\$p > svg > foreignObject > section video::-webkit-media-controls{will-change:transform}@page {size:1280px 720px;margin:0}@media print{html, body{background-color:#fff;margin:0;page-break-inside:avoid;break-inside:avoid-page}div#\:\$p > svg > foreignObject > section{page-break-before:always;break-before:page}div#\:\$p > svg > foreignObject > section, div#\:\$p > svg > foreignObject > section *{-webkit-print-color-adjust:exact!important;animation-delay:0s!important;animation-duration:0s!important;color-adjust:exact!important;print-color-adjust:exact!important;transition:none!important}div#\:\$p > svg[data-marpit-svg]{display:block;height:100vh;width:100vw}}/*!
+ * Marp default theme.
+ *
+ * @theme default
+ * @author Yuki Hattori
+ *
+ * @auto-scaling true
+ * @size 16:9 1280px 720px
+ * @size 4:3 960px 720px
+ */div#\:\$p > svg > foreignObject > section{--base-size-4:calc(var(--marpit-root-font-size, 1rem) * 0.25);--base-size-8:calc(var(--marpit-root-font-size, 1rem) * 0.5);--base-size-16:calc(var(--marpit-root-font-size, 1rem) * 1);--base-size-24:calc(var(--marpit-root-font-size, 1rem) * 1.5);--base-size-40:calc(var(--marpit-root-font-size, 1rem) * 2.5);--base-text-weight-normal:400;--base-text-weight-medium:500;--base-text-weight-semibold:600;--fontStack-monospace:ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;--fgColor-accent:Highlight;}div#\:\$p > svg > foreignObject > section [data-theme=light],div#\:\$p > svg > foreignObject > section{color-scheme:light;--focus-outlineColor:#0969da;--fgColor-default:#1f2328;--fgColor-muted:#59636e;--fgColor-accent:#0969da;--fgColor-success:#1a7f37;--fgColor-attention:#9a6700;--fgColor-danger:#d1242f;--fgColor-done:#8250df;--bgColor-default:#fff;--bgColor-muted:#f6f8fa;--bgColor-neutral-muted:#818b981f;--bgColor-attention-muted:#fff8c5;--borderColor-default:#d1d9e0;--borderColor-muted:#d1d9e0b3;--borderColor-neutral-muted:#d1d9e0b3;--borderColor-accent-emphasis:#0969da;--borderColor-success-emphasis:#1a7f37;--borderColor-attention-emphasis:#9a6700;--borderColor-danger-emphasis:#cf222e;--borderColor-done-emphasis:#8250df;--color-prettylights-syntax-comment:#59636e;--color-prettylights-syntax-constant:#0550ae;--color-prettylights-syntax-constant-other-reference-link:#0a3069;--color-prettylights-syntax-entity:#6639ba;--color-prettylights-syntax-storage-modifier-import:#1f2328;--color-prettylights-syntax-entity-tag:#0550ae;--color-prettylights-syntax-keyword:#cf222e;--color-prettylights-syntax-string:#0a3069;--color-prettylights-syntax-variable:#953800;--color-prettylights-syntax-brackethighlighter-unmatched:#82071e;--color-prettylights-syntax-brackethighlighter-angle:#59636e;--color-prettylights-syntax-invalid-illegal-text:#f6f8fa;--color-prettylights-syntax-invalid-illegal-bg:#82071e;--color-prettylights-syntax-carriage-return-text:#f6f8fa;--color-prettylights-syntax-carriage-return-bg:#cf222e;--color-prettylights-syntax-string-regexp:#116329;--color-prettylights-syntax-markup-list:#3b2300;--color-prettylights-syntax-markup-heading:#0550ae;--color-prettylights-syntax-markup-italic:#1f2328;--color-prettylights-syntax-markup-bold:#1f2328;--color-prettylights-syntax-markup-deleted-text:#82071e;--color-prettylights-syntax-markup-deleted-bg:#ffebe9;--color-prettylights-syntax-markup-inserted-text:#116329;--color-prettylights-syntax-markup-inserted-bg:#dafbe1;--color-prettylights-syntax-markup-changed-text:#953800;--color-prettylights-syntax-markup-changed-bg:#ffd8b5;--color-prettylights-syntax-markup-ignored-text:#d1d9e0;--color-prettylights-syntax-markup-ignored-bg:#0550ae;--color-prettylights-syntax-meta-diff-range:#8250df;--color-prettylights-syntax-sublimelinter-gutter-mark:#818b98;}div#\:\$p > svg > foreignObject > section [data-theme=dark],div#\:\$p > svg > foreignObject > section:where(.invert){color-scheme:dark;--focus-outlineColor:#1f6feb;--fgColor-default:#f0f6fc;--fgColor-muted:#9198a1;--fgColor-accent:#4493f8;--fgColor-success:#3fb950;--fgColor-attention:#d29922;--fgColor-danger:#f85149;--fgColor-done:#ab7df8;--bgColor-default:#0d1117;--bgColor-muted:#151b23;--bgColor-neutral-muted:#656c7633;--bgColor-attention-muted:#bb800926;--borderColor-default:#3d444d;--borderColor-muted:#3d444db3;--borderColor-neutral-muted:#3d444db3;--borderColor-accent-emphasis:#1f6feb;--borderColor-success-emphasis:#238636;--borderColor-attention-emphasis:#9e6a03;--borderColor-danger-emphasis:#da3633;--borderColor-done-emphasis:#8957e5;--color-prettylights-syntax-comment:#9198a1;--color-prettylights-syntax-constant:#79c0ff;--color-prettylights-syntax-constant-other-reference-link:#a5d6ff;--color-prettylights-syntax-entity:#d2a8ff;--color-prettylights-syntax-storage-modifier-import:#f0f6fc;--color-prettylights-syntax-entity-tag:#7ee787;--color-prettylights-syntax-keyword:#ff7b72;--color-prettylights-syntax-string:#a5d6ff;--color-prettylights-syntax-variable:#ffa657;--color-prettylights-syntax-brackethighlighter-unmatched:#f85149;--color-prettylights-syntax-brackethighlighter-angle:#9198a1;--color-prettylights-syntax-invalid-illegal-text:#f0f6fc;--color-prettylights-syntax-invalid-illegal-bg:#8e1519;--color-prettylights-syntax-carriage-return-text:#f0f6fc;--color-prettylights-syntax-carriage-return-bg:#b62324;--color-prettylights-syntax-string-regexp:#7ee787;--color-prettylights-syntax-markup-list:#f2cc60;--color-prettylights-syntax-markup-heading:#1f6feb;--color-prettylights-syntax-markup-italic:#f0f6fc;--color-prettylights-syntax-markup-bold:#f0f6fc;--color-prettylights-syntax-markup-deleted-text:#ffdcd7;--color-prettylights-syntax-markup-deleted-bg:#67060c;--color-prettylights-syntax-markup-inserted-text:#aff5b4;--color-prettylights-syntax-markup-inserted-bg:#033a16;--color-prettylights-syntax-markup-changed-text:#ffdfb6;--color-prettylights-syntax-markup-changed-bg:#5a1e02;--color-prettylights-syntax-markup-ignored-text:#f0f6fc;--color-prettylights-syntax-markup-ignored-bg:#1158c7;--color-prettylights-syntax-meta-diff-range:#d2a8ff;--color-prettylights-syntax-sublimelinter-gutter-mark:#3d444d;}div#\:\$p > svg > foreignObject > section{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;background-color:var(--bgColor-default);color:var(--fgColor-default);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Noto Sans,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;font-size:16px;line-height:1.5;margin:0;word-wrap:break-word}div#\:\$p > svg > foreignObject > section{--marpit-root-font-size:16px;}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1):hover .anchor .octicon-link:before,div#\:\$p > svg > foreignObject > section :is(h2, marp-h2):hover .anchor .octicon-link:before,div#\:\$p > svg > foreignObject > section :is(h3, marp-h3):hover .anchor .octicon-link:before,div#\:\$p > svg > foreignObject > section :is(h4, marp-h4):hover .anchor .octicon-link:before,div#\:\$p > svg > foreignObject > section :is(h5, marp-h5):hover .anchor .octicon-link:before,div#\:\$p > svg > foreignObject > section :is(h6, marp-h6):hover .anchor .octicon-link:before{background-color:currentColor;content:" ";display:inline-block;height:16px;-webkit-mask-image:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 0 0 1.06 1.06l1.25-1.25a2 2 0 1 1 2.83 2.83l-2.5 2.5a2 2 0 0 1-2.83 0 .75.75 0 0 0-1.06 1.06 3.5 3.5 0 0 0 4.95 0l2.5-2.5a3.5 3.5 0 0 0-4.95-4.95zm-4.69 9.64a2 2 0 0 1 0-2.83l2.5-2.5a2 2 0 0 1 2.83 0 .75.75 0 0 0 1.06-1.06 3.5 3.5 0 0 0-4.95 0l-2.5 2.5a3.5 3.5 0 0 0 4.95 4.95l1.25-1.25a.75.75 0 0 0-1.06-1.06l-1.25 1.25a2 2 0 0 1-2.83 0"/></svg>');mask-image:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 0 0 1.06 1.06l1.25-1.25a2 2 0 1 1 2.83 2.83l-2.5 2.5a2 2 0 0 1-2.83 0 .75.75 0 0 0-1.06 1.06 3.5 3.5 0 0 0 4.95 0l2.5-2.5a3.5 3.5 0 0 0-4.95-4.95zm-4.69 9.64a2 2 0 0 1 0-2.83l2.5-2.5a2 2 0 0 1 2.83 0 .75.75 0 0 0 1.06-1.06 3.5 3.5 0 0 0-4.95 0l-2.5 2.5a3.5 3.5 0 0 0 4.95 4.95l1.25-1.25a.75.75 0 0 0-1.06-1.06l-1.25 1.25a2 2 0 0 1-2.83 0"/></svg>');width:16px}div#\:\$p > svg > foreignObject > section details,div#\:\$p > svg > foreignObject > section figcaption,div#\:\$p > svg > foreignObject > section figure{display:block}div#\:\$p > svg > foreignObject > section summary{display:list-item}div#\:\$p > svg > foreignObject > section [hidden]{display:none!important}div#\:\$p > svg > foreignObject > section a{background-color:transparent;color:var(--fgColor-accent);text-decoration:none}div#\:\$p > svg > foreignObject > section abbr[title]{border-bottom:none;-webkit-text-decoration:underline dotted;text-decoration:underline dotted}div#\:\$p > svg > foreignObject > section b,div#\:\$p > svg > foreignObject > section strong{font-weight:var(--base-text-weight-semibold, 600)}div#\:\$p > svg > foreignObject > section dfn{font-style:italic}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1){border-bottom:1px solid var(--borderColor-muted);font-size:2em;font-weight:var(--base-text-weight-semibold, 600);margin:.67em 0;padding-bottom:.3em}div#\:\$p > svg > foreignObject > section mark{background-color:var(--bgColor-attention-muted);color:var(--fgColor-default)}div#\:\$p > svg > foreignObject > section small{font-size:90%}div#\:\$p > svg > foreignObject > section sub,div#\:\$p > svg > foreignObject > section sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}div#\:\$p > svg > foreignObject > section sub{bottom:-.25em}div#\:\$p > svg > foreignObject > section sup{top:-.5em}div#\:\$p > svg > foreignObject > section img{border-style:none;box-sizing:content-box;max-width:100%}div#\:\$p > svg > foreignObject > section code,div#\:\$p > svg > foreignObject > section kbd,div#\:\$p > svg > foreignObject > section :is(pre, marp-pre),div#\:\$p > svg > foreignObject > section samp{font-family:monospace;font-size:1em}div#\:\$p > svg > foreignObject > section figure{margin:1em var(--base-size-40)}div#\:\$p > svg > foreignObject > section hr{background:transparent;background-color:var(--borderColor-default);border:0;box-sizing:content-box;height:.25em;margin:var(--base-size-24) 0;overflow:hidden;padding:0}div#\:\$p > svg > foreignObject > section input{font:inherit;font-family:inherit;font-size:inherit;line-height:inherit;margin:0;overflow:visible}div#\:\$p > svg > foreignObject > section [type=button],div#\:\$p > svg > foreignObject > section [type=reset],div#\:\$p > svg > foreignObject > section [type=submit]{-webkit-appearance:button;-moz-appearance:button;appearance:button}div#\:\$p > svg > foreignObject > section [type=checkbox],div#\:\$p > svg > foreignObject > section [type=radio]{box-sizing:border-box;padding:0}div#\:\$p > svg > foreignObject > section [type=number]::-webkit-inner-spin-button,div#\:\$p > svg > foreignObject > section [type=number]::-webkit-outer-spin-button{height:auto}div#\:\$p > svg > foreignObject > section [type=search]::-webkit-search-cancel-button,div#\:\$p > svg > foreignObject > section [type=search]::-webkit-search-decoration{-webkit-appearance:none;appearance:none}div#\:\$p > svg > foreignObject > section ::-webkit-input-placeholder{color:inherit;opacity:.54}div#\:\$p > svg > foreignObject > section ::-webkit-file-upload-button{-webkit-appearance:button;appearance:button;font:inherit}div#\:\$p > svg > foreignObject > section a:hover{text-decoration:underline}div#\:\$p > svg > foreignObject > section ::-moz-placeholder{color:var(--fgColor-muted);opacity:1}div#\:\$p > svg > foreignObject > section ::placeholder{color:var(--fgColor-muted);opacity:1}div#\:\$p > svg > foreignObject > section hr:after,div#\:\$p > svg > foreignObject > section hr:before{content:"";display:table}div#\:\$p > svg > foreignObject > section hr:after{clear:both}div#\:\$p > svg > foreignObject > section table{border-collapse:collapse;border-spacing:0;display:block;font-variant:tabular-nums;max-width:100%;overflow:auto;width:-moz-max-content;width:max-content}div#\:\$p > svg > foreignObject > section td,div#\:\$p > svg > foreignObject > section th{padding:0}div#\:\$p > svg > foreignObject > section details summary{cursor:pointer}div#\:\$p > svg > foreignObject > section [role=button]:focus,div#\:\$p > svg > foreignObject > section a:focus,div#\:\$p > svg > foreignObject > section input[type=checkbox]:focus,div#\:\$p > svg > foreignObject > section input[type=radio]:focus{box-shadow:none;outline:2px solid var(--focus-outlineColor);outline-offset:-2px}div#\:\$p > svg > foreignObject > section [role=button]:focus:not(:focus-visible),div#\:\$p > svg > foreignObject > section a:focus:not(:focus-visible),div#\:\$p > svg > foreignObject > section input[type=checkbox]:focus:not(:focus-visible),div#\:\$p > svg > foreignObject > section input[type=radio]:focus:not(:focus-visible){outline:1px solid transparent}div#\:\$p > svg > foreignObject > section [role=button]:focus-visible,div#\:\$p > svg > foreignObject > section a:focus-visible,div#\:\$p > svg > foreignObject > section input[type=checkbox]:focus-visible,div#\:\$p > svg > foreignObject > section input[type=radio]:focus-visible{box-shadow:none;outline:2px solid var(--focus-outlineColor);outline-offset:-2px}div#\:\$p > svg > foreignObject > section a:not([class]):focus,div#\:\$p > svg > foreignObject > section a:not([class]):focus-visible,div#\:\$p > svg > foreignObject > section input[type=checkbox]:focus,div#\:\$p > svg > foreignObject > section input[type=checkbox]:focus-visible,div#\:\$p > svg > foreignObject > section input[type=radio]:focus,div#\:\$p > svg > foreignObject > section input[type=radio]:focus-visible{outline-offset:0}div#\:\$p > svg > foreignObject > section kbd{background-color:var(--bgColor-muted);border-bottom-color:var(--borderColor-neutral-muted);border:1px solid var(--borderColor-neutral-muted);border-radius:6px;box-shadow:inset 0 -1px 0 var(--borderColor-neutral-muted);color:var(--fgColor-default);display:inline-block;font:11px var(--fontStack-monospace, ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace);line-height:10px;padding:var(--base-size-4);vertical-align:middle}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1),div#\:\$p > svg > foreignObject > section :is(h2, marp-h2),div#\:\$p > svg > foreignObject > section :is(h3, marp-h3),div#\:\$p > svg > foreignObject > section :is(h4, marp-h4),div#\:\$p > svg > foreignObject > section :is(h5, marp-h5),div#\:\$p > svg > foreignObject > section :is(h6, marp-h6){font-weight:var(--base-text-weight-semibold, 600);line-height:1.25;margin-bottom:var(--base-size-16);margin-top:var(--base-size-24)}div#\:\$p > svg > foreignObject > section :is(h2, marp-h2){border-bottom:1px solid var(--borderColor-muted);font-size:1.5em;padding-bottom:.3em}div#\:\$p > svg > foreignObject > section :is(h2, marp-h2),div#\:\$p > svg > foreignObject > section :is(h3, marp-h3){font-weight:var(--base-text-weight-semibold, 600)}div#\:\$p > svg > foreignObject > section :is(h3, marp-h3){font-size:1.25em}div#\:\$p > svg > foreignObject > section :is(h4, marp-h4){font-size:1em}div#\:\$p > svg > foreignObject > section :is(h4, marp-h4),div#\:\$p > svg > foreignObject > section :is(h5, marp-h5){font-weight:var(--base-text-weight-semibold, 600)}div#\:\$p > svg > foreignObject > section :is(h5, marp-h5){font-size:.875em}div#\:\$p > svg > foreignObject > section :is(h6, marp-h6){color:var(--fgColor-muted);font-size:.85em;font-weight:var(--base-text-weight-semibold, 600)}div#\:\$p > svg > foreignObject > section p{margin-bottom:10px;margin-top:0}div#\:\$p > svg > foreignObject > section blockquote{border-left:.25em solid var(--borderColor-default);color:var(--fgColor-muted);margin:0;padding:0 1em}div#\:\$p > svg > foreignObject > section ol,div#\:\$p > svg > foreignObject > section ul{margin-bottom:0;margin-top:0;padding-left:2em}div#\:\$p > svg > foreignObject > section ol ol,div#\:\$p > svg > foreignObject > section ul ol{list-style-type:lower-roman}div#\:\$p > svg > foreignObject > section ol ol ol,div#\:\$p > svg > foreignObject > section ol ul ol,div#\:\$p > svg > foreignObject > section ul ol ol,div#\:\$p > svg > foreignObject > section ul ul ol{list-style-type:lower-alpha}div#\:\$p > svg > foreignObject > section dd{margin-left:0}div#\:\$p > svg > foreignObject > section code,div#\:\$p > svg > foreignObject > section :is(pre, marp-pre),div#\:\$p > svg > foreignObject > section samp,div#\:\$p > svg > foreignObject > section tt{font-family:var(--fontStack-monospace, ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace);font-size:12px}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre){margin-bottom:0;margin-top:0;word-wrap:normal}div#\:\$p > svg > foreignObject > section .octicon{display:inline-block;overflow:visible!important;vertical-align:text-bottom;fill:currentColor}div#\:\$p > svg > foreignObject > section input::-webkit-inner-spin-button,div#\:\$p > svg > foreignObject > section input::-webkit-outer-spin-button{-webkit-appearance:none;appearance:none;margin:0}div#\:\$p > svg > foreignObject > section .mr-2{margin-right:var(--base-size-8, 8px)!important}div#\:\$p > svg > foreignObject > section:after,div#\:\$p > svg > foreignObject > section:before{display:table}div#\:\$p > svg > foreignObject > section:after{clear:both}div#\:\$p > svg > foreignObject > section>:first-child{margin-top:0!important}div#\:\$p > svg > foreignObject > section>:last-child{margin-bottom:0!important}div#\:\$p > svg > foreignObject > section a:not([href]){color:inherit;text-decoration:none}div#\:\$p > svg > foreignObject > section .absent{color:var(--fgColor-danger)}div#\:\$p > svg > foreignObject > section .anchor{float:left;line-height:1;margin-left:-20px;padding-right:var(--base-size-4)}div#\:\$p > svg > foreignObject > section .anchor:focus{outline:none}div#\:\$p > svg > foreignObject > section blockquote,div#\:\$p > svg > foreignObject > section details,div#\:\$p > svg > foreignObject > section dl,div#\:\$p > svg > foreignObject > section ol,div#\:\$p > svg > foreignObject > section p,div#\:\$p > svg > foreignObject > section :is(pre, marp-pre),div#\:\$p > svg > foreignObject > section table,div#\:\$p > svg > foreignObject > section ul{margin-bottom:var(--base-size-16);margin-top:0}div#\:\$p > svg > foreignObject > section blockquote>:first-child{margin-top:0}div#\:\$p > svg > foreignObject > section blockquote>:last-child{margin-bottom:0}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1) .octicon-link,div#\:\$p > svg > foreignObject > section :is(h2, marp-h2) .octicon-link,div#\:\$p > svg > foreignObject > section :is(h3, marp-h3) .octicon-link,div#\:\$p > svg > foreignObject > section :is(h4, marp-h4) .octicon-link,div#\:\$p > svg > foreignObject > section :is(h5, marp-h5) .octicon-link,div#\:\$p > svg > foreignObject > section :is(h6, marp-h6) .octicon-link{color:var(--fgColor-default);vertical-align:middle;visibility:hidden}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1):hover .anchor,div#\:\$p > svg > foreignObject > section :is(h2, marp-h2):hover .anchor,div#\:\$p > svg > foreignObject > section :is(h3, marp-h3):hover .anchor,div#\:\$p > svg > foreignObject > section :is(h4, marp-h4):hover .anchor,div#\:\$p > svg > foreignObject > section :is(h5, marp-h5):hover .anchor,div#\:\$p > svg > foreignObject > section :is(h6, marp-h6):hover .anchor{text-decoration:none}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1):hover .anchor .octicon-link,div#\:\$p > svg > foreignObject > section :is(h2, marp-h2):hover .anchor .octicon-link,div#\:\$p > svg > foreignObject > section :is(h3, marp-h3):hover .anchor .octicon-link,div#\:\$p > svg > foreignObject > section :is(h4, marp-h4):hover .anchor .octicon-link,div#\:\$p > svg > foreignObject > section :is(h5, marp-h5):hover .anchor .octicon-link,div#\:\$p > svg > foreignObject > section :is(h6, marp-h6):hover .anchor .octicon-link{visibility:visible}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1) code,div#\:\$p > svg > foreignObject > section :is(h1, marp-h1) tt,div#\:\$p > svg > foreignObject > section :is(h2, marp-h2) code,div#\:\$p > svg > foreignObject > section :is(h2, marp-h2) tt,div#\:\$p > svg > foreignObject > section :is(h3, marp-h3) code,div#\:\$p > svg > foreignObject > section :is(h3, marp-h3) tt,div#\:\$p > svg > foreignObject > section :is(h4, marp-h4) code,div#\:\$p > svg > foreignObject > section :is(h4, marp-h4) tt,div#\:\$p > svg > foreignObject > section :is(h5, marp-h5) code,div#\:\$p > svg > foreignObject > section :is(h5, marp-h5) tt,div#\:\$p > svg > foreignObject > section :is(h6, marp-h6) code,div#\:\$p > svg > foreignObject > section :is(h6, marp-h6) tt{font-size:inherit;padding:0 .2em}div#\:\$p > svg > foreignObject > section summary :is(h1, marp-h1),div#\:\$p > svg > foreignObject > section summary :is(h2, marp-h2),div#\:\$p > svg > foreignObject > section summary :is(h3, marp-h3),div#\:\$p > svg > foreignObject > section summary :is(h4, marp-h4),div#\:\$p > svg > foreignObject > section summary :is(h5, marp-h5),div#\:\$p > svg > foreignObject > section summary :is(h6, marp-h6){display:inline-block}div#\:\$p > svg > foreignObject > section summary :is(h1, marp-h1) .anchor,div#\:\$p > svg > foreignObject > section summary :is(h2, marp-h2) .anchor,div#\:\$p > svg > foreignObject > section summary :is(h3, marp-h3) .anchor,div#\:\$p > svg > foreignObject > section summary :is(h4, marp-h4) .anchor,div#\:\$p > svg > foreignObject > section summary :is(h5, marp-h5) .anchor,div#\:\$p > svg > foreignObject > section summary :is(h6, marp-h6) .anchor{margin-left:-40px}div#\:\$p > svg > foreignObject > section summary :is(h1, marp-h1),div#\:\$p > svg > foreignObject > section summary :is(h2, marp-h2){border-bottom:0;padding-bottom:0}div#\:\$p > svg > foreignObject > section ol.no-list,div#\:\$p > svg > foreignObject > section ul.no-list{list-style-type:none;padding:0}div#\:\$p > svg > foreignObject > section ol[type="a s"]{list-style-type:lower-alpha}div#\:\$p > svg > foreignObject > section ol[type="A s"]{list-style-type:upper-alpha}div#\:\$p > svg > foreignObject > section ol[type="i s"]{list-style-type:lower-roman}div#\:\$p > svg > foreignObject > section ol[type="I s"]{list-style-type:upper-roman}div#\:\$p > svg > foreignObject > section div>ol:not([type]),div#\:\$p > svg > foreignObject > section ol[type="1"]{list-style-type:decimal}div#\:\$p > svg > foreignObject > section ol ol,div#\:\$p > svg > foreignObject > section ol ul,div#\:\$p > svg > foreignObject > section ul ol,div#\:\$p > svg > foreignObject > section ul ul{margin-bottom:0;margin-top:0}div#\:\$p > svg > foreignObject > section li>p{margin-top:var(--base-size-16)}div#\:\$p > svg > foreignObject > section li+li{margin-top:.25em}div#\:\$p > svg > foreignObject > section dl{padding:0}div#\:\$p > svg > foreignObject > section dl dt{font-size:1em;font-style:italic;font-weight:var(--base-text-weight-semibold, 600);margin-top:var(--base-size-16);padding:0}div#\:\$p > svg > foreignObject > section dl dd{margin-bottom:var(--base-size-16);padding:0 var(--base-size-16)}div#\:\$p > svg > foreignObject > section table th{font-weight:var(--base-text-weight-semibold, 600)}div#\:\$p > svg > foreignObject > section table td,div#\:\$p > svg > foreignObject > section table th{border:1px solid var(--borderColor-default);padding:6px 13px}div#\:\$p > svg > foreignObject > section table td>:last-child{margin-bottom:0}div#\:\$p > svg > foreignObject > section table tr{background-color:var(--bgColor-default);border-top:1px solid var(--borderColor-muted)}div#\:\$p > svg > foreignObject > section table tr:nth-child(2n){background-color:var(--bgColor-muted)}div#\:\$p > svg > foreignObject > section table img{background-color:transparent}div#\:\$p > svg > foreignObject > section img[align=right]{padding-left:20px}div#\:\$p > svg > foreignObject > section img[align=left]{padding-right:20px}div#\:\$p > svg > foreignObject > section .emoji{background-color:transparent;max-width:none;vertical-align:text-top}div#\:\$p > svg > foreignObject > section :is(span, marp-span).frame,div#\:\$p > svg > foreignObject > section :is(span, marp-span).frame>:is(span, marp-span){display:block;overflow:hidden}div#\:\$p > svg > foreignObject > section :is(span, marp-span).frame>:is(span, marp-span){border:1px solid var(--borderColor-default);float:left;margin:13px 0 0;padding:7px;width:auto}div#\:\$p > svg > foreignObject > section :is(span, marp-span).frame :is(span, marp-span) img{display:block;float:left}div#\:\$p > svg > foreignObject > section :is(span, marp-span).frame :is(span, marp-span) :is(span, marp-span){clear:both;color:var(--fgColor-default);display:block;padding:5px 0 0}div#\:\$p > svg > foreignObject > section :is(span, marp-span).align-center{clear:both;display:block;overflow:hidden}div#\:\$p > svg > foreignObject > section :is(span, marp-span).align-center>:is(span, marp-span){display:block;margin:13px auto 0;overflow:hidden;text-align:center}div#\:\$p > svg > foreignObject > section :is(span, marp-span).align-center :is(span, marp-span) img{margin:0 auto;text-align:center}div#\:\$p > svg > foreignObject > section :is(span, marp-span).align-right{clear:both;display:block;overflow:hidden}div#\:\$p > svg > foreignObject > section :is(span, marp-span).align-right>:is(span, marp-span){display:block;margin:13px 0 0;overflow:hidden;text-align:right}div#\:\$p > svg > foreignObject > section :is(span, marp-span).align-right :is(span, marp-span) img{margin:0;text-align:right}div#\:\$p > svg > foreignObject > section :is(span, marp-span).float-left{display:block;float:left;margin-right:13px;overflow:hidden}div#\:\$p > svg > foreignObject > section :is(span, marp-span).float-left :is(span, marp-span){margin:13px 0 0}div#\:\$p > svg > foreignObject > section :is(span, marp-span).float-right{display:block;float:right;margin-left:13px;overflow:hidden}div#\:\$p > svg > foreignObject > section :is(span, marp-span).float-right>:is(span, marp-span){display:block;margin:13px auto 0;overflow:hidden;text-align:right}div#\:\$p > svg > foreignObject > section code,div#\:\$p > svg > foreignObject > section tt{background-color:var(--bgColor-neutral-muted);border-radius:6px;font-size:85%;margin:0;padding:.2em .4em;white-space:break-spaces}div#\:\$p > svg > foreignObject > section code br,div#\:\$p > svg > foreignObject > section tt br{display:none}div#\:\$p > svg > foreignObject > section del code{text-decoration:inherit}div#\:\$p > svg > foreignObject > section samp{font-size:85%}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) code{font-size:100%}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre)>code{background:transparent;border:0;margin:0;padding:0;white-space:pre;word-break:normal}div#\:\$p > svg > foreignObject > section .highlight{margin-bottom:var(--base-size-16)}div#\:\$p > svg > foreignObject > section .highlight :is(pre, marp-pre){margin-bottom:0;word-break:normal}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre){background-color:var(--bgColor-muted);border-radius:6px;color:var(--fgColor-default);font-size:85%;line-height:1.45;overflow:auto;padding:var(--base-size-16)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) code,div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) tt{display:inline;line-height:inherit;margin:0;max-width:auto;overflow:visible;padding:0;word-wrap:normal;background-color:transparent;border:0}div#\:\$p > svg > foreignObject > section .csv-data td,div#\:\$p > svg > foreignObject > section .csv-data th{font-size:12px;line-height:1;overflow:hidden;padding:5px;text-align:left;white-space:nowrap}div#\:\$p > svg > foreignObject > section .csv-data .blob-num{background:var(--bgColor-default);border:0;padding:10px var(--base-size-8) 9px;text-align:right}div#\:\$p > svg > foreignObject > section .csv-data tr{border-top:0}div#\:\$p > svg > foreignObject > section .csv-data th{background:var(--bgColor-muted);border-top:0;font-weight:var(--base-text-weight-semibold, 600)}div#\:\$p > svg > foreignObject > section [data-footnote-ref]:before{content:"["}div#\:\$p > svg > foreignObject > section [data-footnote-ref]:after{content:"]"}div#\:\$p > svg > foreignObject > section .footnotes{border-top:1px solid var(--borderColor-default);color:var(--fgColor-muted);font-size:12px}div#\:\$p > svg > foreignObject > section div#\:\$p > svg > foreignObject > section section.footnotes{--marpit-root-font-size:12px;}div#\:\$p > svg > foreignObject > section .footnotes ol,div#\:\$p > svg > foreignObject > section .footnotes ol ul{padding-left:var(--base-size-16)}div#\:\$p > svg > foreignObject > section .footnotes ol ul{display:inline-block;margin-top:var(--base-size-16)}div#\:\$p > svg > foreignObject > section .footnotes li{position:relative}div#\:\$p > svg > foreignObject > section .footnotes li:target:before{border:2px solid var(--borderColor-accent-emphasis);border-radius:6px;bottom:calc(var(--base-size-8)*-1);content:"";left:calc(var(--base-size-24)*-1);pointer-events:none;position:absolute;right:calc(var(--base-size-8)*-1);top:calc(var(--base-size-8)*-1)}div#\:\$p > svg > foreignObject > section .footnotes li:target{color:var(--fgColor-default)}div#\:\$p > svg > foreignObject > section .footnotes .data-footnote-backref g-emoji{font-family:monospace}div#\:\$p > svg > foreignObject > section body:has(:modal){padding-right:var(--dialog-scrollgutter)!important}div#\:\$p > svg > foreignObject > section .pl-c{color:var(--color-prettylights-syntax-comment)}div#\:\$p > svg > foreignObject > section .pl-c1,div#\:\$p > svg > foreignObject > section .pl-s .pl-v{color:var(--color-prettylights-syntax-constant)}div#\:\$p > svg > foreignObject > section .pl-e,div#\:\$p > svg > foreignObject > section .pl-en{color:var(--color-prettylights-syntax-entity)}div#\:\$p > svg > foreignObject > section .pl-s .pl-s1,div#\:\$p > svg > foreignObject > section .pl-smi{color:var(--color-prettylights-syntax-storage-modifier-import)}div#\:\$p > svg > foreignObject > section .pl-ent{color:var(--color-prettylights-syntax-entity-tag)}div#\:\$p > svg > foreignObject > section .pl-k{color:var(--color-prettylights-syntax-keyword)}div#\:\$p > svg > foreignObject > section .pl-pds,div#\:\$p > svg > foreignObject > section .pl-s,div#\:\$p > svg > foreignObject > section .pl-s .pl-pse .pl-s1,div#\:\$p > svg > foreignObject > section .pl-sr,div#\:\$p > svg > foreignObject > section .pl-sr .pl-cce,div#\:\$p > svg > foreignObject > section .pl-sr .pl-sra,div#\:\$p > svg > foreignObject > section .pl-sr .pl-sre{color:var(--color-prettylights-syntax-string)}div#\:\$p > svg > foreignObject > section .pl-smw,div#\:\$p > svg > foreignObject > section .pl-v{color:var(--color-prettylights-syntax-variable)}div#\:\$p > svg > foreignObject > section .pl-bu{color:var(--color-prettylights-syntax-brackethighlighter-unmatched)}div#\:\$p > svg > foreignObject > section .pl-ii{background-color:var(--color-prettylights-syntax-invalid-illegal-bg);color:var(--color-prettylights-syntax-invalid-illegal-text)}div#\:\$p > svg > foreignObject > section .pl-c2{background-color:var(--color-prettylights-syntax-carriage-return-bg);color:var(--color-prettylights-syntax-carriage-return-text)}div#\:\$p > svg > foreignObject > section .pl-sr .pl-cce{color:var(--color-prettylights-syntax-string-regexp);font-weight:700}div#\:\$p > svg > foreignObject > section .pl-ml{color:var(--color-prettylights-syntax-markup-list)}div#\:\$p > svg > foreignObject > section .pl-mh,div#\:\$p > svg > foreignObject > section .pl-mh .pl-en,div#\:\$p > svg > foreignObject > section .pl-ms{color:var(--color-prettylights-syntax-markup-heading);font-weight:700}div#\:\$p > svg > foreignObject > section .pl-mi{color:var(--color-prettylights-syntax-markup-italic);font-style:italic}div#\:\$p > svg > foreignObject > section .pl-mb{color:var(--color-prettylights-syntax-markup-bold);font-weight:700}div#\:\$p > svg > foreignObject > section .pl-md{background-color:var(--color-prettylights-syntax-markup-deleted-bg);color:var(--color-prettylights-syntax-markup-deleted-text)}div#\:\$p > svg > foreignObject > section .pl-mi1{background-color:var(--color-prettylights-syntax-markup-inserted-bg);color:var(--color-prettylights-syntax-markup-inserted-text)}div#\:\$p > svg > foreignObject > section .pl-mc{background-color:var(--color-prettylights-syntax-markup-changed-bg);color:var(--color-prettylights-syntax-markup-changed-text)}div#\:\$p > svg > foreignObject > section .pl-mi2{background-color:var(--color-prettylights-syntax-markup-ignored-bg);color:var(--color-prettylights-syntax-markup-ignored-text)}div#\:\$p > svg > foreignObject > section .pl-mdr{color:var(--color-prettylights-syntax-meta-diff-range);font-weight:700}div#\:\$p > svg > foreignObject > section .pl-ba{color:var(--color-prettylights-syntax-brackethighlighter-angle)}div#\:\$p > svg > foreignObject > section .pl-sg{color:var(--color-prettylights-syntax-sublimelinter-gutter-mark)}div#\:\$p > svg > foreignObject > section .pl-corl{color:var(--color-prettylights-syntax-constant-other-reference-link);text-decoration:underline}div#\:\$p > svg > foreignObject > section [role=button]:focus:not(:focus-visible),div#\:\$p > svg > foreignObject > section [role=tabpanel][tabindex="0"]:focus:not(:focus-visible),div#\:\$p > svg > foreignObject > section a:focus:not(:focus-visible),div#\:\$p > svg > foreignObject > section button:focus:not(:focus-visible),div#\:\$p > svg > foreignObject > section summary:focus:not(:focus-visible){box-shadow:none;outline:none}div#\:\$p > svg > foreignObject > section [tabindex="0"]:focus:not(:focus-visible),div#\:\$p > svg > foreignObject > section details-dialog:focus:not(:focus-visible){outline:none}div#\:\$p > svg > foreignObject > section g-emoji{display:inline-block;font-family:Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;font-size:1em;font-style:normal!important;font-weight:var(--base-text-weight-normal, 400);line-height:1;min-width:1ch;vertical-align:-.075em}div#\:\$p > svg > foreignObject > section g-emoji img{height:1em;width:1em}div#\:\$p > svg > foreignObject > section .task-list-item{list-style-type:none}div#\:\$p > svg > foreignObject > section .task-list-item label{font-weight:var(--base-text-weight-normal, 400)}div#\:\$p > svg > foreignObject > section .task-list-item.enabled label{cursor:pointer}div#\:\$p > svg > foreignObject > section .task-list-item+.task-list-item{margin-top:var(--base-size-4)}div#\:\$p > svg > foreignObject > section .task-list-item .handle{display:none}div#\:\$p > svg > foreignObject > section .task-list-item-checkbox{margin:0 .2em .25em -1.4em;vertical-align:middle}div#\:\$p > svg > foreignObject > section ul:dir(rtl) .task-list-item-checkbox{margin:0 -1.6em .25em .2em}div#\:\$p > svg > foreignObject > section ol:dir(rtl) .task-list-item-checkbox{margin:0 -1.6em .25em .2em}div#\:\$p > svg > foreignObject > section .contains-task-list:focus-within .task-list-item-convert-container,div#\:\$p > svg > foreignObject > section .contains-task-list:hover .task-list-item-convert-container{display:block;height:24px;overflow:visible;width:auto;clip:auto}div#\:\$p > svg > foreignObject > section ::-webkit-calendar-picker-indicator{filter:invert(50%)}div#\:\$p > svg > foreignObject > section .markdown-alert{border-left:.25em solid var(--borderColor-default);color:inherit;margin-bottom:var(--base-size-16);padding:var(--base-size-8) var(--base-size-16)}div#\:\$p > svg > foreignObject > section .markdown-alert>:first-child{margin-top:0}div#\:\$p > svg > foreignObject > section .markdown-alert>:last-child{margin-bottom:0}div#\:\$p > svg > foreignObject > section .markdown-alert .markdown-alert-title{align-items:center;display:flex;font-weight:var(--base-text-weight-medium, 500);line-height:1}div#\:\$p > svg > foreignObject > section .markdown-alert.markdown-alert-note{border-left-color:var(--borderColor-accent-emphasis)}div#\:\$p > svg > foreignObject > section .markdown-alert.markdown-alert-note .markdown-alert-title{color:var(--fgColor-accent)}div#\:\$p > svg > foreignObject > section .markdown-alert.markdown-alert-important{border-left-color:var(--borderColor-done-emphasis)}div#\:\$p > svg > foreignObject > section .markdown-alert.markdown-alert-important .markdown-alert-title{color:var(--fgColor-done)}div#\:\$p > svg > foreignObject > section .markdown-alert.markdown-alert-warning{border-left-color:var(--borderColor-attention-emphasis)}div#\:\$p > svg > foreignObject > section .markdown-alert.markdown-alert-warning .markdown-alert-title{color:var(--fgColor-attention)}div#\:\$p > svg > foreignObject > section .markdown-alert.markdown-alert-tip{border-left-color:var(--borderColor-success-emphasis)}div#\:\$p > svg > foreignObject > section .markdown-alert.markdown-alert-tip .markdown-alert-title{color:var(--fgColor-success)}div#\:\$p > svg > foreignObject > section .markdown-alert.markdown-alert-caution{border-left-color:var(--borderColor-danger-emphasis)}div#\:\$p > svg > foreignObject > section .markdown-alert.markdown-alert-caution .markdown-alert-title{color:var(--fgColor-danger)}div#\:\$p > svg > foreignObject > section>:first-child>.heading-element:first-child{margin-top:0!important}div#\:\$p > svg > foreignObject > section .highlight :is(pre, marp-pre):has(+.zeroclipboard-container){min-height:52px}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1){color:var(--h1-color);font-size:1.6em}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1),div#\:\$p > svg > foreignObject > section :is(h2, marp-h2){border-bottom:none}div#\:\$p > svg > foreignObject > section :is(h2, marp-h2){font-size:1.3em}div#\:\$p > svg > foreignObject > section :is(h3, marp-h3){font-size:1.1em}div#\:\$p > svg > foreignObject > section :is(h4, marp-h4){font-size:1.05em}div#\:\$p > svg > foreignObject > section :is(h5, marp-h5){font-size:1em}div#\:\$p > svg > foreignObject > section :is(h6, marp-h6){font-size:.9em}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1) strong,div#\:\$p > svg > foreignObject > section :is(h2, marp-h2) strong,div#\:\$p > svg > foreignObject > section :is(h3, marp-h3) strong,div#\:\$p > svg > foreignObject > section :is(h4, marp-h4) strong,div#\:\$p > svg > foreignObject > section :is(h5, marp-h5) strong,div#\:\$p > svg > foreignObject > section :is(h6, marp-h6) strong{color:var(--heading-strong-color);font-weight:inherit}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1)::part(auto-scaling),div#\:\$p > svg > foreignObject > section :is(h2, marp-h2)::part(auto-scaling),div#\:\$p > svg > foreignObject > section :is(h3, marp-h3)::part(auto-scaling),div#\:\$p > svg > foreignObject > section :is(h4, marp-h4)::part(auto-scaling),div#\:\$p > svg > foreignObject > section :is(h5, marp-h5)::part(auto-scaling),div#\:\$p > svg > foreignObject > section :is(h6, marp-h6)::part(auto-scaling){max-height:563px}div#\:\$p > svg > foreignObject > section hr{height:0;padding-top:.25em}div#\:\$p > svg > foreignObject > section img{background-color:transparent}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre){border:1px solid var(--borderColor-default);line-height:1.15;overflow:visible}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre)::part(auto-scaling){max-height:529px}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs){color:var(--color-prettylights-syntax-storage-modifier-import)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-doctag),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-keyword),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-meta .hljs-keyword),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-template-tag),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-template-variable),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-type),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-variable.language_){color:var(--color-prettylights-syntax-keyword)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-title),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-title.class_),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-title.class_.inherited__),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-title.function_){color:var(--color-prettylights-syntax-entity)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-attr),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-attribute),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-literal),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-meta),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-number),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-operator),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-selector-attr),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-selector-class),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-selector-id),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-variable){color:var(--color-prettylights-syntax-constant)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-meta .hljs-string),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-regexp),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-string){color:var(--color-prettylights-syntax-string)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-built_in),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-symbol){color:var(--color-prettylights-syntax-variable)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-code),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-comment),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-formula){color:var(--color-prettylights-syntax-comment)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-name),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-quote),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-selector-pseudo),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-selector-tag){color:var(--color-prettylights-syntax-entity-tag)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-subst){color:var(--color-prettylights-syntax-storage-modifier-import)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-section){color:var(--color-prettylights-syntax-markup-heading);font-weight:700}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-bullet){color:var(--color-prettylights-syntax-markup-list)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-emphasis){color:var(--color-prettylights-syntax-markup-italic);font-style:italic}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-strong){color:var(--color-prettylights-syntax-markup-bold);font-weight:700}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-addition){background-color:var(--color-prettylights-syntax-markup-inserted-bg);color:var(--color-prettylights-syntax-markup-inserted-text)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-deletion){background-color:var(--color-prettylights-syntax-markup-deleted-bg);color:var(--color-prettylights-syntax-markup-deleted-text)}div#\:\$p > svg > foreignObject > section footer,div#\:\$p > svg > foreignObject > section header{color:var(--header-footer-color);font-size:18px;left:30px;margin:0;position:absolute}div#\:\$p > svg > foreignObject > section header{top:21px}div#\:\$p > svg > foreignObject > section footer{bottom:21px}div#\:\$p > svg > foreignObject > section{--h1-color:#246;--header-footer-color:hsla(0,0%,40%,.75);--heading-strong-color:#48c;--paginate-color:#777;--base-size-4:4px;--base-size-8:8px;--base-size-16:16px;--base-size-24:24px;--base-size-40:40px;align-items:stretch;display:block;flex-flow:column nowrap;font-size:29px;height:720px;padding:78.5px;place-content:safe center center;width:1280px}div#\:\$p > svg > foreignObject > section{--marpit-root-font-size:29px;}div#\:\$p > svg > foreignObject > section:where(.invert){--h1-color:#cee7ff;--header-footer-color:hsla(0,0%,60%,.75);--heading-strong-color:#7bf;--paginate-color:#999;}div#\:\$p > svg > foreignObject > section>:last-child,div#\:\$p > svg > foreignObject > section[data-footer]>:nth-last-child(2){margin-bottom:0}div#\:\$p > svg > foreignObject > section>:first-child,div#\:\$p > svg > foreignObject > section>header:first-child+*{margin-top:0}div#\:\$p > svg > foreignObject > section:after{bottom:21px;color:var(--paginate-color);font-size:24px;padding:0;position:absolute;right:30px}div#\:\$p > svg > foreignObject > section:after{--marpit-root-font-size:24px;}div#\:\$p > svg > foreignObject > section[data-color] :is(h1, marp-h1),div#\:\$p > svg > foreignObject > section[data-color] :is(h2, marp-h2),div#\:\$p > svg > foreignObject > section[data-color] :is(h3, marp-h3),div#\:\$p > svg > foreignObject > section[data-color] :is(h4, marp-h4),div#\:\$p > svg > foreignObject > section[data-color] :is(h5, marp-h5),div#\:\$p > svg > foreignObject > section[data-color] :is(h6, marp-h6){color:currentcolor}div#\:\$p > svg > foreignObject > :where(section){container-type:size}div#\:\$p > svg > foreignObject > section img[data-marp-twemoji]{background:transparent;height:1em;margin:0 .05em 0 .1em;vertical-align:-.1em;width:1em}div#\:\$p > svg > foreignObject > section.communism :is(h2, marp-h2), div#\:\$p > svg > foreignObject > section.communism :is(h1, marp-h1), div#\:\$p > svg > foreignObject > section.communism :is(h3, marp-h3){font-family:'Zilla Slab', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;color:#fc9c36;font-size:calc(var(--marpit-root-font-size, 1rem) * 2);font-weight:bold;font-style:italic;text-shadow:3px 3px 0 #000;line-height:0;max-width:65%}div#\:\$p > svg > foreignObject > section.communism :is(h1, marp-h1){font-size:calc(var(--marpit-root-font-size, 1rem) * 3);line-height:1}div#\:\$p > svg > foreignObject > section.communism :is(h3, marp-h3){font-size:calc(var(--marpit-root-font-size, 1rem) * 1);line-height:1}div#\:\$p > svg > foreignObject > section.communism :is(h4, marp-h4){font-family:'Zilla Slab', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif}div#\:\$p > svg > foreignObject > section.communism{background-image:url('../images/bg4.jpg');background-size:cover}div#\:\$p > svg > foreignObject > section.communism2{background-image:url('../images/bg5.jpg');background-size:cover}div#\:\$p > svg > foreignObject > section :is(h6, marp-h6){margin-top:calc(var(--marpit-root-font-size, 1rem) * 0.25);font-size:calc(var(--marpit-root-font-size, 1rem) * 0.75);line-height:0}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1), div#\:\$p > svg > foreignObject > section :is(h2, marp-h2), div#\:\$p > svg > foreignObject > section :is(h3, marp-h3), div#\:\$p > svg > foreignObject > section :is(h4, marp-h4), div#\:\$p > svg > foreignObject > section :is(h5, marp-h5), div#\:\$p > svg > foreignObject > section :is(h6, marp-h6){font-family:'Zilla Slab', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif}div#\:\$p > svg > foreignObject > section .columns{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:calc(var(--marpit-root-font-size, 1rem) * 1)}div#\:\$p > svg > foreignObject > section center{display:flex;justify-content:center}div#\:\$p > svg > foreignObject > section{font-family:"Noto Sans"}div#\:\$p > svg > foreignObject > section code{font-family:"Noto Sans Mono"}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="background"]{columns:initial!important;display:block!important;padding:0!important}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="background"]::before, div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="background"]::after, div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="content"]::before, div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="content"]::after{display:none!important}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="background"] > div[data-marpit-advanced-background-container]{all:initial;display:flex;flex-direction:row;height:100%;overflow:hidden;width:100%}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="background"] > div[data-marpit-advanced-background-container][data-marpit-advanced-background-direction="vertical"]{flex-direction:column}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="background"][data-marpit-advanced-background-split] > div[data-marpit-advanced-background-container]{width:var(--marpit-advanced-background-split, 50%)}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="background"][data-marpit-advanced-background-split="right"] > div[data-marpit-advanced-background-container]{margin-left:calc(100% - var(--marpit-advanced-background-split, 50%))}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="background"] > div[data-marpit-advanced-background-container] > figure{all:initial;background-position:center;background-repeat:no-repeat;background-size:cover;flex:auto;margin:0}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="background"] > div[data-marpit-advanced-background-container] > figure > figcaption{position:absolute;border:0;clip:rect(0, 0, 0, 0);height:1px;margin:-1px;overflow:hidden;padding:0;white-space:nowrap;width:1px}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="content"], div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="pseudo"]{background:transparent!important}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="pseudo"], div#\:\$p > svg[data-marpit-svg] > foreignObject[data-marpit-advanced-background="pseudo"]{pointer-events:none!important}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background-split]{width:100%;height:100%}
+</style></head><body><div class="bespoke-marp-osc"><button data-bespoke-marp-osc="prev" tabindex="-1" title="Previous slide">Previous slide</button><span data-bespoke-marp-osc="page"></span><button data-bespoke-marp-osc="next" tabindex="-1" title="Next slide">Next slide</button><button data-bespoke-marp-osc="fullscreen" tabindex="-1" title="Toggle fullscreen (f)">Toggle fullscreen</button><button data-bespoke-marp-osc="presenter" tabindex="-1" title="Open presenter view (p)">Open presenter view</button></div><div id=":$p"><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="1" data-paginate="true" data-class="communism invert" data-theme="rust" lang="en-US" class="communism invert" data-marpit-pagination="1" style="--paginate:true;--class:communism invert;--theme:rust;" data-marpit-pagination-total="86">
+<h2 id="intro-to-rust-lang">Intro to Rust Lang</h2>
+<h1 id="modules-and-testing">Modules and Testing</h1>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="2" data-marpit-fragments="7" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="2" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="today-modules-and-testing">Today: Modules and Testing</h1>
+<ul>
+<li data-marpit-fragment="1">Modules, Packages, and Crates
+<ul>
+<li data-marpit-fragment="2">The <code>use</code> keyword</li>
+<li data-marpit-fragment="3">Module Paths and the File System</li>
+</ul>
+</li>
+<li data-marpit-fragment="4">Testing
+<ul>
+<li data-marpit-fragment="5">Unit Testing</li>
+<li data-marpit-fragment="6">Integration Testing</li>
+</ul>
+</li>
+<li data-marpit-fragment="7">Code Review</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="3" data-marpit-fragments="5" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="3" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="large-programs">Large Programs</h1>
+<p>As your programs get larger, the organization of the code becomes increasingly important. It is generally good practice to:</p>
+<ul>
+<li data-marpit-fragment="1">Split code into multiple folders and files</li>
+<li data-marpit-fragment="2">Group related functionality</li>
+<li data-marpit-fragment="3">Separate code with distinct features</li>
+<li data-marpit-fragment="4"><em>Encapsulate</em> implementation details</li>
+<li data-marpit-fragment="5"><em>Modularize</em> your program</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="4" data-marpit-fragments="4" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="4" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="module-system">Module System</h1>
+<p>Rust implements a number of organizational features, collectively referred to as the <em>module system</em>.</p>
+<ul>
+<li data-marpit-fragment="1"><strong>Packages</strong>: A Cargo feature that lets you build, test, and share crates</li>
+<li data-marpit-fragment="2"><strong>Crates</strong>: A tree of modules that produces a library or executable</li>
+<li data-marpit-fragment="3"><strong>Modules</strong>: Lets you control the organization, scope, and privacy of paths</li>
+<li data-marpit-fragment="4"><strong>Paths</strong>: A way of naming an item, such as a struct, function, or module</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="5" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="5" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="packages-and-crates"><strong>Packages and Crates</strong></h1>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="6" data-marpit-fragments="5" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="6" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="crate">Crate</h1>
+<p>A <em>crate</em> is the smallest amount of code that the Rust compiler considers at a time.</p>
+<ul>
+<li data-marpit-fragment="1">The equivalent in C/C++ is a <em>compilation unit</em></li>
+<li data-marpit-fragment="2">Running <code>rustc</code> on a single file also builds a crate</li>
+<li data-marpit-fragment="3">Crates contain modules
+<ul>
+<li data-marpit-fragment="4">Modules can be defined in other files</li>
+<li data-marpit-fragment="5">Paths allow modules to refer to other modules</li>
+</ul>
+</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="7" data-marpit-fragments="7" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="7" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="crate-1">Crate</h1>
+<p>There are two types of crates: <strong>binary</strong> crates and <strong>library</strong> crates.</p>
+<ul>
+<li data-marpit-fragment="1">A binary crate can be compiled to an executable
+<ul>
+<li data-marpit-fragment="2">Contains a <code>main</code> function</li>
+<li data-marpit-fragment="3">Examples include command-line utilities or servers</li>
+</ul>
+</li>
+<li data-marpit-fragment="4">A library crate has no <code>main</code> function, and does not compile to an executable
+<ul>
+<li data-marpit-fragment="5">Defines functionality intended to be shared with multiple projects</li>
+</ul>
+</li>
+<li data-marpit-fragment="6">Each crate also has a file referred to as the <em>crate root</em>
+<ul>
+<li data-marpit-fragment="7"><em>The Rust compiler looks at this file first, and it is also the root module of the crate (more on modules later!)</em></li>
+</ul>
+</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="8" data-marpit-fragments="3" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="8" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="package">Package</h1>
+<p>A package is a bundle of one or more crates.</p>
+<ul>
+<li data-marpit-fragment="1">A package is defined by a <code>Cargo.toml</code> file at the root of your directory
+<ul>
+<li data-marpit-fragment="2"><code>Cargo.toml</code> describes how to build all of the crates</li>
+</ul>
+</li>
+<li data-marpit-fragment="3">A package can contain <strong>any number of</strong> binary crates, but <strong>at most one</strong> library crate</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="9" data-marpit-fragments="3" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="9" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="cargo-new"><code>cargo new</code></h1>
+<p>Let's walk through what happens when we create a package with <code>cargo new</code>.</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-sh">$ cargo new my-project
+     Created binary (application) `my-project` package
+
+$ <span class="hljs-built_in">ls</span> my-project
+Cargo.toml
+src
+
+$ <span class="hljs-built_in">ls</span> my-project/src
+main.rs
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">Creates a new package called <code>my-project</code></li>
+<li data-marpit-fragment="2">Creates a <code>src/main.rs</code> file that prints <code>&quot;Hello, world!&quot;</code></li>
+<li data-marpit-fragment="3">Creates a <code>Cargo.toml</code> in the root directory</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="10" data-marpit-fragments="4" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="10" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="cargotoml"><code>Cargo.toml</code></h1>
+<p>Let's take a look inside the <code>Cargo.toml</code>.</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-toml"><span class="hljs-section">[package]</span>
+<span class="hljs-attr">name</span> = <span class="hljs-string">&quot;my-project&quot;</span>
+<span class="hljs-attr">version</span> = <span class="hljs-string">&quot;0.1.0&quot;</span>
+<span class="hljs-attr">edition</span> = <span class="hljs-string">&quot;2024&quot;</span>
+
+<span class="hljs-section">[dependencies]</span>
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">File written in <code>toml</code>, a file format for configuration files</li>
+<li data-marpit-fragment="2">Notice how there is no explicit mention of <code>src/main.rs</code></li>
+<li data-marpit-fragment="3">Cargo follows the convention that <code>src/main.rs</code> is the root of a <em>binary</em> crate</li>
+<li data-marpit-fragment="4">Similarly, a <code>src/lib.rs</code> file is the root of a <em>library</em> crate</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="11" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="11" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="example-cargo">Example: <code>cargo</code></h1>
+<p>Cargo is itself a Rust package that ships with installations of Rust!</p>
+<ul>
+<li data-marpit-fragment="1">Contains the binary crate that compiles to the executable <code>cargo</code></li>
+<li data-marpit-fragment="2">Contains a library crate that the <code>cargo</code> binary depends on</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="12" data-marpit-fragments="5" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="12" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="aside-package-vs-project-vs-program">Aside: Package vs Project vs Program</h1>
+<ul>
+<li data-marpit-fragment="1">&quot;Package&quot; is the only term of these three with a formal definition in Rust</li>
+<li data-marpit-fragment="2">&quot;Project&quot; is a very overloaded term
+<ul>
+<li data-marpit-fragment="3">More meaningful in the context of an <em>IDE</em></li>
+</ul>
+</li>
+<li data-marpit-fragment="4">&quot;Program&quot;
+<ul>
+<li data-marpit-fragment="5">Ask the mathematicians ¯\<em>(ツ)</em>/¯</li>
+</ul>
+</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="13" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="13" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="modules"><strong>Modules</strong></h1>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="14" data-marpit-fragments="5" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="14" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="modules-1">Modules</h1>
+<p><em>Modules</em> let us organize code within a crate for readability and easy reuse.</p>
+<ul>
+<li data-marpit-fragment="1">Modules are collections of <em>items</em>
+<ul>
+<li data-marpit-fragment="2">Items are functions, structs, traits, etc.</li>
+</ul>
+</li>
+<li data-marpit-fragment="3">Allows us to control the privacy of items</li>
+<li data-marpit-fragment="4">Mitigates namespace collisions</li>
+<li data-marpit-fragment="5">Here is a <a href="https://doc.rust-lang.org/book/ch07-02-defining-modules-to-control-scope-and-privacy.html">cheat sheet</a> from the Rust Book!</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="15" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="15" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="root-module">Root Module</h1>
+<p>The root module is in our <code>main.rs</code> (for a binary crate) or <code>lib.rs</code> (for a library crate).</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-sh">$ cargo new restaurant
+</code></pre>
+<h6 id="srcmainrs">src/main.rs</h6>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;Hello, world!&quot;</span>);
+}
+</code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="16" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="16" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="declaring-modules">Declaring Modules</h1>
+<p>We can declare a new module with the keyword <code>mod</code>.</p>
+<h6 id="srcmainrs-1">src/main.rs</h6>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;Hello, World!&quot;</span>);
+}
+
+<span class="hljs-keyword">mod</span> kitchen {
+    <span class="hljs-comment">// `cook` is defined in the module `kitchen`</span>
+    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">cook</span>() {
+        <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;I&#x27;m cooking&quot;</span>);
+    }
+}
+</code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="17" data-marpit-fragments="1" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="17" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="using-modules">Using Modules</h1>
+<p>To use items outside of a module, we must declare them as <code>pub</code>.</p>
+<h6 id="srcmainrs-2">src/main.rs</h6>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    kitchen::<span class="hljs-title function_ invoke__">cook</span>();
+}
+
+<span class="hljs-keyword">mod</span> kitchen {
+    <span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">cook</span>() { <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;I&#x27;m cooking&quot;</span>); }
+
+    <span class="hljs-comment">// Only items internal to the `kitchen` should be able to access this</span>
+    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">examine_ingredients</span>() {}
+}
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">By default, all module items are private in Rust</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="18" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="18" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="declaring-submodules">Declaring Submodules</h1>
+<p>We can declare submodules inside of other modules.</p>
+<h6 id="srcmainrs-3">src/main.rs</h6>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    kitchen::stove::<span class="hljs-title function_ invoke__">cook</span>();
+}
+
+<span class="hljs-keyword">mod</span> kitchen {
+    <span class="hljs-keyword">pub</span> <span class="hljs-keyword">mod</span> stove {
+        <span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">cook</span>() { <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;I&#x27;m cooking&quot;</span>); }
+    }
+}
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">Submodules also have to be declared as <code>pub mod</code> to be accessible</li>
+<li data-marpit-fragment="2">The module system is a tree, just like a file system</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="19" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="19" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="modules-as-files">Modules as Files</h1>
+<p>In addition to declaring modules <em>within</em> files, creating a file named <code>module_name.rs</code> declares a corresponding module named <code>module_name</code>.</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-sh">src
+├── module_name.rs
+└── main.rs
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">Allows us to represent our module structure in the file system</li>
+<li data-marpit-fragment="2">Let's try moving the <code>kitchen</code> module to its own file!</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="20" data-marpit-fragments="1" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="20" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="modules-as-files-1">Modules as Files</h1>
+<h6 id="srcmainrs-4">src/main.rs</h6>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">mod</span> kitchen; <span class="hljs-comment">// The compiler will look for `kitchen.rs`</span>
+
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    kitchen::stove::<span class="hljs-title function_ invoke__">cook</span>();
+}
+</code></pre>
+<h6 id="srckitchenrs">src/kitchen.rs</h6>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">pub</span> <span class="hljs-keyword">mod</span> stove {
+    <span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">cook</span>() { <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;I&#x27;m cooking&quot;</span>); }
+}
+
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">examine_ingredients</span>() {}
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">What about moving the <code>stove</code> submodule to its own file as well?</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="21" data-marpit-fragments="1" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="21" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="submodules-as-files">Submodules as Files</h1>
+<p>We can move the <code>stove</code> submodule into a file  <code>src/kitchen/stove.rs</code> to indicate that <code>stove</code> is a submodule of <code>kitchen</code>.</p>
+<h6 id="srckitchenrs-1">src/kitchen.rs</h6>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">pub</span> <span class="hljs-keyword">mod</span> stove; <span class="hljs-comment">// note this still has to be `pub`</span>
+
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">examine_ingredients</span>() {}
+</code></pre>
+<h6 id="srckitchenstovers">src/kitchen/stove.rs</h6>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">cook</span>() {
+    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;I&#x27;m cooking&quot;</span>);
+}
+</code></pre>
+<ul>
+<li data-marpit-fragment="1"><code>main.rs</code> is unchanged (omitted for slide real estate)</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="22" data-marpit-fragments="1" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="22" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="alternate-submodule-file-naming">Alternate Submodule File Naming</h1>
+<p>We could also replace <code>src/kitchen.rs</code> with <code>src/kitchen/mod.rs</code>.</p>
+<h6 id="srckitchenmodrs">src/kitchen/mod.rs</h6>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">pub</span> <span class="hljs-keyword">mod</span> stove;
+
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">examine_ingredients</span>() {}
+</code></pre>
+<h6 id="srckitchenstovers-1">src/kitchen/stove.rs</h6>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">cook</span>() {
+    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;I&#x27;m cooking&quot;</span>);
+}
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">The only difference is in which file the <code>kitchen</code> module is defined</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="23" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="23" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="alternate-submodule-file-naming-1">Alternate Submodule File Naming</h1>
+<p>In terms of Rust's module system, these two file trees are (essentially) identical.</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-sh">src
+├── kitchen
+│  └── stove.rs
+├── kitchen.rs
+└── main.rs
+</code></pre>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-sh">src
+├── kitchen
+│  ├── mod.rs
+│  └── stove.rs
+└── main.rs
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">This is a stylistic choice that each instructor has a very strong opinion on
+<ul>
+<li data-marpit-fragment="2">Ask at your own peril...</li>
+</ul>
+</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="24" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="24" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="file-structure-comparison-choice-1">File Structure Comparison: Choice 1</h1>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-sh">src
+├── bathroom
+│  ├── mod.rs
+│  ├── sink.rs
+│  └── toilet.rs
+├── dining_room
+│  ├── guests.rs
+│  ├── mod.rs
+│  ├── seats.rs
+│  └── tables.rs
+├── garden
+│  ├── dirt.rs
+│  ├── mod.rs
+│  ├── plants.rs
+│  └── water.rs
+├── kitchen
+│  ├── dish_washer.rs
+│  ├── mod.rs
+│  ├── oven.rs
+│  └── stove.rs
+└── lib.rs
+</code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="25" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="25" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="file-structure-comparison-choice-2">File Structure Comparison: Choice 2</h1>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-sh">src
+├── bathroom
+│  ├── sink.rs
+│  └── toilet.rs
+├── dining_room
+│  ├── guests.rs
+│  ├── seats.rs
+│  └── tables.rs
+├── garden
+│  ├── dirt.rs
+│  ├── plants.rs
+│  └── water.rs
+├── kitchen
+│  ├── dish_washer.rs
+│  ├── oven.rs
+│  └── stove.rs
+├── bathroom.rs
+├── dining_room.rs
+├── kitchen.rs
+├── garden.rs
+└── lib.rs
+</code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="26" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="26" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="file-structure-comparison">File Structure Comparison</h1>
+<p>Consistency with surrounding codebase is <em><strong>always</strong></em> most important!</p>
+<p>See discussions:</p>
+<ul>
+<li><a href="https://users.rust-lang.org/t/module-mod-rs-or-module-rs/122653">Rust Users Forum</a></li>
+<li><a href="https://internals.rust-lang.org/t/the-module-scheme-module-rs-file-module-folder-instead-of-just-module-mod-rs-introduced-by-the-2018-edition-maybe-a-little-bit-more-confusing/21977/17?u=zirconium-n">Rust Internals Forum</a></li>
+<li><a href="https://www.reddit.com/r/rust/comments/18pytwt/noob_question_foomodrs_vs_foors_foo_for_module/">Reddit</a></li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="27" data-marpit-fragments="1" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="27" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="the-module-tree-visualized">The Module Tree, Visualized</h1>
+<p>Even with our file system changes, the module tree stays the same!</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">crate</span> restaurant
+├── <span class="hljs-keyword">mod</span> kitchen: <span class="hljs-title function_ invoke__">pub</span>(<span class="hljs-keyword">crate</span>)
+│   ├── <span class="hljs-keyword">fn</span> <span class="hljs-title function_">examine_ingredients</span>: <span class="hljs-title function_ invoke__">pub</span>(<span class="hljs-keyword">self</span>)
+│   └── <span class="hljs-keyword">mod</span> stove: <span class="hljs-keyword">pub</span>
+│       └── <span class="hljs-keyword">fn</span> <span class="hljs-title function_">cook</span>: <span class="hljs-keyword">pub</span>
+└── <span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>: <span class="hljs-title function_ invoke__">pub</span>(<span class="hljs-keyword">crate</span>)
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">We can customize our file structure without changing any behavior!</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="28" data-marpit-fragments="3" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="28" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="module-paths">Module Paths</h1>
+<p>To use any item in a module, we need to know its <em>path</em>, just like a filesystem.</p>
+<p>There are two types of paths:</p>
+<ul>
+<li data-marpit-fragment="1">An <em>absolute path</em> is the full path starting from the crate root</li>
+<li data-marpit-fragment="2">A <em>relative path</em> starts from the current module and use <code>self</code>, <code>super</code>, or an identifier in the current module</li>
+<li data-marpit-fragment="3">Components of paths are separated by double colons (<code>::</code>)</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="29" data-marpit-fragments="4" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="29" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="paths-for-referring-to-modules">Paths for Referring to Modules</h1>
+<p>You may have noticed a path from the previous sequence:</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust">kitchen::stove::<span class="hljs-title function_ invoke__">cook</span>();
+</code></pre>
+<p>This is saying:</p>
+<ul>
+<li data-marpit-fragment="1">In the module <code>kitchen</code>
+<ul>
+<li data-marpit-fragment="2">In the submodule <code>stove</code>
+<ul>
+<li data-marpit-fragment="3">Call the function <code>cook</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li data-marpit-fragment="4">This is a path relative to the current module (in this case, the root)</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="30" data-marpit-fragments="1" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="30" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="using-paths">Using Paths</h1>
+<h6 id="srcmainrs-5">src/main.rs</h6>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">mod</span> kitchen;
+
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    kitchen::stove::<span class="hljs-title function_ invoke__">cook</span>();
+}
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">Not too hard to write...</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="31" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="31" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="using-verbose-paths">Using Verbose Paths</h1>
+<p>What if we had a deeper module tree?</p>
+<h6 id="srcmainrs-6">src/main.rs</h6>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    kitchen::stove::stovetop::burner::gas::gasknob::pot::<span class="hljs-title function_ invoke__">cook</span>();
+    kitchen::stove::stovetop::burner::gas::gasknob::pot::<span class="hljs-title function_ invoke__">cook</span>();
+    kitchen::stove::stovetop::burner::gas::gasknob::pot::<span class="hljs-title function_ invoke__">cook</span>();
+}
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">A lot more verbose...
+<ul>
+<li data-marpit-fragment="2">Especially if we need to write this multiple times</li>
+</ul>
+</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="32" data-marpit-fragments="1" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="32" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="the-use-keyword">The <code>use</code> Keyword</h1>
+<p>We can bring paths into scope with the <code>use</code> keyword.</p>
+<h6 id="srcmainrs-7">src/main.rs</h6>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">mod</span> kitchen;
+
+<span class="hljs-keyword">use</span> kitchen::stove::stovetop::burner::gas::gasknob::pot;
+
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    pot::<span class="hljs-title function_ invoke__">cook</span>();
+    pot::<span class="hljs-title function_ invoke__">cook</span>();
+    pot::<span class="hljs-title function_ invoke__">cook</span>();
+}
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">It is idiomatic to <code>use</code> up to the <em>parent</em> of a function, rather than the function item itself</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="33" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="33" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="more-use-syntax">More <code>use</code> Syntax</h1>
+<p>We can also import items from the Rust standard library (<code>std</code>).</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">use</span> std::collections::HashMap;
+<span class="hljs-keyword">use</span> std::io::Bytes;
+<span class="hljs-keyword">use</span> std::io::Write;
+</code></pre>
+<ul>
+<li data-marpit-fragment="1"><code>HashMap</code> and <code>Bytes</code> are structs, and <code>Write</code> is a trait</li>
+<li data-marpit-fragment="2">It is idiomatic to import structs, enums, traits, etc. directly</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="34" data-marpit-fragments="3" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="34" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="more-use-syntax-1">More <code>use</code> Syntax</h1>
+<p>We can combine those 2 <code>std::io</code> imports into one statement:</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">use</span> std::collections::HashMap;
+<span class="hljs-keyword">use</span> std::io::{Bytes, Write};
+
+<span class="hljs-keyword">use</span> std::io::*; <span class="hljs-comment">// Also possible!</span>
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">You could also write <code>use std::io::*</code> to bring in everything from the <code>std::io</code> module (including <code>Bytes</code> and <code>Write</code>)
+<ul>
+<li data-marpit-fragment="2">Called the &quot;glob operator&quot;</li>
+<li data-marpit-fragment="3">Generally not recommended since it clutters the namespace</li>
+</ul>
+</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="35" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="35" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="aside-binary-and-library-crate-paths">Aside: Binary and Library Crate Paths</h1>
+<p>In the past examples, we were using a binary crate (<code>src/main.rs</code>). All the same principles apply to using a library crate.</p>
+<p>However, if you use <em>both</em> a binary <em>and</em> a library crate, things are slightly different.</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-sh">src
+├── kitchen
+│  ├── mod.rs
+│  └── stove.rs
+├── lib.rs &lt;- What happens when we add this?
+└── main.rs
+</code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="36" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="36" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="aside-binary-and-library-crate-paths-1">Aside: Binary and Library Crate Paths</h1>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code>src
+├── kitchen
+│  ├── mod.rs
+│  └── stove.rs
+├── lib.rs
+└── main.rs (wants to call functions from lib.rs)
+</code></pre>
+<p>Typically when you have both a binary and library crate in the same package, you want to use functions and types defined in <code>lib.rs</code> from <code>main.rs</code>.</p>
+<ul>
+<li data-marpit-fragment="1">If you have both a <code>main.rs</code> file and a <code>lib.rs</code> file, <em>both</em> are crate roots</li>
+<li data-marpit-fragment="2">So how can we get items from a separate module tree?</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="37" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="37" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="accessing-library-from-binary">Accessing Library from Binary</h1>
+<p>Let's try to refactor our previous example:</p>
+<h6 id="restaurantsrclibrs">restaurant/src/lib.rs</h6>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">pub</span> <span class="hljs-keyword">mod</span> kitchen; <span class="hljs-comment">// Now marked `pub`!</span>
+</code></pre>
+<h6 id="restaurantsrcmainrs">restaurant/src/main.rs</h6>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    ???::kitchen::stove::<span class="hljs-title function_ invoke__">cook</span>();
+}
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">All files in <code>src/kitchen</code> remain unchanged</li>
+<li data-marpit-fragment="2">What do we put in <code>???</code>?</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="38" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="38" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="accessing-library-from-binary-1">Accessing Library from Binary</h1>
+<p>We treat our library crate as an <em>external</em> crate, with the same name as our package.</p>
+<h6 id="restaurantsrcmainrs-1">restaurant/src/main.rs</h6>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    restaurant::kitchen::stove::<span class="hljs-title function_ invoke__">cook</span>();
+}
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">Similar to how you would treat <code>std</code> as an external crate</li>
+<li data-marpit-fragment="2">We'll talk about external crates more next week!</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="39" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="39" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="the-super-keyword">The <code>super</code> Keyword</h1>
+<p>We can also construct relative paths that begin in the parent module with <code>super</code>.</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">crate</span> restaurant
+├── <span class="hljs-keyword">mod</span> kitchen: <span class="hljs-title function_ invoke__">pub</span>(<span class="hljs-keyword">crate</span>)
+│   ├── <span class="hljs-keyword">fn</span> <span class="hljs-title function_">examine_ingredients</span>: <span class="hljs-title function_ invoke__">pub</span>(<span class="hljs-keyword">self</span>)
+│   └── <span class="hljs-keyword">mod</span> stove: <span class="hljs-keyword">pub</span>
+│       └── <span class="hljs-keyword">fn</span> <span class="hljs-title function_">cook</span>: <span class="hljs-keyword">pub</span>
+└── <span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>: <span class="hljs-title function_ invoke__">pub</span>(<span class="hljs-keyword">crate</span>)
+</code></pre>
+<h6 id="srckitchenstovers-2">src/kitchen/stove.rs</h6>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">cook</span>() {
+    super::<span class="hljs-title function_ invoke__">examine_ingredients</span>(); <span class="hljs-comment">// Make sure you do this before cooking!</span>
+    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;I&#x27;m cooking&quot;</span>);
+}
+</code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="40" data-marpit-fragments="3" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="40" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="privacy">Privacy</h1>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">mod</span> kitchen: <span class="hljs-title function_ invoke__">pub</span>(<span class="hljs-keyword">crate</span>)
+├── <span class="hljs-keyword">fn</span> <span class="hljs-title function_">examine_ingredients</span>: <span class="hljs-title function_ invoke__">pub</span>(<span class="hljs-keyword">self</span>)
+└── <span class="hljs-keyword">mod</span> stove: <span class="hljs-keyword">pub</span>
+    └── <span class="hljs-keyword">fn</span> <span class="hljs-title function_">cook</span>: <span class="hljs-keyword">pub</span>
+</code></pre>
+<h6 id="srckitchenstovers-3">src/kitchen/stove.rs</h6>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">cook</span>() {
+    super::<span class="hljs-title function_ invoke__">examine_ingredients</span>(); <span class="hljs-comment">// Make sure you do this before cooking!</span>
+    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;I&#x27;m cooking&quot;</span>);
+}
+</code></pre>
+<ul>
+<li data-marpit-fragment="1"><code>examine_ingredients</code> does not need to be public in this case</li>
+<li data-marpit-fragment="2"><code>stove</code> can access anything in its parent module <code>kitchen</code>
+<ul>
+<li data-marpit-fragment="3">Note that privacy only applies upwards, not downwards</li>
+</ul>
+</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="41" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="41" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="privacy-of-types">Privacy of Types</h1>
+<p>We can also use <code>pub</code> to designate structs and enums as public.</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">pub</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">Breakfast</span> {
+    <span class="hljs-keyword">pub</span> toast: <span class="hljs-type">String</span>,
+    seasonal_fruit: <span class="hljs-type">String</span>,
+}
+
+<span class="hljs-keyword">pub</span> <span class="hljs-keyword">enum</span> <span class="hljs-title class_">Appetizer</span> {
+    Soup,
+    Salad,
+}
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">We can mark specific fields of structs public, allowing direct access</li>
+<li data-marpit-fragment="2">If an enum is public, so are its variants!</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="42" data-marpit-fragments="5" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="42" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="recap-modules">Recap: Modules</h1>
+<ul>
+<li data-marpit-fragment="1">You can split a package into crates
+<ul>
+<li data-marpit-fragment="2">Crates into modules
+<ul>
+<li data-marpit-fragment="3">Modules into items</li>
+</ul>
+</li>
+</ul>
+</li>
+<li data-marpit-fragment="4">You can refer to items defined in other modules with paths</li>
+<li data-marpit-fragment="5">All module components are private by default, unless you mark them as <code>pub</code></li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="43" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="43" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="testing"><strong>Testing</strong></h1>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="44" data-marpit-fragments="1" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="44" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="testing-1">Testing</h1>
+<blockquote>
+<p>Program testing can be a very effective way to show the presence of bugs, but it is hopelessly inadequate for showing their absence.</p>
+</blockquote>
+<ul>
+<li data-marpit-fragment="1">Edsger W. Dijkstra, <em>The Humble Programmer</em></li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="45" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="45" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="testing-2">Testing</h1>
+<p>Correctness of a program is complex and not easy to prove.</p>
+<ul>
+<li data-marpit-fragment="1">Rust's type system helps with this, but it certainly cannot catch everything</li>
+<li data-marpit-fragment="2">Rust includes a testing framework for this reason!</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="46" data-marpit-fragments="3" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="46" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="what-is-a-test">What is a Test?</h1>
+<p>Generally we want to perform at least 3 actions when running a test:</p>
+<ol>
+<li data-marpit-fragment="1">Set up needed data or state</li>
+<li data-marpit-fragment="2">Run the evaluated code</li>
+<li data-marpit-fragment="3">Determine if the results are as expected</li>
+</ol>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="47" data-marpit-fragments="1" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="47" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="writing-tests">Writing Tests</h1>
+<p>In Rust, a test is a function annotated with the <code>#[test]</code> attribute.</p>
+<h6 id="srclibrs">src/lib.rs</h6>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-meta">#[cfg(test)]</span>
+<span class="hljs-keyword">mod</span> tests {
+    <span class="hljs-meta">#[test]</span>
+    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">it_works</span>() {
+        <span class="hljs-keyword">let</span> <span class="hljs-variable">result</span> = <span class="hljs-number">2</span> + <span class="hljs-number">2</span>;
+        <span class="hljs-built_in">assert_eq!</span>(result, <span class="hljs-number">4</span>);
+    }
+}
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">After running <code>cargo new adder --lib</code>, this code will be in <code>src/lib.rs</code></li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="48" data-marpit-fragments="4" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="48" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="writing-tests-1">Writing Tests</h1>
+<p>Let's break this down.</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-meta">#[test]</span>
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">it_works</span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-variable">result</span> = <span class="hljs-number">2</span> + <span class="hljs-number">2</span>;
+    <span class="hljs-built_in">assert_eq!</span>(result, <span class="hljs-number">4</span>);
+}
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">The <code>#[test]</code> attribute indicates that this is a test function</li>
+<li data-marpit-fragment="2">We set up the value <code>result</code> by adding <code>2 + 2</code></li>
+<li data-marpit-fragment="3">We use the <code>assert_eq!</code> macro to assert that <code>result</code> is correct</li>
+<li data-marpit-fragment="4">We don't need to return anything, since not panicking <em>is</em> the test!</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="49" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="49" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="running-tests">Running Tests</h1>
+<p>We run tests with <code>cargo test</code>.</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code>$ cargo test
+   Compiling adder v0.1.0 (file:///projects/adder)
+    Finished test [unoptimized + debuginfo] target(s) in 0.57s
+     Running unittests src/lib.rs (target/debug/deps/adder-92948b65e88960b4)
+
+running 1 test
+test tests::it_works ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests adder
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+</code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="50" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="50" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="running-tests-1">Running Tests</h1>
+<p>Let's break down the output of <code>cargo test</code>.</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code>running 1 test
+test tests::it_works ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">We see <code>test result: ok</code>, meaning we have passed all the tests</li>
+<li data-marpit-fragment="2">In this case, only 1 test has run, and it has passed</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="51" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="51" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="documentation-tests">Documentation Tests</h1>
+<p>You may have seen something similar to this in your homework:</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code>   Doc-tests adder
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">All of the code examples in documentation comments are treated as tests!</li>
+<li data-marpit-fragment="2">This is useful for keeping your docs and code in sync</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="52" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="52" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="cfgtest"><code>#[cfg(test)]</code></h1>
+<p>You may have also noticed this <code>#[cfg(test)]</code> attribute in your homework:</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-meta">#[cfg(test)]</span>
+<span class="hljs-keyword">mod</span> tests {
+    <span class="hljs-comment">// &lt;-- snip --&gt;</span>
+}
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">This tells the compiler that this entire module should <em>only</em> be used for testing</li>
+<li data-marpit-fragment="2">The compiler ignores this module when compiling with <code>cargo build</code></li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="53" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="53" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="writing-better-tests">Writing Better Tests</h1>
+<p>Let's try and be more creative with our tests.</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-meta">#[cfg(test)]</span>
+<span class="hljs-keyword">mod</span> tests {
+    <span class="hljs-meta">#[test]</span>
+    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">exploration</span>() {
+        <span class="hljs-built_in">assert_eq!</span>(<span class="hljs-number">2</span> + <span class="hljs-number">2</span>, <span class="hljs-number">4</span>);
+    }
+
+    <span class="hljs-meta">#[test]</span>
+    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">another</span>() {
+        <span class="hljs-built_in">panic!</span>(<span class="hljs-string">&quot;Make this test fail&quot;</span>);
+    }
+}
+</code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="54" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="54" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="failing-tests">Failing Tests</h1>
+<p>Let's see what we get:</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code>$ cargo test
+
+running 2 tests
+test tests::another ... FAILED
+test tests::exploration ... ok
+
+failures:
+
+---- tests::another stdout ----
+thread 'tests::another' panicked at 'Make this test fail', src/lib.rs:10:9
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+failures:
+    tests::another
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`
+</code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="55" data-marpit-fragments="1" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="55" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="failing-tests-1">Failing Tests</h1>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code>failures:
+
+---- tests::another stdout ----
+thread 'tests::another' panicked at 'Make this test fail', src/lib.rs:10:9
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    tests::another
+
+test result: FAILED. 1 passed; 1 failed; &lt;-- snip --&gt;
+
+error: test failed, to rerun pass `--lib`
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">Instead of <code>ok</code>, we get that the result of <code>tests:another</code> is <code>FAILED</code></li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="56" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="56" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="checking-results">Checking Results</h1>
+<p>We can use the <code>assert!</code> macro to ensure that something is <code>true</code>.</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-meta">#[test]</span>
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">larger_can_hold_smaller</span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-variable">larger</span> = Rectangle {
+        width: <span class="hljs-number">8</span>,
+        height: <span class="hljs-number">7</span>,
+    };
+    <span class="hljs-keyword">let</span> <span class="hljs-variable">smaller</span> = Rectangle {
+        width: <span class="hljs-number">5</span>,
+        height: <span class="hljs-number">1</span>,
+    };
+
+    <span class="hljs-built_in">assert!</span>(larger.<span class="hljs-title function_ invoke__">can_hold</span>(&amp;smaller));
+}
+</code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="57" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="57" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="testing-equality">Testing Equality</h1>
+<p>Rust also provides a way to check equality between two values with <code>assert_eq!</code>.</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-meta">#[test]</span>
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">it_adds_two</span>() {
+    <span class="hljs-built_in">assert_eq!</span>(<span class="hljs-number">4</span>, <span class="hljs-title function_ invoke__">add_two</span>(<span class="hljs-number">2</span>));
+}
+</code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="58" data-marpit-fragments="1" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="58" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="testing-equality-1">Testing Equality</h1>
+<p>If <code>add_two(2)</code> somehow evaluated to <code>5</code>, we would get this output:</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code>---- tests::it_adds_two stdout ----
+thread 'tests::it_adds_two' panicked at 'assertion failed: `(left == right)`
+  left: `4`,
+ right: `5`', src/lib.rs:11:9
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">You get a nicer error message from <code>assert_eq!</code> versus using<br />
+<code>assert!(left == right)</code></li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="59" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="59" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="custom-error-messages">Custom Error Messages</h1>
+<p>We can also write our own custom error messages in <code>assert!</code></p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-meta">#[test]</span>
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">greeting_contains_name</span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-variable">result</span> = <span class="hljs-title function_ invoke__">greeting</span>(<span class="hljs-string">&quot;Carol&quot;</span>);
+    <span class="hljs-built_in">assert!</span>(
+        result.<span class="hljs-title function_ invoke__">contains</span>(<span class="hljs-string">&quot;Carol&quot;</span>),
+        <span class="hljs-string">&quot;Greeting did not contain name, value was `{}`&quot;</span>,
+        result
+    );
+}
+</code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="60" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="60" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="should_panic"><code>#[should_panic]</code></h1>
+<p>If you want test that your code (correctly) panics, you can use <code>#[should_panic]</code>:</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-meta">#[test]</span>
+<span class="hljs-meta">#[should_panic(expected = <span class="hljs-string">&quot;not less than 100&quot;</span>)]</span>
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">greater_than_100</span>() {
+    <span class="hljs-title function_ invoke__">this_better_be_less_than_100</span>(<span class="hljs-number">200</span>);
+}
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">The <code>#[should_panic]</code> attribute says that this test expects a panic!</li>
+<li data-marpit-fragment="2">Adding the <code>expected = &quot;...&quot;</code> means we want a specific panic message</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="61" data-marpit-fragments="3" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="61" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="controlling-test-behavior">Controlling Test Behavior</h1>
+<p><code>cargo test</code> compiles your code in test mode and runs the resulting test binary.</p>
+<ul>
+<li data-marpit-fragment="1">By default, it will run all tests in parallel and will not print any test output</li>
+<li data-marpit-fragment="2">Other testing configurations are available</li>
+<li data-marpit-fragment="3"><em>Note that you can run <code>cargo test --help</code>, and <code>cargo test -- --help</code> for help</em></li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="62" data-marpit-fragments="4" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="62" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="running-tests-in-parallel">Running Tests in Parallel</h1>
+<ul>
+<li data-marpit-fragment="1">Suppose each of your tests all write to some shared file on disk
+<ul>
+<li data-marpit-fragment="2">All tests write to a file <code>output.txt</code></li>
+</ul>
+</li>
+<li data-marpit-fragment="3">They later assert that the file still contains that data they wrote</li>
+<li data-marpit-fragment="4">You probably don't want all of them to run at the same time!</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="63" data-marpit-fragments="1" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="63" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="test-threads">Test Threads</h1>
+<p>By default, Rust will run all tests in parallel, on different threads.</p>
+<p>You can use <code>--test-threads</code> flag to control the number of threads.</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code>$ cargo test -- --test-threads=1
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">Only use this when you actually need to, otherwise the benefits of running tests in parallel are lost</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="64" data-marpit-fragments="4" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="64" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="showing-output">Showing Output</h1>
+<p>If you want to prevent the capturing of output, you can use <code>--no-capture</code>.</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code>$ cargo test -- --no-capture
+$ cargo test -- --show-output
+</code></pre>
+<ul>
+<li data-marpit-fragment="1"><code>--no-capture</code> will print the full output of every test that is run</li>
+<li data-marpit-fragment="2">Using <code>--show-output</code> will only show the output of passed tests</li>
+<li data-marpit-fragment="3">With 1000 tests, this might become verbose!</li>
+<li data-marpit-fragment="4">If only we could only run a subset of the tests...</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="65" data-marpit-fragments="1" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="65" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="running-tests-by-name">Running Tests by Name</h1>
+<p>Let's say we have 1000 tests, but only one is named <code>one_hundred</code>. We can run <code>cargo test one_hundred</code> to only run  the <code>one_hundred</code> test.</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code>$ cargo test one_hundred
+
+running 1 test
+test tests::one_hundred ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 999 filtered out; finished in 0.00s
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">Notice how there are now <code>999 filtered out</code> tests, these were the tests that didn't match the name <code>one_hundred</code></li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="66" data-marpit-fragments="1" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="66" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="multiple-tests-by-name">Multiple Tests by Name</h1>
+<p><code>cargo</code> will actually find <em>any</em> test that matches the name you passed in.</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code>$ cargo test add
+
+running 2 tests
+test tests::add_three_and_two ... ok
+test tests::add_two_and_two ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 998 filtered out; finished in 0.00s
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">If you want an exact name, use <code>cargo test {name} -- --exact</code></li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="67" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="67" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="ignoring-tests">Ignoring Tests</h1>
+<p>We can ignore some tests by using the <code>#[ignore]</code> attribute.</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-meta">#[test]</span>
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">it_works</span>() {
+    <span class="hljs-built_in">assert_eq!</span>(<span class="hljs-number">2</span> + <span class="hljs-number">2</span>, <span class="hljs-number">4</span>);
+}
+
+<span class="hljs-meta">#[test]</span>
+<span class="hljs-meta">#[ignore]</span>
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">expensive_test</span>() {
+    <span class="hljs-comment">// code that takes an hour to run</span>
+}
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">If we want to run only ignored tests, we can run <code>cargo test -- --ignored</code></li>
+<li data-marpit-fragment="2">If we want to run all tests, we can run <code>cargo test -- --include-ignored</code></li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="68" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="68" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="test-organization">Test Organization</h1>
+<p>The Rust community thinks about tests in terms of two main categories: unit tests and integration tests.</p>
+<ul>
+<li data-marpit-fragment="1">Unit tests test each unit of code in isolation</li>
+<li data-marpit-fragment="2">Integration tests are external to your library, testing the entire system</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="69" data-marpit-fragments="3" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="69" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="unit-tests">Unit Tests</h1>
+<p>Unit tests are almost always contained within the <code>src</code> directory.</p>
+<ul>
+<li data-marpit-fragment="1">The convention is to create submodules named <code>tests</code> for every module you want to test
+<ul>
+<li data-marpit-fragment="2">Make sure to add the attribute <code>#[cfg(test)]</code>!</li>
+</ul>
+</li>
+<li data-marpit-fragment="3">Prevents deploying extra code in production that is only used for testing</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="70" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="70" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="testing-private-functions">Testing Private Functions</h1>
+<p>You can unit test private functions as long as the module the test lives in has access to it.</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">add_two</span>(a: <span class="hljs-type">i32</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">i32</span> { <span class="hljs-title function_ invoke__">internal_adder</span>(a, <span class="hljs-number">2</span>) }
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">internal_adder</span>(a: <span class="hljs-type">i32</span>, b: <span class="hljs-type">i32</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">i32</span> { a + b }
+
+<span class="hljs-meta">#[cfg(test)]</span>
+<span class="hljs-keyword">mod</span> tests {
+    <span class="hljs-keyword">use</span> super::*;
+
+    <span class="hljs-meta">#[test]</span>
+    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">internal</span>() {
+        <span class="hljs-built_in">assert_eq!</span>(<span class="hljs-number">4</span>, <span class="hljs-title function_ invoke__">internal_adder</span>(<span class="hljs-number">2</span>, <span class="hljs-number">2</span>));
+    }
+}
+</code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="71" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="71" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="integration-tests">Integration Tests</h1>
+<p>Integration Tests use your library in the same way any other code would.</p>
+<ul>
+<li data-marpit-fragment="1">They can only call functions that are part of your library's public API</li>
+<li data-marpit-fragment="2">Useful for testing if many parts of your library work together correctly</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="72" data-marpit-fragments="1" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="72" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="integration-tests-1">Integration Tests</h1>
+<p>To create integration tests, we need a <code>tests</code> directory.</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code>adder
+├── Cargo.lock
+├── Cargo.toml
+├── src
+│   └── lib.rs
+└── tests
+    └── integration_test.rs
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">Notice how <code>tests</code> is <em>outside</em> of <code>src</code></li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="73" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="73" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="integration-tests-2">Integration Tests</h1>
+<p>Since we are now external to our own library, we must import everything as if it were a 3rd-party crate.</p>
+<h6 id="addertestsintegration_testrs">adder/tests/integration_test.rs</h6>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-rust"><span class="hljs-keyword">use</span> adder;
+
+<span class="hljs-meta">#[test]</span>
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">it_adds_two</span>() {
+    <span class="hljs-built_in">assert_eq!</span>(<span class="hljs-number">4</span>, adder::<span class="hljs-title function_ invoke__">add_two</span>(<span class="hljs-number">2</span>));
+}
+</code></pre>
+<ul>
+<li data-marpit-fragment="1">Note that we don't need to annotate anything with <code>#[cfg(tests)]</code></li>
+<li data-marpit-fragment="2">We run test files using the name of the integration test file, like<br />
+<code>cargo test --test integration_test</code></li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="74" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="74" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="integration-tests-for-binary-crates">Integration Tests for Binary Crates</h1>
+<p>We cannot create integration tests for a binary crate.</p>
+<ul>
+<li data-marpit-fragment="1">Binary crates do not expose their functions</li>
+<li data-marpit-fragment="2">This is why most binary crates will be paired with a library crate, even if they don't <em>need</em> to expose any functions</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="75" data-marpit-fragments="3" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="75" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="recap-testing">Recap: Testing</h1>
+<ul>
+<li data-marpit-fragment="1">Unit tests examine parts of a library in isolation and can test private implementation details</li>
+<li data-marpit-fragment="2">Integration tests check that many parts of the library work together correctly</li>
+<li data-marpit-fragment="3">Even though Rust can prevent some kinds of bugs, tests are still extremely important to reduce logical bugs!</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="76" data-marpit-fragments="4" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="76" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="homework-6">Homework 6</h1>
+<p>Homework 6 is going to be very different from the previous 5 homeworks!</p>
+<ul>
+<li data-marpit-fragment="1">You will be following a tutorial from the <a href="https://doc.rust-lang.org/book/ch12-00-an-io-project.html">official Rust Book</a> (our textbook)</li>
+<li data-marpit-fragment="2">Your task is to implement a miniature version of the popular CLI tool <code>grep</code></li>
+<li data-marpit-fragment="3">We are not giving you <em>any</em> starter code</li>
+<li data-marpit-fragment="4">Your assignment will be manually graded on both correctness and robustness</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="77" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="77" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="code-review"><strong>Code Review</strong></h1>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="78" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="78" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="code">Code?</h1>
+<ul>
+<li data-marpit-fragment="1">What is code?</li>
+<li data-marpit-fragment="2">Why do we write code?</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="79" data-marpit-fragments="7" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="79" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="typical-assignment-workflow">Typical Assignment Workflow</h1>
+<p>You are probably very used to <a href="https://www.cs.cmu.edu/~410/lectures/L01c_Boot.pdf">this workflow</a>:</p>
+<ul>
+<li data-marpit-fragment="1">Get assignment handout and code outline</li>
+<li data-marpit-fragment="2">&quot;Fill in the blanks&quot;</li>
+<li data-marpit-fragment="3">Debug a few things</li>
+<li data-marpit-fragment="4">Graded by autograder</li>
+<li data-marpit-fragment="5"><strong>All done!</strong>
+<ul>
+<li data-marpit-fragment="6">Never use this code again</li>
+<li data-marpit-fragment="7">Delete it at the end of the semester</li>
+</ul>
+</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="80" data-marpit-fragments="6" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="80" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="real-world-workflow">Real World Workflow</h1>
+<p>In the real world, the workflow is almost the complete opposite:</p>
+<ul>
+<li data-marpit-fragment="1">Jump into a <em>massive</em> codebase</li>
+<li data-marpit-fragment="2">Figure out where the &quot;blanks&quot; are to add new features</li>
+<li data-marpit-fragment="3">Read and debug someone else's code</li>
+<li data-marpit-fragment="4">Run tests that may not be exhaustive</li>
+<li data-marpit-fragment="5"><strong>Not done!</strong>
+<ul>
+<li data-marpit-fragment="6">Your users and your team are constantly &quot;grading&quot; your work</li>
+</ul>
+</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="81" data-marpit-fragments="5" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="81" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="homework-6-grading">Homework 6 Grading</h1>
+<p>We will be manually grading for both correctness and <em>robustness</em>.</p>
+<ul>
+<li data-marpit-fragment="1">By following the tutorial, you will easily get 100% on this assignment</li>
+<li data-marpit-fragment="2">We will give you up to 100 extra credit points for style, quality, documentation, and robustness</li>
+<li data-marpit-fragment="3">If you simply copy and paste everything from the tutorial, <em>you may get around 15/100 extra credit points</em>
+<ul>
+<li data-marpit-fragment="4">We are going to be super strict!
+<ul>
+<li data-marpit-fragment="5">Adopting the 15-410 (CMU Operating Systems) mindset</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="82" data-marpit-fragments="4" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="82" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="style">Style</h1>
+<p>You can follow the <a href="https://doc.rust-lang.org/nightly/style-guide/">Rust style guide</a> for advice.</p>
+<p>Key things:</p>
+<ul>
+<li data-marpit-fragment="1">Format your code correctly with <code>cargo fmt</code></li>
+<li data-marpit-fragment="2">Run the <code>cargo clippy</code> linter</li>
+<li data-marpit-fragment="3">Make sure comments are styled correctly</li>
+<li data-marpit-fragment="4">Use descriptive naming</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="83" data-marpit-fragments="6" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="83" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="documentation">Documentation</h1>
+<p>Most of the extra credit grade will come from your documentation.</p>
+<ul>
+<li data-marpit-fragment="1">Documentation should be <a href="https://rust-lang.github.io/api-guidelines/documentation.html">descriptive and succinct</a>
+<ul>
+<li data-marpit-fragment="2">For this assignment, explain the features of your executable!</li>
+</ul>
+</li>
+<li data-marpit-fragment="3">For fellow developers, explain:
+<ul>
+<li data-marpit-fragment="4">Design</li>
+<li data-marpit-fragment="5">Architecture / structure of your code</li>
+<li data-marpit-fragment="6"><em>Why</em> does this function need to exist?</li>
+</ul>
+</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="84" data-marpit-fragments="6" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="84" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="errors">Errors</h1>
+<p>There are <a href="https://www.cs.cmu.edu/~410/lectures/L10a_Errors.pdf">3 types of errors</a>:</p>
+<ul>
+<li data-marpit-fragment="1">Hmm...
+<ul>
+<li data-marpit-fragment="2">Try to <em>resolve</em></li>
+</ul>
+</li>
+<li data-marpit-fragment="3">That's not right...
+<ul>
+<li data-marpit-fragment="4">Try to <em>report</em></li>
+</ul>
+</li>
+<li data-marpit-fragment="5">Uh-oh
+<ul>
+<li data-marpit-fragment="6">Try to help the developer find the <em>fatal</em> problem faster</li>
+</ul>
+</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="85" data-marpit-fragments="2" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="85" style="--paginate:true;--theme:rust;" data-marpit-pagination-total="86">
+<h1 id="testing-3">Testing</h1>
+<p>Write good tests!</p>
+<ul>
+<li data-marpit-fragment="1">1000 tests testing the same thing?</li>
+<li data-marpit-fragment="2">5 tests testing edge cases?</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="86" style="--paginate:true;--theme:rust;--marpit-advanced-background-split:30%;" data-marpit-pagination-total="86" data-marpit-advanced-background="background" data-marpit-advanced-background-split="right"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;../images/ferris_happy.svg&quot;);background-size:80%;"></figure></div></section></foreignObject><foreignObject width="70%" height="720"><section id="86" data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="86" style="--paginate:true;--theme:rust;--marpit-advanced-background-split:30%;" data-marpit-pagination-total="86" data-marpit-advanced-background="content" data-marpit-advanced-background-split="right">
+<h1 id="next-lecture-crates-closures-and-iterators">Next Lecture: Crates, Closures, and Iterators</h1>
+
+<p>Thanks for coming!</p>
+<br />
+<p><em>Slides created by:</em><br />
+Connor Tsui, Benjamin Owad, David Rudo,<br />
+Jessica Ruan, Fiona Fisher, Terrance Chen</p>
+</section>
+<script>!function(){"use strict";const t={h1:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"1"},style:"display: block; font-size: 2em; margin-block-start: 0.67em; margin-block-end: 0.67em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h2:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"2"},style:"display: block; font-size: 1.5em; margin-block-start: 0.83em; margin-block-end: 0.83em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h3:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"3"},style:"display: block; font-size: 1.17em; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h4:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"4"},style:"display: block; margin-block-start: 1.33em; margin-block-end: 1.33em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h5:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"5"},style:"display: block; font-size: 0.83em; margin-block-start: 1.67em; margin-block-end: 1.67em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h6:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"6"},style:"display: block; font-size: 0.67em; margin-block-start: 2.33em; margin-block-end: 2.33em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},span:{proto:()=>HTMLSpanElement},pre:{proto:()=>HTMLElement,style:"display: block; font-family: monospace; white-space: pre; margin: 1em 0; --marp-auto-scaling-white-space: pre;"}},e="data-marp-auto-scaling-wrapper",i="data-marp-auto-scaling-svg",n="data-marp-auto-scaling-container";class s extends HTMLElement{container;containerSize;containerObserver;svg;svgComputedStyle;svgPreserveAspectRatio="xMinYMid meet";wrapper;wrapperSize;wrapperObserver;constructor(){super();const t=t=>([e])=>{const{width:i,height:n}=e.contentRect;this[t]={width:i,height:n},this.updateSVGRect()};this.attachShadow({mode:"open"}),this.containerObserver=new ResizeObserver(t("containerSize")),this.wrapperObserver=new ResizeObserver(((...e)=>{t("wrapperSize")(...e),this.flushSvgDisplay()}))}static get observedAttributes(){return["data-downscale-only"]}connectedCallback(){this.shadowRoot.innerHTML=`\n<style>\n  svg[${i}] { display: block; width: 100%; height: auto; vertical-align: top; }\n  span[${n}] { display: table; white-space: var(--marp-auto-scaling-white-space, nowrap); width: max-content; }\n</style>\n<div ${e}>\n  <svg part="svg" ${i}>\n    <foreignObject><span ${n}><slot></slot></span></foreignObject>\n  </svg>\n</div>\n    `.split(/\n\s*/).join(""),this.wrapper=this.shadowRoot.querySelector(`div[${e}]`)??void 0;const t=this.svg;this.svg=this.wrapper?.querySelector(`svg[${i}]`)??void 0,this.svg!==t&&(this.svgComputedStyle=this.svg?window.getComputedStyle(this.svg):void 0),this.container=this.svg?.querySelector(`span[${n}]`)??void 0,this.observe()}disconnectedCallback(){this.svg=void 0,this.svgComputedStyle=void 0,this.wrapper=void 0,this.container=void 0,this.observe()}attributeChangedCallback(){this.observe()}flushSvgDisplay(){const{svg:t}=this;t&&(t.style.display="inline",requestAnimationFrame((()=>{t.style.display=""})))}observe(){this.containerObserver.disconnect(),this.wrapperObserver.disconnect(),this.wrapper&&this.wrapperObserver.observe(this.wrapper),this.container&&this.containerObserver.observe(this.container),this.svgComputedStyle&&this.observeSVGStyle(this.svgComputedStyle)}observeSVGStyle(t){const e=()=>{const i=(()=>{const e=t.getPropertyValue("--preserve-aspect-ratio");if(e)return e.trim();return`x${(({textAlign:t,direction:e})=>{if(t.endsWith("left"))return"Min";if(t.endsWith("right"))return"Max";if("start"===t||"end"===t){let i="rtl"===e;return"end"===t&&(i=!i),i?"Max":"Min"}return"Mid"})(t)}YMid meet`})();i!==this.svgPreserveAspectRatio&&(this.svgPreserveAspectRatio=i,this.updateSVGRect()),t===this.svgComputedStyle&&requestAnimationFrame(e)};e()}updateSVGRect(){let t=Math.ceil(this.containerSize?.width??0);const e=Math.ceil(this.containerSize?.height??0);void 0!==this.dataset.downscaleOnly&&(t=Math.max(t,this.wrapperSize?.width??0));const i=this.svg?.querySelector(":scope > foreignObject");if(i?.setAttribute("width",`${t}`),i?.setAttribute("height",`${e}`),this.svg&&(this.svg.setAttribute("viewBox",`0 0 ${t} ${e}`),this.svg.setAttribute("preserveAspectRatio",this.svgPreserveAspectRatio),this.svg.style.height=t<=0||e<=0?"0":""),this.container){const t=this.svgPreserveAspectRatio.toLowerCase();this.container.style.marginLeft=t.startsWith("xmid")||t.startsWith("xmax")?"auto":"0",this.container.style.marginRight=t.startsWith("xmi")?"auto":"0"}}}const r=(t,{attrs:e={},style:i})=>class extends t{constructor(...t){super(...t);for(const[t,i]of Object.entries(e))this.hasAttribute(t)||this.setAttribute(t,i);this._shadow()}static get observedAttributes(){return["data-auto-scaling"]}connectedCallback(){this._update()}attributeChangedCallback(){this._update()}_shadow(){if(!this.shadowRoot)try{this.attachShadow({mode:"open"})}catch(t){if(!(t instanceof Error&&"NotSupportedError"===t.name))throw t}return this.shadowRoot}_update(){const t=this._shadow();if(t){const e=i?`<style>:host { ${i} }</style>`:"";let n="<slot></slot>";const{autoScaling:s}=this.dataset;if(void 0!==s){n=`<marp-auto-scaling exportparts="svg:auto-scaling" ${"downscale-only"===s?"data-downscale-only":""}>${n}</marp-auto-scaling>`}t.innerHTML=e+n}}};let o;const a=Symbol();let l;const c="marpitSVGPolyfill:setZoomFactor,",d=Symbol(),h=Symbol();const g=()=>{const t="Apple Computer, Inc."===navigator.vendor,e=t?[u]:[],i={then:e=>(t?(async()=>{if(void 0===l){const t=document.createElement("canvas");t.width=10,t.height=10;const e=t.getContext("2d"),i=new Image(10,10),n=new Promise((t=>{i.addEventListener("load",(()=>t()))}));i.crossOrigin="anonymous",i.src="data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2210%22%20height%3D%2210%22%20viewBox%3D%220%200%201%201%22%3E%3CforeignObject%20width%3D%221%22%20height%3D%221%22%20requiredExtensions%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxhtml%22%3E%3Cdiv%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxhtml%22%20style%3D%22width%3A%201px%3B%20height%3A%201px%3B%20background%3A%20red%3B%20position%3A%20relative%22%3E%3C%2Fdiv%3E%3C%2FforeignObject%3E%3C%2Fsvg%3E",await n,e.drawImage(i,0,0),l=e.getImageData(5,5,1,1).data[3]<128}return l})().then((t=>{null==e||e(t?[u]:[])})):null==e||e([]),i)};return Object.assign(e,i)};let p,m;function u(t){const e="object"==typeof t&&t.target||document,i="object"==typeof t?t.zoom:t;window[h]||(Object.defineProperty(window,h,{configurable:!0,value:!0}),document.body.style.zoom=1.0001,document.body.offsetHeight,document.body.style.zoom=1,window.addEventListener("message",(({data:t,origin:e})=>{if(e===window.origin)try{if(t&&"string"==typeof t&&t.startsWith(c)){const[,e]=t.split(","),i=Number.parseFloat(e);Number.isNaN(i)||(m=i)}}catch(t){console.error(t)}})));let n=!1;Array.from(e.querySelectorAll("svg[data-marpit-svg]"),(t=>{var e,s,r,o;t.style.transform||(t.style.transform="translateZ(0)");const a=i||m||t.currentScale||1;p!==a&&(p=a,n=a);const l=t.getBoundingClientRect(),{length:c}=t.children;for(let i=0;i<c;i+=1){const n=t.children[i];if(n.getScreenCTM){const t=n.getScreenCTM();if(t){const i=null!==(s=null===(e=n.x)||void 0===e?void 0:e.baseVal.value)&&void 0!==s?s:0,c=null!==(o=null===(r=n.y)||void 0===r?void 0:r.baseVal.value)&&void 0!==o?o:0,d=n.children.length;for(let e=0;e<d;e+=1){const s=n.children[e];if("SECTION"===s.tagName){const{style:e}=s;e.transformOrigin||(e.transformOrigin=`${-i}px ${-c}px`),e.transform=`scale(${a}) matrix(${t.a}, ${t.b}, ${t.c}, ${t.d}, ${t.e-l.left}, ${t.f-l.top}) translateZ(0.0001px)`;break}}}}}})),!1!==n&&Array.from(e.querySelectorAll("iframe"),(({contentWindow:t})=>{null==t||t.postMessage(`${c}${n}`,"null"===window.origin?"*":window.origin)}))}function v({once:t=!1,target:e=document}={}){const i=function(t=document){if(t[d])return t[d];let e=!0;const i=()=>{e=!1,delete t[d]};Object.defineProperty(t,d,{configurable:!0,value:i});let n=[],s=!1;(async()=>{try{n=await g()}finally{s=!0}})();const r=()=>{for(const e of n)e({target:t});s&&0===n.length||e&&window.requestAnimationFrame(r)};return r(),i}(e);return t?(i(),()=>{}):i}p=1,m=void 0;const w=Symbol(),b=(e=document)=>{if("undefined"==typeof window)throw new Error("Marp Core's browser script is valid only in browser context.");if(((e=document)=>{const i=window[a];i||customElements.define("marp-auto-scaling",s);for(const n of Object.keys(t)){const s=`marp-${n}`,a=t[n].proto();(o??(o=!!document.createElement("div",{is:"marp-auto-scaling"}).outerHTML.startsWith("<div is"),o))&&a!==HTMLElement?i||customElements.define(s,r(a,{style:t[n].style}),{extends:n}):(i||customElements.define(s,r(HTMLElement,t[n])),e.querySelectorAll(`${n}[is="${s}"]`).forEach((t=>{t.outerHTML=t.outerHTML.replace(new RegExp(`^<${n}`,"i"),`<${s}`).replace(new RegExp(`</${n}>$`,"i"),`</${s}>`)})))}window[a]=!0})(e),e[w])return e[w];const i=v({target:e}),n=()=>{i(),delete e[w]},l=Object.assign(n,{cleanup:n,update:()=>b(e)});return Object.defineProperty(e,w,{configurable:!0,value:l}),l},y=document.currentScript;b(y?y.getRootNode():document)}();
+</script></foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section data-paginate="true" data-theme="rust" lang="en-US" data-marpit-pagination="86" style="" data-marpit-pagination-total="86" data-marpit-advanced-background="pseudo" data-marpit-advanced-background-split="right"></section></foreignObject></svg></div><div class="bespoke-marp-note" data-index="3" tabindex="0"><p>Paths are what we've been calling namespaces this whole time basically</p></div><div class="bespoke-marp-note" data-index="5" tabindex="0"><p>You've probably never heard of compilation units---
+Think of it as adding a .o to your makefile. When you add it,
+the preprocessor will logically pull in all of the headers. The
+source c/cxx/cpp file and all of its dependents is one compilation unit.
+
+Explicitly state that in C/C++ each file is treated as a compilation unit, and that is NOT the case in Rust</p></div><div class="bespoke-marp-note" data-index="8" tabindex="0"><p>Some stuff has been elided for slide real estate...</p></div><div class="bespoke-marp-note" data-index="9" tabindex="0"><p>When we say root, we mean root _modules_
+
+You _can_ have both lib.rs and main.rs</p></div><div class="bespoke-marp-note" data-index="10" tabindex="0"><p>It is typical for binary executables in Rust to be thin wrappers around library crates as that makes
+testing the program easier</p></div><div class="bespoke-marp-note" data-index="13" tabindex="0"><p>Generally, a mechanism for encapsulation</p></div><div class="bespoke-marp-note" data-index="14" tabindex="0"><p>Root module is implicit here, no `mod` keyword</p></div><div class="bespoke-marp-note" data-index="16" tabindex="0"><p>In fact, generally everything is private by default in Rust
+Private by default is very very good</p></div><div class="bespoke-marp-note" data-index="22" tabindex="0"><p>Connor and also Terrance prefers `mod.rs`
+Ben prefers named modules files
+David is partial to both based on the project
+
+Connor also believes that `mod.rs` files should only have docs, `use` statements, and type definitions.</p></div><div class="bespoke-marp-note" data-index="25" tabindex="0"><p>You don't really need to explain the discussions in here, leave it for interested students to find out on their own</p></div><div class="bespoke-marp-note" data-index="26" tabindex="0"><p>Emphasize that the above module tree can be represented by many different file structures</p></div><div class="bespoke-marp-note" data-index="31" tabindex="0"><p>It is idiomatic to do it this way, because it makes it clear that the item is not locally defined</p></div><div class="bespoke-marp-note" data-index="32" tabindex="0"><p>The reason this is idiomatic is because you generally shouldn't have multiple different types that
+are named exactly the same, and types are usually defined elsewhere anyways.
+If you do have types that have identical names, you need to bring in the types relative to their
+parent modules anyways.</p></div><div class="bespoke-marp-note" data-index="33" tabindex="0"><p>The one case where glob is idiomatic is with the `use some_crate::prelude::*` pattern.
+
+It does not actually increase compilation cost, it just makes dealing with namespace collisions
+annoying, so it is good practice to only bring in what you actually need.</p></div><div class="bespoke-marp-note" data-index="35" tabindex="0"><p>Since both are crate roots, there are technically 2 separate module trees</p></div><div class="bespoke-marp-note" data-index="36" tabindex="0"><p>Make sure the mention that the paths are now relative to outside package directory now</p></div><div class="bespoke-marp-note" data-index="39" tabindex="0"><p>Child modules can access anything the parent module has access to, but not the other way around.
+This means child modules can also access any public item in a sibling module.</p></div><div class="bespoke-marp-note" data-index="49" tabindex="0"><p>Disregard the &quot;0 measured&quot;, that is for nightly benchmarking</p></div><div class="bespoke-marp-note" data-index="55" tabindex="0"><p>Say in lecture that `assert!` will give you a nicer error message
+than if you did an if check and panic manually</p></div><div class="bespoke-marp-note" data-index="59" tabindex="0"><p>We don't actually use this anymore... But it is helpful to know nonetheless</p><p>---
+
+
+# Using `Result&lt;T, E&gt;` in Tests
+
+We can also use `Result` in our tests.
+
+```rust
+#[test]
+fn it_works() -&gt; Result&lt;(), String&gt; {
+    if 2 + 2 == 4 {
+        Ok(())
+    } else {
+        Err(String::from(&quot;two plus two does not equal four&quot;))
+    }
+}
+```
+
+* The test will now fail if it returns `Err`
+* Allows convenient usage of `?` in tests
+* Note that you can't use `#[should_panic]` on tests that return a `Result`</p></div><div class="bespoke-marp-note" data-index="60" tabindex="0"><p>Formally, &quot;capturing&quot; means that is won't display any `println!`s or error messages.
+
+Parallel stuff leads into next slide...</p></div><div class="bespoke-marp-note" data-index="62" tabindex="0"><p>Take 15-445 if you want to do this safely without losing parallelism!</p></div><div class="bespoke-marp-note" data-index="63" tabindex="0"><p>Note that `cargo test` will show the print output of failed tests</p></div><div class="bespoke-marp-note" data-index="66" tabindex="0"><p>This can be useful if you have super specialized tests that need to run by themselves</p></div><div class="bespoke-marp-note" data-index="68" tabindex="0"><p>Make sure to briefly re-explain what `#[cfg(test)]` is just in case</p></div><div class="bespoke-marp-note" data-index="69" tabindex="0"><p>In terms of privacy, unit tests are treated just as any other function.
+
+Excerpt from the Rust Book:
+
+There's debate within the testing community about whether or not private functions should be tested directly, and other languages make it difficult or impossible to test private functions.
+
+If you don't think private functions should be tested, there's nothing in Rust that will compel you to do so.</p></div><div class="bespoke-marp-note" data-index="70" tabindex="0"><p>By &quot;any other code&quot; we mean code that was written by some other developer using
+your library crate.
+
+The main difference here is that integration tests don't have any access to private items</p></div><div class="bespoke-marp-note" data-index="73" tabindex="0"><p># Submodules in Integration Tests
+
+As you add more integration tests, you might want to make more files in the `tests` directory to help organize them.
+
+* You can use submodules in the `tests` directory just like in the `src` directory
+
+
+// Comment this below:
+You can treat the `tests` directory almost exactly the same as the `src` directory, and you can
+also use the alternate module file naming that we talked about earlier in the lecture.
+
+
+
+---
+
+
+# Submodules in Integration Tests
+
+Using the alternate naming convention with `common/mod.rs` tells Rust not to treat the `common` module as an integration test file.
+
+```
+├── Cargo.lock
+├── Cargo.toml
+├── src
+│   └── lib.rs
+└── tests
+    ├── common
+    │   └── mod.rs
+    └── integration_test.rs
+```
+
+
+---
+
+
+# Submodules in Integration Tests
+
+Here is an example of using `common` in an integration test:
+
+```
+└── tests
+    ├── common
+    │   └── mod.rs
+    └── integration_test.rs
+```
+
+```rust
+use adder;
+
+mod common;
+
+#[test]
+fn it_adds_two() {
+    common::setup();
+    assert_eq!(4, adder::add_two(2));
+}
+```
+
+
+---</p></div><div class="bespoke-marp-note" data-index="78" tabindex="0"><p>This slide is inspired very directly from 15-410's Boot Camp Slides, page 45</p></div><div class="bespoke-marp-note" data-index="80" tabindex="0"><p>A perfect 100 is basically the highest quality open source code.
+That is basically impossible to get in an hour...</p></div><div class="bespoke-marp-note" data-index="83" tabindex="0"><p>Taken directly from 15-410's Error's lecture, page 37
+We're being purposefully ambiguous here since there is not time to do an entire lecture on error handling
+
+Note that for the purposes of this assignment, the only type of error that should really happen is reportable errors,
+unless someone is adding a VERY interesting feature...</p></div><script>/*!! License: https://unpkg.com/@marp-team/marp-cli@4.2.3/lib/bespoke.js.LICENSE.txt */
+!function(){"use strict";function e(e){return e&&e.__esModule&&Object.prototype.hasOwnProperty.call(e,"default")?e.default:e}var t,n,r=(n||(n=1,t={from:function(e,t){var n,r=1===(e.parent||e).nodeType?e.parent||e:document.querySelector(e.parent||e),o=[].filter.call("string"==typeof e.slides?r.querySelectorAll(e.slides):e.slides||r.children,function(e){return"SCRIPT"!==e.nodeName}),a={},i=function(e,t){return(t=t||{}).index=o.indexOf(e),t.slide=e,t},s=function(e,t){a[e]=(a[e]||[]).filter(function(e){return e!==t})},c=function(e,t){return(a[e]||[]).reduce(function(e,n){return e&&!1!==n(t)},!0)},l=function(e,t){o[e]&&(n&&c("deactivate",i(n,t)),n=o[e],c("activate",i(n,t)))},d=function(e,t){var r=o.indexOf(n)+e;c(e>0?"next":"prev",i(n,t))&&l(r,t)},u={off:s,on:function(e,t){return(a[e]||(a[e]=[])).push(t),s.bind(null,e,t)},fire:c,slide:function(e,t){if(!arguments.length)return o.indexOf(n);c("slide",i(o[e],t))&&l(e,t)},next:d.bind(null,1),prev:d.bind(null,-1),parent:r,slides:o,destroy:function(e){c("destroy",i(n,e)),a={}}};return(t||[]).forEach(function(e){e(u)}),n||l(0),u}}),t),o=e(r);const a=document.body,i=(...e)=>history.replaceState(...e),s="",c="presenter",l="next",d=["",c,l],u="bespoke-marp-",f=`data-${u}`,m=(e,{protocol:t,host:n,pathname:r,hash:o}=location)=>{const a=e.toString();return`${t}//${n}${r}${a?"?":""}${a}${o}`},g=()=>a.dataset.bespokeView,p=e=>new URLSearchParams(location.search).get(e),v=(e,t={})=>{const n={location,setter:i,...t},r=new URLSearchParams(n.location.search);for(const t of Object.keys(e)){const n=e[t];"string"==typeof n?r.set(t,n):r.delete(t)}try{n.setter({...window.history.state??{}},"",m(r,n.location))}catch(e){console.error(e)}},h=(()=>{const e="bespoke-marp";try{return localStorage.setItem(e,e),localStorage.removeItem(e),!0}catch{return!1}})(),y=e=>{try{return localStorage.getItem(e)}catch{return null}},b=(e,t)=>{try{return localStorage.setItem(e,t),!0}catch{return!1}},w=e=>{try{return localStorage.removeItem(e),!0}catch{return!1}},x=(e,t)=>{const n="aria-hidden";t?e.setAttribute(n,"true"):e.removeAttribute(n)},k=e=>{e.parent.classList.add(`${u}parent`),e.slides.forEach(e=>e.classList.add(`${u}slide`)),e.on("activate",t=>{const n=`${u}active`,r=t.slide,o=r.classList,a=!o.contains(n);if(e.slides.forEach(e=>{e.classList.remove(n),x(e,!0)}),o.add(n),x(r,!1),a){const e=`${n}-ready`;o.add(e),document.body.clientHeight,o.remove(e)}})},$=e=>{let t=0,n=0;Object.defineProperty(e,"fragments",{enumerable:!0,value:e.slides.map(e=>[null,...e.querySelectorAll("[data-marpit-fragment]")])});const r=r=>void 0!==e.fragments[t][n+r],o=(r,o)=>{t=r,n=o,e.fragments.forEach((e,t)=>{e.forEach((e,n)=>{if(null==e)return;const a=t<r||t===r&&n<=o;e.setAttribute(`${f}fragment`,(a?"":"in")+"active");const i=`${f}current-fragment`;t===r&&n===o?e.setAttribute(i,"current"):e.removeAttribute(i)})}),e.fragmentIndex=o;const a={slide:e.slides[r],index:r,fragments:e.fragments[r],fragmentIndex:o};e.fire("fragment",a)};e.on("next",({fragment:a=!0})=>{if(a){if(r(1))return o(t,n+1),!1;const a=t+1;e.fragments[a]&&o(a,0)}else{const r=e.fragments[t].length;if(n+1<r)return o(t,r-1),!1;const a=e.fragments[t+1];a&&o(t+1,a.length-1)}}),e.on("prev",({fragment:a=!0})=>{if(r(-1)&&a)return o(t,n-1),!1;const i=t-1;e.fragments[i]&&o(i,e.fragments[i].length-1)}),e.on("slide",({index:t,fragment:n})=>{let r=0;if(void 0!==n){const o=e.fragments[t];if(o){const{length:e}=o;r=-1===n?e-1:Math.min(Math.max(n,0),e-1)}}o(t,r)}),o(0,0)},E=document,L=()=>!(!E.fullscreenEnabled&&!E.webkitFullscreenEnabled),S=()=>!(!E.fullscreenElement&&!E.webkitFullscreenElement),P=e=>{e.fullscreen=()=>{L()&&(async()=>{S()?(E.exitFullscreen||E.webkitExitFullscreen)?.call(E):((e=E.body)=>{(e.requestFullscreen||e.webkitRequestFullscreen)?.call(e)})()})()},document.addEventListener("keydown",t=>{"f"!==t.key&&"F11"!==t.key||t.altKey||t.ctrlKey||t.metaKey||!L()||(e.fullscreen(),t.preventDefault())})},_=`${u}inactive`,T=(e=2e3)=>({parent:t,fire:n})=>{const r=t.classList,o=e=>n(`marp-${e?"":"in"}active`);let a;const i=()=>{a&&clearTimeout(a),a=setTimeout(()=>{r.add(_),o()},e),r.contains(_)&&(r.remove(_),o(!0))};for(const e of["mousedown","mousemove","touchend"])document.addEventListener(e,i);setTimeout(i,0)},I=["AUDIO","BUTTON","INPUT","SELECT","TEXTAREA","VIDEO"],M=e=>{e.parent.addEventListener("keydown",e=>{if(!e.target)return;const t=e.target;(I.includes(t.nodeName)||"true"===t.contentEditable)&&e.stopPropagation()})},O=e=>{window.addEventListener("load",()=>{for(const t of e.slides){const e=t.querySelector("marp-auto-scaling, [data-auto-scaling], [data-marp-fitting]");t.setAttribute(`${f}load`,e?"":"hideable")}})},A=({interval:e=250}={})=>t=>{document.addEventListener("keydown",e=>{if(" "===e.key&&e.shiftKey)t.prev();else if("ArrowLeft"===e.key||"ArrowUp"===e.key||"PageUp"===e.key)t.prev({fragment:!e.shiftKey});else if(" "!==e.key||e.shiftKey)if("ArrowRight"===e.key||"ArrowDown"===e.key||"PageDown"===e.key)t.next({fragment:!e.shiftKey});else if("End"===e.key)t.slide(t.slides.length-1,{fragment:-1});else{if("Home"!==e.key)return;t.slide(0)}else t.next();e.preventDefault()});let n,r,o=0;t.parent.addEventListener("wheel",a=>{let i=!1;const s=(e,t)=>{e&&(i=i||((e,t)=>((e,t)=>{const n="X"===t?"Width":"Height";return e[`client${n}`]<e[`scroll${n}`]})(e,t)&&((e,t)=>{const{overflow:n}=e,r=e[`overflow${t}`];return"auto"===n||"scroll"===n||"auto"===r||"scroll"===r})(getComputedStyle(e),t))(e,t)),e?.parentElement&&s(e.parentElement,t)};if(0!==a.deltaX&&s(a.target,"X"),0!==a.deltaY&&s(a.target,"Y"),i)return;a.preventDefault();const c=Math.sqrt(a.deltaX**2+a.deltaY**2);if(void 0!==a.wheelDelta){if(void 0===a.webkitForce&&Math.abs(a.wheelDelta)<40)return;if(a.deltaMode===a.DOM_DELTA_PIXEL&&c<4)return}else if(a.deltaMode===a.DOM_DELTA_PIXEL&&c<12)return;r&&clearTimeout(r),r=setTimeout(()=>{n=0},e);const l=Date.now()-o<e,d=c<=n;if(n=c,l||d)return;let u;(a.deltaX>0||a.deltaY>0)&&(u="next"),(a.deltaX<0||a.deltaY<0)&&(u="prev"),u&&(t[u](),o=Date.now())})},C=(e=`.${u}osc`)=>{const t=document.querySelector(e);if(!t)return()=>{};const n=(e,n)=>{t.querySelectorAll(`[${f}osc=${JSON.stringify(e)}]`).forEach(n)};return L()||n("fullscreen",e=>e.style.display="none"),h||n("presenter",e=>{e.disabled=!0,e.title="Presenter view is disabled due to restricted localStorage."}),e=>{t.addEventListener("click",t=>{if(t.target instanceof HTMLElement){const{bespokeMarpOsc:n}=t.target.dataset;n&&t.target.blur();const r={fragment:!t.shiftKey};"next"===n?e.next(r):"prev"===n?e.prev(r):"fullscreen"===n?e?.fullscreen():"presenter"===n&&e.openPresenterView()}}),e.parent.appendChild(t),e.on("activate",({index:t})=>{n("page",n=>n.textContent=`Page ${t+1} of ${e.slides.length}`)}),e.on("fragment",({index:t,fragments:r,fragmentIndex:o})=>{n("prev",e=>e.disabled=0===t&&0===o),n("next",n=>n.disabled=t===e.slides.length-1&&o===r.length-1)}),e.on("marp-active",()=>x(t,!1)),e.on("marp-inactive",()=>x(t,!0)),L()&&(e=>{for(const t of["","webkit"])E.addEventListener(t+"fullscreenchange",e)})(()=>n("fullscreen",e=>e.classList.toggle("exit",L()&&S())))}},D=e=>{window.addEventListener("message",t=>{if(t.origin!==window.origin)return;const[n,r]=t.data.split(":");if("navigate"===n){const[t,n]=r.split(",");let o=Number.parseInt(t,10),a=Number.parseInt(n,10)+1;a>=e.fragments[o].length&&(o+=1,a=0),e.slide(o,{fragment:a})}})};var N,B,q,K,F,j,V,U={exports:{}},X=(N||(N=1,U.exports=(B=["area","base","br","col","command","embed","hr","img","input","keygen","link","meta","param","source","track","wbr"],q=function(e){return String(e).replace(/[&<>"']/g,function(e){return"&"+K[e]+";"})},K={"&":"amp","<":"lt",">":"gt",'"':"quot","'":"apos"},F="dangerouslySetInnerHTML",j={className:"class",htmlFor:"for"},V={},function(e,t){var n=[],r="";t=t||{};for(var o=arguments.length;o-- >2;)n.push(arguments[o]);if("function"==typeof e)return t.children=n.reverse(),e(t);if(e){if(r+="<"+e,t)for(var a in t)!1!==t[a]&&null!=t[a]&&a!==F&&(r+=" "+(j[a]?j[a]:q(a))+'="'+q(t[a])+'"');r+=">"}if(-1===B.indexOf(e)){if(t[F])r+=t[F].__html;else for(;n.length;){var i=n.pop();if(i)if(i.pop)for(var s=i.length;s--;)n.push(i[s]);else r+=!0===V[i]?i:q(i)}r+=e?"</"+e+">":""}return V[r]=!0,r})),U.exports),H=e(X);const R=({children:e})=>H(null,null,...e),W=`${u}presenter-`,J={container:`${W}container`,dragbar:`${W}dragbar-container`,next:`${W}next`,nextContainer:`${W}next-container`,noteContainer:`${W}note-container`,noteWrapper:`${W}note-wrapper`,noteButtons:`${W}note-buttons`,infoContainer:`${W}info-container`,infoPage:`${W}info-page`,infoPageText:`${W}info-page-text`,infoPagePrev:`${W}info-page-prev`,infoPageNext:`${W}info-page-next`,noteButtonsBigger:`${W}note-bigger`,noteButtonsSmaller:`${W}note-smaller`,infoTime:`${W}info-time`,infoTimer:`${W}info-timer`},Y=e=>{const{title:t}=document;document.title="[Presenter view]"+(t?` - ${t}`:"");const n={},r=e=>(n[e]=n[e]||document.querySelector(`.${e}`),n[e]);document.body.appendChild((e=>{const t=document.createElement("div");return t.className=J.container,t.appendChild(e),t.insertAdjacentHTML("beforeend",H(R,null,H("div",{class:J.nextContainer},H("iframe",{class:J.next,src:"?view=next"})),H("div",{class:J.dragbar}),H("div",{class:J.noteContainer},H("div",{class:J.noteWrapper}),H("div",{class:J.noteButtons},H("button",{class:J.noteButtonsSmaller,tabindex:"-1",title:"Smaller notes font size"},"Smaller notes font size"),H("button",{class:J.noteButtonsBigger,tabindex:"-1",title:"Bigger notes font size"},"Bigger notes font size"))),H("div",{class:J.infoContainer},H("div",{class:J.infoPage},H("button",{class:J.infoPagePrev,tabindex:"-1",title:"Previous"},"Previous"),H("span",{class:J.infoPageText}),H("button",{class:J.infoPageNext,tabindex:"-1",title:"Next"},"Next")),H("time",{class:J.infoTime,title:"Current time"}),H("time",{class:J.infoTimer,title:"Timer"})))),t})(e.parent)),(e=>{let t=!1;r(J.dragbar).addEventListener("mousedown",()=>{t=!0,r(J.dragbar).classList.add("active")}),window.addEventListener("mouseup",()=>{t=!1,r(J.dragbar).classList.remove("active")}),window.addEventListener("mousemove",e=>{if(!t)return;const n=e.clientX/document.documentElement.clientWidth*100;r(J.container).style.setProperty("--bespoke-marp-presenter-split-ratio",`${Math.max(0,Math.min(100,n))}%`)}),r(J.nextContainer).addEventListener("click",()=>e.next());const n=r(J.next),o=(a=n,(e,t)=>a.contentWindow?.postMessage(`navigate:${e},${t}`,"null"===window.origin?"*":window.origin));var a;n.addEventListener("load",()=>{r(J.nextContainer).classList.add("active"),o(e.slide(),e.fragmentIndex),e.on("fragment",({index:e,fragmentIndex:t})=>o(e,t))});const i=document.querySelectorAll(".bespoke-marp-note");i.forEach(e=>{e.addEventListener("keydown",e=>e.stopPropagation()),r(J.noteWrapper).appendChild(e)}),e.on("activate",()=>i.forEach(t=>t.classList.toggle("active",t.dataset.index==e.slide())));let s=0;const c=e=>{s=Math.max(-5,s+e),r(J.noteContainer).style.setProperty("--bespoke-marp-note-font-scale",(1.2**s).toFixed(4))},l=()=>c(1),d=()=>c(-1),u=r(J.noteButtonsBigger),f=r(J.noteButtonsSmaller);u.addEventListener("click",()=>{u.blur(),l()}),f.addEventListener("click",()=>{f.blur(),d()}),document.addEventListener("keydown",e=>{"+"===e.key&&l(),"-"===e.key&&d()},!0),e.on("activate",({index:t})=>{r(J.infoPageText).textContent=`${t+1} / ${e.slides.length}`});const m=r(J.infoPagePrev),g=r(J.infoPageNext);m.addEventListener("click",t=>{m.blur(),e.prev({fragment:!t.shiftKey})}),g.addEventListener("click",t=>{g.blur(),e.next({fragment:!t.shiftKey})}),e.on("fragment",({index:t,fragments:n,fragmentIndex:r})=>{m.disabled=0===t&&0===r,g.disabled=t===e.slides.length-1&&r===n.length-1});let p=new Date;const v=()=>{const e=new Date,t=e=>`${Math.floor(e)}`.padStart(2,"0"),n=e.getTime()-p.getTime(),o=t(n/1e3%60),a=t(n/1e3/60%60),i=t(n/36e5%24);r(J.infoTime).textContent=e.toLocaleTimeString(),r(J.infoTimer).textContent=`${i}:${a}:${o}`};v(),setInterval(v,250),r(J.infoTimer).addEventListener("click",()=>{p=new Date})})(e)},z=e=>{if(!(e=>e.syncKey&&"string"==typeof e.syncKey)(e))throw new Error("The current instance of Bespoke.js is invalid for Marp bespoke presenter plugin.");Object.defineProperties(e,{openPresenterView:{enumerable:!0,value:G},presenterUrl:{enumerable:!0,get:Q}}),h&&document.addEventListener("keydown",t=>{"p"!==t.key||t.altKey||t.ctrlKey||t.metaKey||(t.preventDefault(),e.openPresenterView())})};function G(){const{max:e,floor:t}=Math,n=e(t(.85*window.innerWidth),640),r=e(t(.85*window.innerHeight),360);return window.open(this.presenterUrl,W+this.syncKey,`width=${n},height=${r},menubar=no,toolbar=no`)}function Q(){const e=new URLSearchParams(location.search);return e.set("view","presenter"),e.set("sync",this.syncKey),m(e)}const Z=e=>{const t=g();return t===l&&e.appendChild(document.createElement("span")),{[s]:z,[c]:Y,[l]:D}[t]},ee=e=>{e.on("activate",t=>{document.querySelectorAll(".bespoke-progress-parent > .bespoke-progress-bar").forEach(n=>{n.style.flexBasis=100*t.index/(e.slides.length-1)+"%"})})},te=e=>{const t=Number.parseInt(e,10);return Number.isNaN(t)?null:t},ne=(e={})=>{const t={history:!0,...e};return e=>{let n=!0;const r=e=>{const t=n;try{return n=!0,e()}finally{n=t}},o=(t={fragment:!0})=>{let n=t.fragment?te(p("f")||""):null;((t,n)=>{const{min:r,max:o}=Math,{fragments:a,slides:i}=e,s=o(0,r(t,i.length-1)),c=o(0,r(n||0,a[s].length-1));s===e.slide()&&c===e.fragmentIndex||e.slide(s,{fragment:c})})((()=>{if(location.hash){const[t]=location.hash.slice(1).split(":~:");if(/^\d+$/.test(t))return(te(t)??1)-1;const r=document.getElementById(t)||document.querySelector(`a[name="${CSS.escape(t)}"]`);if(r){const{length:t}=e.slides;for(let o=0;o<t;o+=1)if(e.slides[o].contains(r)){const t=e.fragments?.[o],a=r.closest("[data-marpit-fragment]");if(t&&a){const e=t.indexOf(a);e>=0&&(n=e)}return o}}}return 0})(),n)};e.on("fragment",({index:e,fragmentIndex:r})=>{n||v({f:0===r||r.toString()},{location:{...location,hash:`#${e+1}`},setter:(...e)=>t.history?history.pushState(...e):history.replaceState(...e)})}),setTimeout(()=>{o(),window.addEventListener("hashchange",()=>r(()=>{o({fragment:!1}),v({f:void 0})})),window.addEventListener("popstate",()=>{n||r(()=>o())}),n=!1},0)}},re=(e={})=>{const t=e.key||window.history.state?.marpBespokeSyncKey||Math.random().toString(36).slice(2),n=`bespoke-marp-sync-${t}`;var r;r={marpBespokeSyncKey:t},v({},{setter:(e,...t)=>i({...e,...r},...t)});const o=()=>{const e=y(n);return e?JSON.parse(e):Object.create(null)},a=e=>{const t=o(),r={...t,...e(t)};return b(n,JSON.stringify(r)),r},s=()=>{window.removeEventListener("pageshow",s),a(e=>({reference:(e.reference||0)+1}))};return e=>{s(),Object.defineProperty(e,"syncKey",{value:t,enumerable:!0});let r=!0;setTimeout(()=>{e.on("fragment",e=>{r&&a(()=>({index:e.index,fragmentIndex:e.fragmentIndex}))})},0),window.addEventListener("storage",t=>{if(t.key===n&&t.oldValue&&t.newValue){const n=JSON.parse(t.oldValue),o=JSON.parse(t.newValue);if(n.index!==o.index||n.fragmentIndex!==o.fragmentIndex)try{r=!1,e.slide(o.index,{fragment:o.fragmentIndex,forSync:!0})}finally{r=!0}}});const i=()=>{const{reference:e}=o();void 0===e||e<=1?w(n):a(()=>({reference:e-1}))};window.addEventListener("pagehide",e=>{e.persisted&&window.addEventListener("pageshow",s),i()}),e.on("destroy",i)}},{PI:oe,abs:ae,sqrt:ie,atan2:se}=Math,ce={passive:!0},le=({slope:e=-.7,swipeThreshold:t=30}={})=>n=>{let r;const o=n.parent,a=e=>{const t=o.getBoundingClientRect();return{x:e.pageX-(t.left+t.right)/2,y:e.pageY-(t.top+t.bottom)/2}};o.addEventListener("touchstart",({touches:e})=>{r=1===e.length?a(e[0]):void 0},ce),o.addEventListener("touchmove",e=>{if(r)if(1===e.touches.length){e.preventDefault();const t=a(e.touches[0]),n=t.x-r.x,o=t.y-r.y;r.delta=ie(ae(n)**2+ae(o)**2),r.radian=se(n,o)}else r=void 0}),o.addEventListener("touchend",o=>{if(r){if(r.delta&&r.delta>=t&&r.radian){const t=(r.radian-e+oe)%(2*oe)-oe;n[t<0?"next":"prev"](),o.stopPropagation()}r=void 0}},ce)},de=new Map;de.clear(),de.set("none",{backward:{both:void 0,incoming:void 0,outgoing:void 0},forward:{both:void 0,incoming:void 0,outgoing:void 0}});const ue={both:"",outgoing:"outgoing-",incoming:"incoming-"},fe={forward:"",backward:"-backward"},me=e=>`--marp-bespoke-transition-animation-${e}`,ge=e=>`--marp-transition-${e}`,pe=me("name"),ve=me("duration"),he=e=>new Promise(t=>{const n={},r=document.createElement("div"),o=e=>{r.remove(),t(e)};r.addEventListener("animationstart",()=>o(n)),Object.assign(r.style,{animationName:e,animationDuration:"1s",animationFillMode:"both",animationPlayState:"paused",position:"absolute",pointerEvents:"none"}),document.body.appendChild(r);const a=getComputedStyle(r).getPropertyValue(ge("duration"));a&&Number.parseFloat(a)>=0&&(n.defaultDuration=a),((e,t)=>{requestAnimationFrame(()=>{e.style.animationPlayState="running",requestAnimationFrame(()=>t(void 0))})})(r,o)}),ye=async e=>de.has(e)?de.get(e):(e=>{const t={},n=[];for(const[r,o]of Object.entries(ue))for(const[a,i]of Object.entries(fe)){const s=`marp-${o}transition${i}-${e}`;n.push(he(s).then(e=>{t[a]=t[a]||{},t[a][r]=e?{...e,name:s}:void 0}))}return Promise.all(n).then(()=>t)})(e).then(t=>(de.set(e,t),t)),be=e=>Object.values(e).flatMap(Object.values).every(e=>!e),we=(e,{type:t,backward:n})=>{const r=e[n?"backward":"forward"],o=(()=>{const e=r[t],n=e=>({[pe]:e.name});if(e)return n(e);if(r.both){const e=n(r.both);return"incoming"===t&&(e[me("direction")]="reverse"),e}})();return!o&&n?we(e,{type:t,backward:!1}):o||{[pe]:"__bespoke_marp_transition_no_animation__"}},xe=e=>{if(e)try{const t=JSON.parse(e);if((e=>{if("object"!=typeof e)return!1;const t=e;return"string"==typeof t.name&&(void 0===t.duration||"string"==typeof t.duration)})(t))return t}catch{}},ke="_tSId",$e="_tA",Ee="bespoke-marp-transition-warming-up",Le=window.matchMedia("(prefers-reduced-motion: reduce)"),Se="__bespoke_marp_transition_reduced_outgoing__",Pe="__bespoke_marp_transition_reduced_incoming__",_e={forward:{both:void 0,incoming:{name:Pe},outgoing:{name:Se}},backward:{both:void 0,incoming:{name:Pe},outgoing:{name:Se}}},Te=e=>{if(!document.startViewTransition)return;const t=t=>(void 0!==t&&(e._tD=t),e._tD);let n;t(!1),((...e)=>{CSS.registerProperty({name:ge("duration"),syntax:"<time>",inherits:!0,initialValue:"-1s"});const t=[...new Set(e).values()];return Promise.all(t.map(e=>ye(e))).then()})(...Array.from(document.querySelectorAll("section[data-transition], section[data-transition-back]")).flatMap(e=>[e.dataset.transition,e.dataset.transitionBack].flatMap(e=>{const t=xe(e);return[t?.name,t?.builtinFallback?`__builtin__${t.name}`:void 0]}).filter(e=>!!e))).then(()=>{document.querySelectorAll("style").forEach(e=>{e.innerHTML=e.innerHTML.replace(/--marp-transition-duration:[^;}]*[;}]/g,e=>e.slice(0,-1)+"!important"+e.slice(-1))})});const r=(n,{back:r,cond:o})=>a=>{const i=t();if(i)return!!a[$e]||!("object"!=typeof i||(i.skipTransition(),!a.forSync));if(!o(a))return!0;const s=e.slides[e.slide()],c=()=>a.back??r,l="data-transition"+(c()?"-back":""),d=s.querySelector(`section[${l}]`);if(!d)return!0;const u=xe(d.getAttribute(l)??void 0);return!u||((async(e,{builtinFallback:t=!0}={})=>{let n=await ye(e);if(be(n)){if(!t)return;return n=await ye(`__builtin__${e}`),be(n)?void 0:n}return n})(u.name,{builtinFallback:u.builtinFallback}).then(e=>{if(!e){t(!0);try{n(a)}finally{t(!1)}return}let r=e;Le.matches&&(console.warn("Use a constant animation to transition because preferring reduced motion by viewer has detected."),r=_e);const o=document.getElementById(ke);o&&o.remove();const i=document.createElement("style");i.id=ke,document.head.appendChild(i),((e,t)=>{const n=[`:root{${ge("direction")}:${t.backward?-1:1};}`,":root:has(.bespoke-marp-inactive){cursor:none;}"],r=t=>{const n=e[t].both?.defaultDuration||e[t].outgoing?.defaultDuration||e[t].incoming?.defaultDuration;return"forward"===t?n:n||r("forward")},o=t.duration||r(t.backward?"backward":"forward");void 0!==o&&n.push(`::view-transition-group(*){${ve}:${o};}`);const a=e=>Object.entries(e).map(([e,t])=>`${e}:${t};`).join("");return n.push(`::view-transition-old(root){${a(we(e,{...t,type:"outgoing"}))}}`,`::view-transition-new(root){${a(we(e,{...t,type:"incoming"}))}}`),n})(r,{backward:c(),duration:u.duration}).forEach(e=>i.sheet?.insertRule(e));const s=document.documentElement.classList;s.add(Ee);let l=!1;const d=()=>{l||(n(a),l=!0,s.remove(Ee))},f=()=>{t(!1),i.remove(),s.remove(Ee)};try{t(!0);const e=document.startViewTransition(d);t(e),e.finished.finally(f)}catch(e){console.error(e),d(),f()}}),!1)};e.on("prev",r(t=>e.prev({...t,[$e]:!0}),{back:!0,cond:e=>e.index>0&&!((e.fragment??1)&&n.fragmentIndex>0)})),e.on("next",r(t=>e.next({...t,[$e]:!0}),{cond:t=>t.index+1<e.slides.length&&!(n.fragmentIndex+1<n.fragments.length)})),setTimeout(()=>{e.on("slide",r(t=>e.slide(t.index,{...t,[$e]:!0}),{cond:t=>{const n=e.slide();return t.index!==n&&(t.back=t.index<n,!0)}}))},0),e.on("fragment",e=>{n=e})};let Ie;const Me=()=>(void 0===Ie&&(Ie="wakeLock"in navigator&&navigator.wakeLock),Ie),Oe=async()=>{const e=Me();if(e)try{return await e.request("screen")}catch(e){console.warn(e)}return null},Ae=async()=>{if(!Me())return;let e;const t=()=>{e&&"visible"===document.visibilityState&&Oe()};for(const e of["visibilitychange","fullscreenchange"])document.addEventListener(e,t);return e=await Oe(),e};((e=document.getElementById(":$p"))=>{(()=>{const e=p("view");a.dataset.bespokeView=e===l||e===c?e:""})();const t=(e=>{const t=p(e);return v({[e]:void 0}),t})("sync")||void 0;o.from(e,((...e)=>{const t=d.findIndex(e=>g()===e);return e.map(([e,n])=>e[t]&&n).filter(e=>e)})([[1,1,0],re({key:t})],[[1,1,1],Z(e)],[[1,1,0],M],[[1,1,1],k],[[1,0,0],T()],[[1,1,1],O],[[1,1,1],ne({history:!1})],[[1,1,0],A()],[[1,1,0],P],[[1,0,0],ee],[[1,1,0],le()],[[1,0,0],C()],[[1,0,0],Te],[[1,1,1],$],[[1,1,0],Ae]))})()}();</script></body></html>

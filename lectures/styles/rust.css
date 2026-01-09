@@ -1,0 +1,61 @@
+/* @theme rust */
+
+@import 'default';
+
+@import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+section.communism h2, section.communism h1, section.communism h3 {
+    font-family:'Zilla Slab', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    color: #fc9c36;
+    font-size: 2rem;
+    font-weight: bold;
+    font-style: italic;
+    text-shadow: 3px 3px 0 #000;
+    line-height: 0;
+    max-width: 65%;
+}
+
+section.communism h1 {
+    font-size: 3rem;
+    line-height: 1;
+}
+
+section.communism h3 {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+section.communism h4 {
+    font-family:'Zilla Slab', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+section.communism {
+    background-image: url('../images/bg4.jpg');
+    background-size: cover;
+}
+
+section.communism2 {
+    background-image: url('../images/bg5.jpg');
+    background-size: cover;
+}
+
+h6 {
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    line-height: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family:'Zilla Slab', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+.columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+center {
+    display: flex;
+    justify-content: center;
+}

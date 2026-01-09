@@ -1,0 +1,6 @@
+{
+  "markdown.marp.themes": ["./styles/rust.css"],
+  "[markdown]": {
+    "editor.formatOnSave": false
+  }
+}
