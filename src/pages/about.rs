@@ -79,7 +79,6 @@ pub fn About() -> Element {
             h2 { class: "text-2xl font-bold mb-4 mt-12 text-white", "Previous Iterations:" }
             ul { class: "list-disc ml-8 marker:text-foreground/50",
                 for semester in PREVIOUS_SEMESTERS {
-
                     {
                         let instructors = semester
                             .instructors
