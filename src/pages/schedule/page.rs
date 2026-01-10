@@ -3,7 +3,7 @@ use dioxus::prelude::*;
 use std::sync::LazyLock;
 
 // Update this as the semester goes
-const LAST_WEEK_SHOWN: usize = 0;
+const LAST_WEEK_SHOWN: usize = 1;
 
 static WEEKS: LazyLock<Vec<Week>> = LazyLock::new(load_weeks);
 
