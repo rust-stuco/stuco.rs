@@ -23,4 +23,4 @@ Run the following command in the root of your project:
 dx serve
 ```
 
-The first time you run this, it will take longer since it needs to build the `public/` directory from `homeworks/`, `/lectures/`, and `/src/syllabus.typ`.
+The first time you run this, it will take longer since it needs to build the `public/` directory from `homeworks/`, `lectures/`, and `src/syllabus.typ`.
