@@ -8,6 +8,7 @@ pub fn Resources() -> Element {
             h1 { class: "text-3xl font-bold italic text-primary mb-6 text-center",
                 "Resources"
             }
+            p { "Under construction" }
         }
     }
 }
