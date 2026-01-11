@@ -1,16 +1,16 @@
 use crate::Route;
+use crate::pages::about::CURRENT_SEMESTER;
 use dioxus::prelude::*;
 
-const MOBILE_BG: Asset = asset!("/assets/crab-and-fisherman.jpeg");
-const DESKTOP_BG: Asset = asset!("/assets/crab-and-fisherman-16x9.jpeg");
+const BACKGROUND: Asset = asset!("/assets/elixir-rust-cover.webp");
 
 #[component]
 pub fn Home() -> Element {
     rsx! {
         document::Title { "Intro to Rust Lang" }
         div {
-            class: "-mt-16 h-[90vh] w-full bg-cover bg-center flex items-center justify-center shadow-2xl bg-(image:--bg-mobile) lg:bg-(image:--bg-desktop)",
-            style: format!("--bg-mobile: url('{}'); --bg-desktop: url('{}')", MOBILE_BG, DESKTOP_BG),
+            class: "-mt-16 h-[90vh] w-full bg-cover bg-center flex items-center justify-center shadow-2xl",
+            style: format!("background-image: url('{}')", BACKGROUND),
             div { class: "bg-black/25 text-primary text-center px-8 py-6",
                 h1 { class: "text-4xl sm:text-6xl font-bold", "Intro to Rust Lang" }
                 p { class: "text-xl sm:text-2xl mt-2", "Spring 2026" }
@@ -21,9 +21,28 @@ pub fn Home() -> Element {
                 "Intro to Rust Lang"
             }
             p {
-                "Welcome to Intro to Rust Lang (98-008). The course will be offered in Spring 2026 by Stephen Mao, Hugo Latendresse, and Anish Pallati at Carnegie Mellon University. Please see the "
-                Link { to: Route::About {}, class: "text-secondary", "about page" }
-                " for more!"
+                {
+                    let names: Vec<_> = CURRENT_SEMESTER
+                        .instructors
+                        .iter()
+                        .map(|(n, _)| *n)
+                        .collect();
+                    let instructors = if names.len() <= 1 {
+                        names.join("")
+                    } else {
+                        format!(
+                            "{}, and {}",
+                            names[..names.len() - 1].join(", "),
+                            names.last().unwrap(),
+                        )
+                    };
+
+                    rsx! {
+                        "Welcome to Intro to Rust Lang (98-008). The course will be offered in Spring 2026 by {instructors} at Carnegie Mellon University. Please see the "
+                        Link { to: Route::About {}, class: "text-secondary", "about page" }
+                        " for more!"
+                    }
+                }
             }
         }
     }

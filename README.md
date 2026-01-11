@@ -24,3 +24,7 @@ dx serve
 ```
 
 The first time you run this, it will take longer since it needs to build the `public/` directory from `homeworks/`, `lectures/`, and `src/syllabus.typ`.
+
+## Miscellaneous
+
+Background image credit to [Annie Ruygt](https://annieruygtillustration.com/), image taken from [this](https://fly.io/phoenix-files/elixir-and-rust-is-a-good-mix/) article.

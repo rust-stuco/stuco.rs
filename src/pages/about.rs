@@ -1,13 +1,13 @@
 use dioxus::prelude::*;
 
 #[derive(PartialEq)]
-struct Semester {
-    name: &'static str,
-    instructors: &'static [(&'static str, Option<&'static str>)], // (name, optional email)
-    tas: &'static [(&'static str, Option<&'static str>)],
+pub struct Semester {
+    pub name: &'static str,
+    pub instructors: &'static [(&'static str, Option<&'static str>)], // (name, optional email)
+    pub tas: &'static [(&'static str, Option<&'static str>)],
 }
 
-const CURRENT_SEMESTER: Semester = Semester {
+pub const CURRENT_SEMESTER: Semester = Semester {
     name: "Spring 2026",
     instructors: &[
         ("Stephen Mao", Some("stmao@andrew.cmu.edu")),
