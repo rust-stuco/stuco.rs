@@ -134,7 +134,6 @@ What is Rust at a more technical view?
 * No runtime overhead from the JVM or a garbage collector
 * Much lower memory use
 * Zero-cost abstractions
-* First-class support for modern paradigms
 
 
 ---

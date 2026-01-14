@@ -22,9 +22,9 @@ Make sure you have Rust installed. You should have installed Rust through `rustu
 
 ```sh
 $ rustup --version
-rustup 1.27.1 (54dd3d00f 2024-04-24)
+rustup 1.28.2 (e4f3ad6f8 2025-04-28)
 $ cargo --version
-cargo 1.84.0 (66221abde 2024-11-19)
+cargo 1.92.0 (344c4567c 2025-10-21)
 ```
 
 Make sure that both of those commands execute successfully, and that they have relatively recent
