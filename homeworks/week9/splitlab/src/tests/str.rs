@@ -18,7 +18,7 @@ fn test_str_compiles() {
 #[test]
 #[should_panic]
 fn test_str_empty_delimiter() {
-    let _ = Split::new(&String::from("a b c"), &String::from(""));
+    let _ = Split::new(&String::from("a b c"), "");
 }
 
 test_str!(
