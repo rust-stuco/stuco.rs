@@ -2,17 +2,20 @@
 
 ### Lecture
 
-- Ownership (25 min)
-    - Ownership Rules (4 min)
+- Formatting and Linting (3 mins)
+    - `cargo fmt` and `cargo clippy --fix` (1 min)
+    - VSCode rust-analyzer and Format on Save (2 min)
+- Ownership (24 min)
+    - Ownership Rules (3 min)
     - Motivation: Strings (4 min)
     - Data Validity (7 min)
     - Move Semantics, `Copy` and `Clone` (5 min)
     - Ownership with Functions and Return values (5 min)
-- References and Borrowing (16 min)
+- References and Borrowing (15 min)
     - References vs Ownership (4 min)
-    - Immutable and Mutable references (9 min)
+    - Immutable and Mutable references (8 min)
     - Dangling References and Data Races (3 min)
-- Slices (6 min)
+- Slices (5 min)
 - `Vec` Sneak Peek (3 min)
 
 ### Extra Material
@@ -26,4 +29,5 @@
 
 - `rustlings` exercises
     - `move_semantics`
+    - `slices`
     - `strings`
