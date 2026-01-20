@@ -1,6 +1,6 @@
 //! All examples taken from
-//! [rustlings exercises](https://github.com/rust-lang/rustlings/tree/main/exercises/move_semantics)
-//! and [practice.rs](https://practice.rs/ownership/ownership.html)
+//! [rustlings exercises](https://github.com/rust-lang/rustlings/tree/main/exercises/06_move_semantics)
+//! and [practice.rs](https://practice.course.rs/ownership/ownership.html)
 //!
 //! Uncomment each of these and ensure that it compiles with `cargo test`.
 //! We recommend uncommenting them one at a time.

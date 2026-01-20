@@ -1,5 +1,5 @@
 //! All examples taken from
-//! [rustlings exercises](https://github.com/rust-lang/rustlings/tree/main/exercises/move_semantics)
+//! [rustlings exercises](https://github.com/rust-lang/rustlings/tree/main/exercises/09_strings)
 //!
 //! Uncomment each of these and ensure that it compiles with `cargo test`.
 //! We recommend uncommenting them one at a time.
