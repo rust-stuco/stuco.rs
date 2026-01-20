@@ -39,7 +39,13 @@ mod tests {
 
     #[test]
     fn replace_a_string() {
-        assert_eq!(replace_me("I think cars are cool"), "I think balloons are cool");
-        assert_eq!(replace_me("I love to look at cars"), "I love to look at balloons");
+        assert_eq!(
+            replace_me("I think cars are cool"),
+            "I think balloons are cool"
+        );
+        assert_eq!(
+            replace_me("I love to look at cars"),
+            "I love to look at balloons"
+        );
     }
 }
