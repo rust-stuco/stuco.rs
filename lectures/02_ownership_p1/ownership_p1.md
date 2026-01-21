@@ -28,7 +28,6 @@ code {
 
 # Welcome back!
 
-* Homework 1 due in 2 weeks
 * You can use 7 late days over the whole semester
 * If you spent over an hour on the assignment, please let us know!
 
