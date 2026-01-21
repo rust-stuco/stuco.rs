@@ -310,12 +310,14 @@ fn SlideLinks(slides: &'static str) -> Element {
             a {
                 class: "text-primary hover:underline",
                 href: "/lectures/{slides}/{name}-light.pdf",
+                target: "_blank",
                 "light"
             }
             span { class: "text-secondary", "/" }
             a {
                 class: "text-primary hover:underline",
                 href: "/lectures/{slides}/{name}-dark.pdf",
+                target: "_blank",
                 "dark"
             }
         }
@@ -332,12 +334,14 @@ fn HomeworkLinks(homework: &'static Homework) -> Element {
                 a {
                     class: "text-primary hover:underline",
                     href: "/hw/{slug}/{slug}.zip",
+                    target: "_blank",
                     "handout"
                 }
                 " / "
                 a {
                     class: "text-primary hover:underline",
                     href: "/hw/{slug}/doc/{slug}/index.html",
+                    target: "_blank",
                     "writeup"
                 }
                 ")"
