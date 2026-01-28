@@ -96,7 +96,7 @@ error[E0382]: borrow of moved value: `s`
   |                                          ^ value borrowed here after move
   |
 ```
-* Looks like `taker` does not still own `s`, after all
+* Looks like `taker` took the ownership of `s` and did not not give it back.
 
 
 ---
@@ -203,7 +203,7 @@ help: consider changing this to be mutable
 # Review Question 2 (Solution)
 
 ```rust
-fn cool_guy() {
+fn main() {
 //      +++ Add `mut` here
     let mut favorite_computers = Vec::new();
     add_to_list(favorite_computers, String::from("Framework Laptop"));
@@ -222,7 +222,7 @@ fn add_to_list(mut fav_items: Vec<String>, item: String) {
 # Review Question 2b
 
 ```rust
-fn cool_guy() {
+fn main() {
     let favorite_computers = Vec::new();
     add_to_list(favorite_computers, String::from("Framework Laptop"));
     println!("{:?}", favorite_computers); // <-- I want to print this!
@@ -246,7 +246,7 @@ fn add_to_list(mut fav_items: Vec<String>, item: String) {
 Let's try a mutable reference instead of moving the entire value.
 
 ```rust
-fn cool_guy() {
+fn main() {
     let favorite_computers = Vec::new();
     add_to_list(&mut favorite_computers, String::from("Framework Laptop"));
     println!("{:?}", favorite_computers);
