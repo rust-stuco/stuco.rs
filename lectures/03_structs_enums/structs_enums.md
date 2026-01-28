@@ -277,7 +277,8 @@ fn main() {
 
 fn read(x: &i32) {
     println!("{}", x);
-}```
+}
+```
 
 
 ---
@@ -308,7 +309,8 @@ fn main() {
 
 fn modify(x: &mut i32) {
     *x += 10;
-}```
+}
+```
 
 
 ---
