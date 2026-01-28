@@ -96,7 +96,7 @@ error[E0382]: borrow of moved value: `s`
   |                                          ^ value borrowed here after move
   |
 ```
-* Looks like `taker` took the ownership of `s` and did not not give it back.
+* Looks like `taker` took the ownership of `s` and did not give it back.
 
 
 ---
