@@ -30,6 +30,7 @@ This course references and builds upon the following educational materials:
 ## Fonts
 
 - [Noto Sans](https://fonts.google.com/noto/specimen/Noto+Sans) and [Noto Sans Mono](https://fonts.google.com/noto/specimen/Noto+Sans+Mono) by Google Fonts
+- [Nikkyou Sans](https://font.download/font/nikkyou-sans)
 
 ## Contact
 
