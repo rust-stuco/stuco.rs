@@ -6,7 +6,7 @@ use std::sync::LazyLock;
 const LAST_WEEK_SHOWN: usize = if cfg!(debug_assertions) {
     usize::MAX
 } else {
-    4
+    5
 };
 
 static WEEKS: LazyLock<Vec<Week>> = LazyLock::new(load_weeks);
