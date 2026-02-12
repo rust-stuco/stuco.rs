@@ -1,30 +1,24 @@
-# 98-008 Website
+# 98-008: Intro to Rust
 
-## Setup
+This course is an introduction to the Rust programming language, a memory-safe systems programming language. We cover a range of topics, from the Rust borrow checker to parallelism and the `unsafe` keyword.
 
-This project uses the `typst` CLI to compile the [syllabus source file](src/syllabus.typ) into a PDF located at `public/syllabus.pdf` during the build process. You need to have `typst` installed on your system for this to work. On macOS, you can install it using Homebrew:
+This repository is developed and maintained by students of Carnegie Mellon University as part of the Student Taught Courses ([StuCo](https://www.cmu.edu/stuco/)) program.
 
-```bash
-brew install typst
-```
+**Website:** https://stuco.rs
 
-You also need to install `dioxus-cli` to run the development server:
+## Contributing
 
-```bash
-cargo install cargo-binstall # if you don't already have binstall
-cargo binstall dioxus-cli
-```
+See [CONTRIBUTING.md](CONTRIBUTING.md) for build instructions and development setup.
 
-## Development
+## Credits and Acknowledgments
 
-Run the following command in the root of your project:
+See [CREDITS.md](CREDITS.md) for course contributors and [ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md) for third-party resources.
 
-```bash
-dx serve
-```
+## License
 
-The first time you run this, it will take longer since it needs to build the `public/` directory from `homeworks/`, `lectures/`, and `src/syllabus.typ`.
+[![CC BY 4.0][cc-by-shield]][cc-by]
 
-## Miscellaneous
+All original material in this repository is shared under the [Creative Commons Attribution 4.0 International License][cc-by]. Third-party content retains its original licensing; see [ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md) for details.
 
-Background image credit to [Annie Ruygt](https://annieruygtillustration.com/), image taken from [this](https://fly.io/phoenix-files/elixir-and-rust-is-a-good-mix/) article.
+[cc-by]: http://creativecommons.org/licenses/by/4.0/
+[cc-by-shield]: https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg
