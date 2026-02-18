@@ -1525,8 +1525,7 @@ In the real world, the workflow is almost the complete opposite:
 We will be manually grading for both correctness and _robustness_.
 
 * By following the tutorial, you will easily get 100% on this assignment
-* We will give you up to 100 extra credit points for style, quality, documentation, and robustness
-* If you simply copy and paste everything from the tutorial, _you may get around 15/100 extra credit points_
+* If you opt in to a code review, we may give 100 extra credit points for style, quality, documentation, and robustness
   * We are going to be super strict!
     * Adopting the 15-410 (CMU Operating Systems) mindset
 
