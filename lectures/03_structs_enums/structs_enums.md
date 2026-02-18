@@ -1670,4 +1670,4 @@ Thanks for coming!
 
 _Slides created by:_
 Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen
+Jessica Ruan, Fiona Fisher, Terrance Chen, Hugo Latendresse
