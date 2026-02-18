@@ -414,8 +414,7 @@ src
 └── main.rs
 ```
 
-* This is a stylistic choice that each instructor has a very strong opinion on
-  * Ask at your own peril...
+* The Rust book says that having kitchen.rs is more idiomatic than kitchen/mod.rs, but ultimately this is a stylistic choice.
 
 <!--
 Connor and also Terrance prefers `mod.rs`
