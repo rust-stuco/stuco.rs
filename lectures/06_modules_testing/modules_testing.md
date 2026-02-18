@@ -239,16 +239,17 @@ We can declare a new module with the keyword `mod`.
 ###### src/main.rs
 
 ```rust
-fn main() {
-    println!("Hello, World!");
-}
-
 mod kitchen {
     // `cook` is defined in the module `kitchen`
     fn cook() {
         println!("I'm cooking");
     }
 }
+
+fn main() {
+    println!("Hello, World!");
+}
+
 ```
 
 ---
@@ -260,15 +261,15 @@ To use items outside of a module, we must declare them as `pub`.
 ###### src/main.rs
 
 ```rust
-fn main() {
-    kitchen::cook();
-}
-
 mod kitchen {
     pub fn cook() { println!("I'm cooking"); }
 
     // Only items internal to the `kitchen` should be able to access this
     fn examine_ingredients() {}
+}
+
+fn main() {
+    kitchen::cook();
 }
 ```
 
@@ -288,14 +289,14 @@ We can declare submodules inside of other modules.
 ###### src/main.rs
 
 ```rust
-fn main() {
-    kitchen::stove::cook();
-}
-
 mod kitchen {
     pub mod stove {
         pub fn cook() { println!("I'm cooking"); }
     }
+}
+
+fn main() {
+    kitchen::stove::cook();
 }
 ```
 
