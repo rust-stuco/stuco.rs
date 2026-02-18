@@ -611,7 +611,7 @@ It is idiomatic to do it this way, because it makes it clear that the item is no
 
 # More `use` Syntax
 
-We can also import items from the Rust standard library (`std`).
+We can also import items from other crates. One common example is the Rust standard library (`std`).
 
 ```rust
 use std::collections::HashMap;
@@ -619,6 +619,8 @@ use std::io::Bytes;
 use std::io::Write;
 ```
 
+* `std` is a crate
+* `collections` and `io` are modules
 * `HashMap` and `Bytes` are structs, and `Write` is a trait
 * It is idiomatic to import structs, enums, traits, etc. directly
 
