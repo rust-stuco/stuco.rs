@@ -108,7 +108,8 @@ A package is a bundle of one or more crates.
 
 * A package is defined by a `Cargo.toml` file at the root of your directory
   * `Cargo.toml` describes how to build all of the crates
-* A package can contain **any number of** binary crates, but **at most one** library crate
+* A package can _define_ **any number of** binary crates, but **at most one** library crate.
+  * A package can _depend_ on any number of library crates.
 
 ---
 
