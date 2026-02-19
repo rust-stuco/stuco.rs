@@ -1562,27 +1562,6 @@ Most of the extra credit grade will come from your documentation.
 
 ---
 
-# Errors
-
-There are [3 types of errors](https://www.cs.cmu.edu/~410/lectures/L10a_Errors.pdf):
-
-* Hmm...
-  * Try to _resolve_
-* That's not right...
-  * Try to _report_
-* Uh-oh
-  * Try to help the developer find the _fatal_ problem faster
-
-<!--
-Taken directly from 15-410's Error's lecture, page 37
-We're being purposefully ambiguous here since there is not time to do an entire lecture on error handling
-
-Note that for the purposes of this assignment, the only type of error that should really happen is reportable errors,
-unless someone is adding a VERY interesting feature...
--->
-
----
-
 # Testing
 
 Write good tests!
