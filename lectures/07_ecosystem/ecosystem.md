@@ -103,19 +103,10 @@ https://doc.rust-lang.org/book/appendix-07-nightly-rust.html
 
 # The Rust Train
 
-Here is a high-level diagram of Rust's release cycle.
-
-```
-nightly: * - - * - - * - - * - - * - - * - * - *
-                     |                         |
-beta:                * - - - - - - - - *       *
-                                       |
-stable:                                *
-```
-
-* This is called the “train model”
-* Every six weeks, a release “leaves the station”
-* Still has to take a "journey" through the beta channel before it "arrives" as a stable release
+* New features follow the “train model”
+* They start in Nightly.
+* Every six weeks, a release “leaves the station”: the Beta branch is cut from `master`.
+* Still has to take a "journey" through the beta channel before it "arrives" as a stable release.
 
 
 ---
