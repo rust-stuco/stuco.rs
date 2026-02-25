@@ -6,8 +6,8 @@ The goal of this homework is to make sure you know how to create a command line 
 well as how to write unit tests for your programs.
 
 This homework is going to be _very_ different from other homeworks. There is no autograder, and we
-will be **manually grading your submission for not just correctness but also code quality and
-robustness through a code review**.
+will be **manually grading** your submission for correctness. You may also opt in to be graded on
+code quality and robustness through a code review.
 
 **For this homework, you will follow
 [Chapter 12](https://doc.rust-lang.org/book/ch12-00-an-io-project.html) of the Rust Book and create
@@ -69,9 +69,11 @@ should also be printed if the user gives invalid command line arguments.
 
 # Code Review and Grading
 
-Your submission will be manually graded, and we will give you a code review. If you simply follow
-along the tutorial and add a simple additional feature, you will get a full 100 points on this
-assignment. The code review will give you _up to_ 100 extra credit points.
+Your submission will be manually graded.
+
+You may opt in to a code review by letting us know on Piazza. (More information will be posted there.)
+If you simply follow along the tutorial and add a simple additional feature, you will get a full 100
+points on this assignment. The optional code review will give you _up to_ 100 extra credit points.
 
 We are mainly looking at the correctness of your feature (does your feature work how you describe in
 your documentation and does it run without modifications), the robustness of your code (architecture

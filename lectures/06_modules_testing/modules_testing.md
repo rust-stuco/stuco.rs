@@ -1525,8 +1525,7 @@ In the real world, the workflow is almost the complete opposite:
 We will be manually grading for both correctness and _robustness_.
 
 * By following the tutorial, you will easily get 100% on this assignment
-* We will give you up to 100 extra credit points for style, quality, documentation, and robustness
-* If you simply copy and paste everything from the tutorial, _you may get around 15/100 extra credit points_
+* If you opt in to a code review, we may give up to 100 extra credit points for style, quality, documentation, and robustness
   * We are going to be super strict!
     * Adopting the 15-410 (CMU Operating Systems) mindset
 
@@ -1560,27 +1559,6 @@ Most of the extra credit grade will come from your documentation.
   * Design
   * Architecture / structure of your code
   * _Why_ does this function need to exist?
-
----
-
-# Errors
-
-There are [3 types of errors](https://www.cs.cmu.edu/~410/lectures/L10a_Errors.pdf):
-
-* Hmm...
-  * Try to _resolve_
-* That's not right...
-  * Try to _report_
-* Uh-oh
-  * Try to help the developer find the _fatal_ problem faster
-
-<!--
-Taken directly from 15-410's Error's lecture, page 37
-We're being purposefully ambiguous here since there is not time to do an entire lecture on error handling
-
-Note that for the purposes of this assignment, the only type of error that should really happen is reportable errors,
-unless someone is adding a VERY interesting feature...
--->
 
 ---
 
