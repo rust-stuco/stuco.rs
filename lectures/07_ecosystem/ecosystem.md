@@ -584,7 +584,6 @@ Here is the flamegraph for `build_string_pushstr`:
 
 ![](../images/week7/flamegraph-pushstr.svg)
 
-- This one is faster!
 
 <!--
 KEY OBSERVATIONS:
