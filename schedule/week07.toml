@@ -1,9 +1,6 @@
 title = "The Rust Ecosystem"
 slides = "07_ecosystem"
 
-[homework]
-name = "Ownership Quiz (Gradescope)"
-
 [[extras]]
 title = "Awesome Rust"
 url = "https://github.com/rust-unofficial/awesome-rust"

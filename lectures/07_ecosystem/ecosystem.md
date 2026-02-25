@@ -108,9 +108,14 @@ Connor's PR to Rust :D https://github.com/rust-lang/rust/pull/128219
 
 ---
 
+<<<<<<< HEAD
 # `rustup` Usage
+=======
 
-Here are some basic `rustup` commands to remember:
+# Selecting a Channel
+>>>>>>> abaffb864607549eccc109683a17d846e8dec1bc
+
+Here are some basic commands to remember:
 
 - `rustup update`
   - Updates your Rust toolchains to the latest versions.
@@ -1083,6 +1088,7 @@ pub struct MyError {
 - Less mature, but picking up a lot of traction
 - Look at the [docs](https://docs.rs/snafu/latest/snafu/) if you are interested!
 
+<<<<<<< HEAD
 ---
 
 # Homework - Ownership Quiz
@@ -1100,6 +1106,10 @@ It is hard, the editor got 3/15 for his own quiz when he was taking the course ;
 -->
 
 ---
+=======
+--- 
+
+>>>>>>> abaffb864607549eccc109683a17d846e8dec1bc
 
 # Next Lecture: Closures and Iterators
 
