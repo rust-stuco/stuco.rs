@@ -119,7 +119,6 @@ We can use features under development by enabling _unstable features_.
 * You can only use unstable features on nightly
 * Allows you to access cool new things in Rust
     * Example: [`try_blocks`](https://doc.rust-lang.org/beta/unstable-book/language-features/try-blocks.html) with `#![feature(try_blocks)]`
-    * Example: [`downgrade` on `RwLock`](https://doc.rust-lang.org/std/sync/struct.RwLockWriteGuard.html#method.downgrade) with `#![feature(rwlock_downgrade)]`
 
 <!--
 Connor's PR to Rust :D https://github.com/rust-lang/rust/pull/128219
