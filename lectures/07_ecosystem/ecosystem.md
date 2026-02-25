@@ -76,10 +76,10 @@ code {
 
 # `rustup` Channels
 
-* There are 3 different channels
-    * Stable: `rustc` and `cargo` release every 6 weeks
-    * Beta: the next stable release
+* There are 3 different channels, each corresponding to different releases of `rustc` and `cargo`.
     * Nightly: release made every night, based on the `master` branch
+    * Beta: branched from Nightly every 6 weeks. Frozen for six weeks except for bugfixes. 
+    * Stable: Beta branch from prior iteration.
 
 
 ---
@@ -1273,4 +1273,4 @@ Thanks for coming!
 
 _Slides created by:_
 Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen
+Jessica Ruan, Fiona Fisher, Terrance Chen, Hugo Latendresse
