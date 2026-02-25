@@ -1083,21 +1083,6 @@ pub struct MyError {
 - Less mature, but picking up a lot of traction
 - Look at the [docs](https://docs.rs/snafu/latest/snafu/) if you are interested!
 
----
-
-# Homework - Ownership Quiz
-
-- This homework is a Gradescope Quiz!
-- 30 questions from the [Brown Rust Book](https://rust-book.cs.brown.edu/)
-- Read through chapter 4 on ownership
-  - Answer the quiz questions on the web page as you go through it
-  - All answers will be revealed after you attempt!
-- Each question is worth 5 points, so you don't need to do everything
-- Focus on _understanding_ rather than the questions themselves
-
-<!--
-It is hard, the editor got 3/15 for his own quiz when he was taking the course ;(
--->
 
 --- 
 
