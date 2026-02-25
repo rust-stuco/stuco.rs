@@ -49,7 +49,7 @@ code {
 
 * A toolchain is defined as a set of software tools used to build and develop software within a specific ecosystem
 * A Rust toolchain is a complete installation of the Rust compiler (rustc) and related tools (like `cargo`)
-    * Defined by release channel / version, and the host platform triple
+    * Defined by release channel / version, and the host platform triplet
     * `stable-x86_64-pc-windows-msvc`, `beta-aarch64-unknown-linux-gnu`
 
 
