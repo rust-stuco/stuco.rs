@@ -129,9 +129,9 @@ Connor's PR to Rust :D https://github.com/rust-lang/rust/pull/128219
 ---
 
 
-# `rustup` Usage
+# Selecting a Channel
 
-Here are some basic `rustup` commands to remember:
+Here are some basic commands to remember:
 
 * `rustup update`
     - Updates your Rust toolchains to the latest versions.
