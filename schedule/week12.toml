@@ -30,3 +30,7 @@ items = [
 [[extras]]
 title = "The Rustonomicon"
 url = "https://doc.rust-lang.org/nomicon/"
+
+[homework_ec]
+name = "FilterLab"
+slug = "filterlab"

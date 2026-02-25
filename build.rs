@@ -34,9 +34,9 @@ const HOMEWORKS: &[(&str, &str)] = &[
     ("homeworks/week5-ec/summarylab", "summarylab"),
     ("homeworks/week6/greplab", "greplab"),
     ("homeworks/week8/iterlab", "iterlab"),
-    ("homeworks/week9/splitlab", "splitlab"),
-    ("homeworks/week10/filterlab", "filterlab"),
-    ("homeworks/week12/rowlab", "rowlab"),
+    ("homeworks/week10/splitlab", "splitlab"),
+    ("homeworks/week12/filterlab", "filterlab"),
+    ("homeworks/week13/rowlab", "rowlab"),
 ];
 
 fn watch_lectures() {
