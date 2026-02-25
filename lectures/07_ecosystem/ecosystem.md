@@ -119,7 +119,7 @@ We can use features under development by enabling _unstable features_.
 * You can only use unstable features on nightly
 * Allows you to access cool new things in Rust
     * Example: [`try_blocks`](https://doc.rust-lang.org/beta/unstable-book/language-features/try-blocks.html) with `#![feature(try_blocks)]`
-    * The `#![]` syntax is a _feature flag_ and must be included at the top of the crate root.
+    * The `#![]` syntax defines a _feature flag_ and must be included at the top of the crate root.
 
 <!--
 Connor's PR to Rust :D https://github.com/rust-lang/rust/pull/128219
@@ -134,12 +134,13 @@ Connor's PR to Rust :D https://github.com/rust-lang/rust/pull/128219
 Here are some basic `rustup` commands to remember:
 
 * `rustup update`
-    - Updates your Rust toolchains to the latest versions
+    - Updates your Rust toolchains to the latest versions.
 * `rustup default set <stable/beta/nightly>`
-    - Sets the default rust toolchain
+    - Sets the default rust toolchain for all your projects.
 * `rustup override set <stable/beta/nightly>`
-    - Overrides the toolchain for the specific directory
-
+    - Sets the default rust toolchain for the project only.
+* `cargo +<stable/beta/nightly> build`
+    - Uses a specific rust toolchain one-time.
 
 ---
 
