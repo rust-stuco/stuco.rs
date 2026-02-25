@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-# Copy student's submission into the test crate.
-cp -r /autograder/submission/src/. /autograder/source/splitlab/src
-
-# Run the test suite.
-cd /autograder/source
-python3 run_tests.py
