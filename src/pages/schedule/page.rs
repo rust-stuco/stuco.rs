@@ -53,6 +53,7 @@ pub fn Schedule() -> Element {
 }
 
 #[component]
+#[allow(clippy::absurd_extreme_comparisons)]
 fn WeekRow(week_num: usize, week: &'static Week) -> Element {
     let mut expanded = use_signal(|| false);
     let mut open_upward = use_signal(|| false);
