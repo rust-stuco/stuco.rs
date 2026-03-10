@@ -20,7 +20,7 @@ name = "SplitLab"
 slug = "splitlab"
 
 [homework_alt]
-name = "Project Checkpoint 2 (Gradescope)"
+name = "Project Checkpoint 2"
 
 [[extras]]
 title = "What is 'a lifetime?"

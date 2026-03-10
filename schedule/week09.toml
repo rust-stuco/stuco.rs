@@ -2,10 +2,10 @@ title = "Ownership (Part 2)"
 slides = "09_ownership_p2"
 
 [homework]
-name = "Ownership Quiz (Gradescope)"
+name = "Ownership Quiz"
 
 [homework_alt]
-name = "Project Checkpoint 1 (Gradescope)"
+name = "Project Checkpoint 1"
 
 [[extras]]
 title = "Aquascope: Visualizing Rust Permissions"

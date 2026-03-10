@@ -356,6 +356,7 @@ fn HomeworkLinks(homework: &'static Homework) -> Element {
     } else {
         rsx! {
             span { "{homework.name}" }
+            span { class: "text-sm", "(Gradescope)" }
         }
     }
 }

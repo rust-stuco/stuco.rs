@@ -29,7 +29,7 @@ name = "IterLab"
 slug = "iterlab"
 
 [homework_alt]
-name = "Project Proposal (Gradescope)"
+name = "Project Proposal"
 
 [[extras]]
 title = "Rust Iterator Optimization"
