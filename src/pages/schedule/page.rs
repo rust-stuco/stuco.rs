@@ -133,6 +133,12 @@ fn WeekRow(week_num: usize, week: &'static Week) -> Element {
                             HomeworkLinks { homework: hw_ec }
                         }
                     }
+                    if let Some(hw_alt) = &week.homework_alt {
+                        div { class: "mt-1",
+                            span { class: "text-secondary text-sm", "OR " }
+                            HomeworkLinks { homework: hw_alt }
+                        }
+                    }
                 }
             }
         }

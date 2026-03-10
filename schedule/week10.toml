@@ -19,6 +19,9 @@ items = [
 name = "SplitLab"
 slug = "splitlab"
 
+[homework_alt]
+name = "Project Checkpoint 2 (Gradescope)"
+
 [[extras]]
 title = "What is 'a lifetime?"
 url = "https://www.youtube.com/watch?v=gRAVZv7V91Q"

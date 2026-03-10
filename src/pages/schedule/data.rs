@@ -10,6 +10,7 @@ pub struct Week {
     pub videos: Option<Vec<VideoGroup>>,
     pub homework: Option<Homework>,
     pub homework_ec: Option<Homework>,
+    pub homework_alt: Option<Homework>,
     pub extras: Option<Vec<Extra>>,
 }
 

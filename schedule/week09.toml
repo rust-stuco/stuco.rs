@@ -4,6 +4,9 @@ slides = "09_ownership_p2"
 [homework]
 name = "Ownership Quiz (Gradescope)"
 
+[homework_alt]
+name = "Project Checkpoint 1 (Gradescope)"
+
 [[extras]]
 title = "Aquascope: Visualizing Rust Permissions"
 url = "https://cel.cs.brown.edu/aquascope/"
