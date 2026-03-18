@@ -1882,7 +1882,7 @@ let mut v = vec![1, 2, 3, 4];
 
 # Arrays and Slices
 
-We want to take this number `2`...and add it to the number in the first index.
+We want to take this number `2` ... and add it to the number in the first index.
 
 ```rust
 let mut v = vec![1, 2, 3, 4];
