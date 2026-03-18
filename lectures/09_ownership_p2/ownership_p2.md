@@ -1631,7 +1631,6 @@ println!("{}", *x); // Requires R on *x
 # Mutable References
 
 * **`x` and `*x` have different permissions**
-    * Notice how revoking permissions removes R from `*x`, but _keeps_ R on `x`
     * We can create as many references as we want...
         * We just can't _access_ them without the correct permissions
 * Mutable references further illustrate this
@@ -2008,7 +2007,7 @@ Recall that when we create an immutable reference `slot2 = &v[1]`:
 
 
 * `v` loses W and O permissions (didn't have it anyways)
-* `v` gives `x` R since `x` needs R on line 4
+* `v` needs to give `slot2` R since `slot2` needs R on line 4
     * But `v` doesn't have R!
 
 
