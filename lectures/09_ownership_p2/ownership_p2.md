@@ -1475,8 +1475,7 @@ We can no longer mutate `v`, since we created a reference `x` to it.
 When does `v` regain W, O? Either:
 
 * All references become unused (Case 1)
-* Mutate `v` before _any_ reference is used (Case 2)
-    * Revokes permissions of references
+* The references are never used (Case 2)
 
 <!--
 (Only if time!)
@@ -1525,7 +1524,7 @@ v.pop(); // <- v revokes x's permissions
 
 This `v.pop()` is safe (Case 2).
 
-* `v` requests W before any references are used (Case 2)
+* `v` requests W and the reference is never used (Case 2)
     * `v` regains W, O, _revokes permissions of all references_
     * Temporarily: `x` loses R and O, `*x` loses R
 
@@ -1620,8 +1619,8 @@ println!("{}", *x); // Requires R on *x
     * Gives `x` R, O permissions
     * Removes `v`'s W, O permissions
 * Permissions are restored when either:
-    * References become **unused**
-    * We mutate `v` *before* any reference is used
+    * References become **unused** (last access of the reference).
+    * The declaration of the reference if it is never used.
 
 <!-- Speaker note: "unused" will be clarified in Lifetimes lecture -->
 
@@ -2173,20 +2172,6 @@ Usually you can be pretty sure when you need it vs. when you don't.
 ---
 
 
-# Homework 8
-
-* This homework is a Gradescope Quiz!
-* 30 questions from the [Brown Rust Book](https://rust-book.cs.brown.edu/)
-* Read through chapter 4 on ownership
-    * Answer the quiz questions on the web page as you go through it
-    * All answers will be revealed after you attempt!
-* Each question is worth 5 points, so you don't need to do everything
-* Focus on _understanding_ rather than the questions themselves
-
-
----
-
-
 # Next Lecture: Lifetimes
 
 ![bg right:30% 80%](../images/ferris_happy.svg)
@@ -2197,4 +2182,4 @@ Thanks for coming!
 
 _Slides created by:_
 Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen
+Jessica Ruan, Fiona Fisher, Terrance Chen, Hugo Latendresse
