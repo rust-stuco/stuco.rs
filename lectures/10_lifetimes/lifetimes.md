@@ -598,13 +598,13 @@ fn first_word<'a>(s: &'a str) -> &'a str {
 
 # Lifetime Elision Rule 1
 
-        The first rule is that the compiler will assign a different lifetime to each parameter that's a lifetime.tm
+The first rule is that the compiler will assign a different lifetime to each parameter that is a reference.
 
 ```rust
 fn foo(x: &i32);
 fn foo<'a>(x: &'a i32);
 
-fn bar(x: &i32, y: &i32);
+fn bar(x: &i32, y: &i32, z: i32);
 fn bar<'a, 'b>(x: &'a i32, y: &'b i32);
 ```
 
