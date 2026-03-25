@@ -879,7 +879,7 @@ fn main() {
 ```
 
 * `'a: 'b` reads as "lifetime `'a` outlives `'b`"
-* This is needed if we pass an input to another input (for example, `*first_arg = second_arg;`).
+    * This is needed if we pass an argument to another argumentb (for example, `*first_arg = second_arg;`).
 
 <!--
 'a outlives 'b == 'a is at least as long as 'b
@@ -984,6 +984,7 @@ let second: &'static [usize; 100] = random_vec();
 assert_ne!(first, second)
 ```
 
+* Box::leak returns a reference to the heap data and prevents `Drop` from being called.
 * This allows us to _dynamically_ create a `'static` reference
 * _Note that leaking memory is NOT undefined behavior!_
 
@@ -1009,7 +1010,7 @@ Does not imply contrapositive
 
 ---
 
-# `'static` Bound Example
+# `'static` Bound Example 1
 
 ![bg right:20% 90%](../images/ferris_does_not_compile.svg)
 
@@ -1034,7 +1035,7 @@ fn main() {
 
 ---
 
-# `'static` Bound Example
+# `'static` Bound Example 1
 
 We get a compiler error:
 
@@ -1051,7 +1052,60 @@ error[E0597]: `i` does not live long enough
    | - `i` dropped here while still borrowed
 ```
 
+
 ---
+
+# `'static` Bound Example 2
+
+![bg right:20% 90%](../images/ferris_does_not_compile.svg)
+
+```rust
+fn print_with_static_lifetime(v: &'static Vec<i32>) {
+    println!("{:?}", v);
+}
+
+fn main() {
+    let v: Vec<i32> = vec![1,2,3];
+    print_with_static_lifetime(&v);
+}
+```
+
+---
+
+# `'static` Bound Example 2
+
+
+```rust
+fn print_with_static_bound(v: impl Debug + 'static) {
+println!("{:?}", v);
+}
+
+
+fn main() {
+    let v: Vec<i32> = vec![1,2,3];
+    print_with_static_bound(v);
+}
+```
+
+---
+
+# `'static` Bound Example 2
+
+![bg right:20% 90%](../images/ferris_does_not_compile.svg)
+
+```rust
+fn print_with_static_bound(v: impl Debug + 'static) {
+println!("{:?}", v);
+}
+
+
+fn main() {
+    let v: Vec<i32> = vec![1,2,3];
+    print_with_static_bound(&v);
+}
+```
+
+--- 
 
 # Review
 
