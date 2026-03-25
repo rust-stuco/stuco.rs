@@ -656,7 +656,7 @@ fn first_word<'a>(s: &'a str) -> &'a str {
 
 # Lifetime Elision Rule 1
 
-The first rule is that the compiler will assign a different lifetime parameter for each input lifetime.
+        The first rule is that the compiler will assign a different lifetime to each parameter that's a lifetime.tm
 
 ```rust
 fn foo(x: &i32);
@@ -1211,21 +1211,6 @@ Some quick points:
 ---
 
 
-# Homework 9
-
-* In this homework, you will be following a live-coding stream on YouTube:
-    * [Crust of Rust: Lifetime Annotations](https://youtu.be/rAl-9HwD858?si=VTQfI8Re7DvrtDqy)
-* Jon Gjengset is a well-known educator in the Rust community
-    * _He is also the inspiration for a lot of content in the second half of this course!_
-* The livestream is 1.5 hours, but the writeup shows sections you can skip
-    * We would recommend watching the livestream and _then_ writing code!
-* This homework is more about getting the tests to compile
-    * _You'll only need to write about 20-30 lines of code!_
-
-
----
-
-
 # Next Lecture: Smart Pointers and Trait Objects
 
 ![bg right:30% 80%](../images/ferris_happy.svg)
@@ -1236,4 +1221,4 @@ Thanks for coming!
 
 _Slides created by:_
 Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen
+Jessica Ruan, Fiona Fisher, Terrance Chen, Hugo Latendresse
