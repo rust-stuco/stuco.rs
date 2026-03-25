@@ -1000,9 +1000,9 @@ memory the OS is just going to kill your process.
 
 `'static` can also be used as a type bound. However...
 
-* There is a subtle difference between the `'static` lifetime and the `'static` bound
-* The `'static` bound means that the type does not contain any non-static references
-* This means that all owned data implicitly has a `'static` bound, since owned data holds no references
+* There is a subtle difference between the `'static` lifetime and the `'static` bound.
+* The `'static` bound means that the type does not contain any non-static references (including itself).
+* This means that all owned data implicitly has a `'static` bound, since owned data holds no references.
 
 <!--
 Does not imply contrapositive
