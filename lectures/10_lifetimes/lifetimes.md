@@ -605,7 +605,7 @@ fn foo(x: &i32);
 fn foo<'a>(x: &'a i32);
 
 fn bar(x: &i32, y: &i32, z: i32);
-fn bar<'a, 'b>(x: &'a i32, y: &'b i32);
+fn bar<'a, 'b>(x: &'a i32, y: &'b i32, z: i32);
 ```
 
 ---
@@ -879,7 +879,7 @@ fn main() {
 ```
 
 * `'a: 'b` reads as "lifetime `'a` outlives `'b`"
-    * This is needed if we pass an argument to another argumentb (for example, `*first_arg = second_arg;`).
+    * This is needed if we pass an argument to another argument.
 
 <!--
 'a outlives 'b == 'a is at least as long as 'b
