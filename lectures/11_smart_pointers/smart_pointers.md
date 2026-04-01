@@ -352,12 +352,31 @@ impl<T: ?Sized, A: Allocator> Deref for Box<T, A> {
 ```
 
 * Don't worry about the generics, just focus on the `deref()` method!
+* `Box<T>` is special: the compiler already knows how to dereference it. 
 
 <!--
 This code is copied and pasted directly from the standard library
 https://doc.rust-lang.org/std/boxed/struct.Box.html#impl-Deref-for-Box%3CT,+A%3E
 -->
 
+
+---
+
+# The `Deref` Trait on `CustomBox<T>`
+
+If you were to implement `Box<T>` yourself, `deref` would look something like this.
+
+```rust
+impl<T: ?Sized, A: Allocator> Deref for CustomBox<T, A> {
+    type Target = T;
+
+    fn deref(&self) -> &T {
+        &self.0 // Accessing an inner field
+    }
+}
+```
+
+* In our `CustomBox`, `deref` must return a reference to a specific field.
 
 ---
 
