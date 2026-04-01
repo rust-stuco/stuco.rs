@@ -353,6 +353,10 @@ impl<T: ?Sized, A: Allocator> Deref for Box<T, A> {
 * Don't worry about the generics, just focus on the `deref()` method!
 * What's surprising about this?
 
+<!--
+When doing `**self`, we are dereferencing a Box! This appears circular. 
+-->
+
 ---
 
 
@@ -383,7 +387,7 @@ https://doc.rust-lang.org/std/boxed/struct.Box.html#impl-Deref-for-Box%3CT,+A%3E
 
 # The `Deref` Trait on `CustomBox<T>`
 
-If you were to implement `Box<T>` yourself, `deref` would look something like this.
+If we were to implement `Box<T>` ourselves, `deref` would look something like this.
 
 ```rust
 impl<T: ?Sized, A: Allocator> Deref for CustomBox<T, A> {
@@ -468,7 +472,9 @@ hello(&m);
 
 # Deref Coercion Rules
 
-Rust is able to coerce mutable to immutable but not the reverse.
+The Rust compiler coerces mutable to immutable but not the reverse. 
+Suppose `T` is the _provided type_ and `U` is the _expected type_.
+Each type implements `Deref` for exactly one target type.
 
 * From `&T` to `&U` when `T: Deref<Target=U>`
 * From `&mut T` to `&mut U` when `T: DerefMut<Target=U>`
@@ -540,7 +546,7 @@ fn corge(v: Vec<T>) { ... }
 fn grault(v: &[T]) { ... }
 ```
 
-* `bar`, `qux`, and `grault` are strictly more powerful!
+* `bar`, `qux`, and `grault` are more powerful - they accept more types.
 
 
 ---
