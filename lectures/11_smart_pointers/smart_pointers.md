@@ -333,6 +333,25 @@ pub trait Deref {
   * Note that this does not recurse infinitely
 * We can treat anything that implements `Deref` like a pointer!
 
+---
+
+
+# The `Deref` Trait on `Box<T>`
+
+Here is the implementation of `Deref` for `Box<T>`.
+
+```rust
+impl<T: ?Sized, A: Allocator> Deref for Box<T, A> {
+    type Target = T;
+
+    fn deref(&self) -> &T {
+        &**self
+    }
+}
+```
+
+* Don't worry about the generics, just focus on the `deref()` method!
+* What's surprising about this?
 
 ---
 
