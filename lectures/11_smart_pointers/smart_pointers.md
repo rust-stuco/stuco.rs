@@ -51,7 +51,7 @@ What is a pointer?
 
 * A _pointer_ is a general concept for a variable that contains an address in memory
 * The address "points to" or "points at" some other data
-* In Rust, the most common pointer is a reference (`&`)
+* In Rust, pointers most commonly occur inside references (`&`)
 * No overhead other than dereferencing
 
 
@@ -62,7 +62,7 @@ What is a pointer?
 
 What is a _smart pointer?_
 
-* Data structures that act like a pointer
+* Data structures that act like a pointer (and that probably contain a pointer).
 * Contain additional metadata and capabilities beyond dereferencing
 * This concept is not unique to Rust (C++)
 
@@ -131,8 +131,8 @@ help: insert some indirection (e.g., a `Box`, `Rc`, or `&`) to break the cycle
   |               ++++    +
 ```
 
-* The compiler is complaining because we've defined a type with _infinite size_
-
+* The compiler is complaining because we've defined a type with _infinite size_.
+* The compiler needs to know the size of the enum at compile time.
 
 ---
 
@@ -266,8 +266,7 @@ Cons(1.1, Cons(2.2, Cons(3.3, Nil)))
 # More about `Box<T>`
 
 * `Box<T>` is a simple "smart" pointer to memory allocated on the heap*
-* `Box<T>` fully owns the data it points to (just like `Vec<T>`)
-  * It is a "smart" pointer because it frees the data it owns when dropped
+* `Box<T>` (just like `Vec<T>`) is a "smart" pointer and frees the data it owns when dropped.
 * Low overhead (other than allocation)
 
 <!--
@@ -1386,4 +1385,4 @@ Thanks for coming!
 
 _Slides created by:_
 Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen
+Jessica Ruan, Fiona Fisher, Terrance Chen, Hugo Latendresse
