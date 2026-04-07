@@ -41,7 +41,7 @@ As much as we'd have loved to dive deep into all of these topics, we simply do n
 
 However...
 
-* The goal of this course was never to feed you information
+* The goal of this course was never to cover everything there is to know about Rust.
 * The goal was to teach you the _core ideas_ of Rust and how to think about it
 * We hope that you will take the knowledge from this class and use it to explore more about this programming language _yourself_
 
