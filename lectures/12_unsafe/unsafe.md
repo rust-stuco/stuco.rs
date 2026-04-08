@@ -147,9 +147,8 @@ impl<T> SomeType<T> {
 }
 ```
 
-* Here, the `unsafe` keyword serves as a warning to the caller
+* The caller can only call `decr` inside an unsafe block. 
 * The caller will want to be careful when calling `decr`
-* This keyword does _nothing_. It's just an annotation for the programmer.
 
 ---
 
@@ -198,12 +197,12 @@ impl<T> Rc<T> {
 
 So what can we do with `unsafe`?
 
-With `unsafe`, we get 5 superpowers! We can:
+With `unsafe`, we get 5 superpowers! The first four are:
 
 1) Call an `unsafe` function or method
 2) Access or modify a mutable static variable
 3) Implement an `unsafe` trait
-4) Access fields of `union`s
+4) Access fields of a `union`
 
 ---
 
