@@ -700,7 +700,7 @@ If you get something wrong, your program now has _undefined behavior_.
   * Segfaults
   * Unexpected deadlocks
   * Garbled output
-  * Panics that _don't_ exit the program
+  * Panics that exit the program
 * The worst case...
 
 ---
