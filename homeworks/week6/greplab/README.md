@@ -29,7 +29,7 @@ the Book. Given this requirement, it will be more efficient for you to read the 
 [Chapter 12](https://doc.rust-lang.org/book/ch12-00-an-io-project.html) in its entirety, rather than
 copy and paste everything and then reverse engineer. See the [Extra Features](#extra-features)
 section below for some potential features you could add. You must document this feature as a
-documentation comment (we will run `cargo doc` on your submission when we grade it, so it the
+documentation comment (we will run `cargo doc` on your submission when we grade it, so the
 documentation should be in the root of your library crate).
 
 Another soft requirement is that you add unit tests. This won't count towards the first 100 points,
