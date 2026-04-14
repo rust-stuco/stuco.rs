@@ -1022,8 +1022,8 @@ Channels consist of both a transmitter and a receiver.
 let (tx, rx) = mpsc::channel();
 ```
 
-* **Transmitter**: Connor writes "Review the ZFOD PR" and sends it down a river
-* **Receiver**: Ben finds the duck downstream and reads the message
+* **Transmitter**: Stephen writes "Review the ZFOD PR" and sends it down a river
+* **Receiver**: Hugo finds the duck downstream and reads the message
 * Each channel can only transmit/receive one type
 * Communication is only one-way
 * This is an `mpsc`-flavored channel...
@@ -1073,7 +1073,7 @@ thread::spawn(move || { // Takes ownership of `tx`.
     let val = String::from("review the ZFOD PR!");
 
     tx.send(val).unwrap(); // Send `val` through the transmitter.
-    tx.send("buy Connor lunch".into()).unwrap(); // Send another message!
+    tx.send("buy Stephen lunch".into()).unwrap(); // Send another message!
 });
 
 for msg in rx { // Iterate through messages until all transmitters are dropped.
@@ -1634,4 +1634,5 @@ Thanks for coming!
 
 _Slides created by:_
 Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen
+Jessica Ruan, Fiona Fisher, Terrance Chen,
+Stephen Mao
