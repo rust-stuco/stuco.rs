@@ -12,7 +12,7 @@ fn trim_me(input: &str) -> String {
 
 #[cfg(test)]
 fn compose_me(input: &str) -> String {
-    todo!("Add 'world!' to the string! There's multiple ways to do this!")
+    todo!("Add ' world!' to the string! There's multiple ways to do this!")
 }
 
 #[cfg(test)]

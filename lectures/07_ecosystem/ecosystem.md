@@ -22,189 +22,151 @@ code {
 
 # The Rust Ecosystem
 
-
 ---
-
 
 # Today: The Rust Ecosystem
 
 - The Rust Toolchain: `rustup`, `clippy`, `rustfmt`
 - Performance and Analysis: Criterion, Flamegraphs
 - Reading Documentation
-    - `rand`
-    - `time` vs `chrono`
-    - `anyhow` vs `thiserror`
-
+  - `rand`
+  - `time` vs `chrono`
+  - `anyhow` vs `thiserror`
 
 ---
-
 
 # **The Rust Toolchain**
 
-
 ---
-
 
 # Toolchains
 
-* A toolchain is defined as a set of software tools used to build and develop software within a specific ecosystem
-* A Rust toolchain is a complete installation of the Rust compiler (rustc) and related tools (like `cargo`)
-    * Defined by release channel / version, and the host platform triple
-    * `stable-x86_64-pc-windows-msvc`, `beta-aarch64-unknown-linux-gnu`
-
+- A toolchain is defined as a set of software tools used to build and develop software within a specific ecosystem
+- A Rust toolchain is a complete installation of the Rust compiler (rustc) and related tools (like `cargo`)
+  - Defined by release channel / version, and the host platform triplet
+  - `stable-x86_64-pc-windows-msvc`, `beta-aarch64-unknown-linux-gnu`
 
 ---
-
 
 # **`rustup`**
 
-
 ---
-
 
 # `rustup`
 
 `rustup` is a _toolchain multiplexer_.
 
-* Rust has several toolchains, which you manage via `rustup`
-* `rustup` consolidates them as a single set of tools installed in `~/.cargo/bin`
-* Similar to Ruby's `rbenv`, Python's `pyenv`, or Node's `nvm`
-
+- Rust has several toolchains, which you manage via `rustup`
+- `rustup` consolidates them as a single set of tools installed in `~/.cargo/bin`
+- Similar to Ruby's `rbenv`, Python's `pyenv`, or Node's `nvm`
 
 ---
-
 
 # `rustup` Channels
 
-* There are 3 different channels
-    * Stable: `rustc` and `cargo` release every 6 weeks
-    * Beta: the next stable release
-    * Nightly: release made every night, based on the `master` branch
-
+- There are 3 different channels, each corresponding to different releases of `rustc` and `cargo`.
+  - Nightly: release made every night, based on the `master` branch
+  - Beta: branched from Nightly every 6 weeks. Frozen for six weeks except for bugfixes.
+  - Stable: Beta branch from prior iteration.
 
 ---
 
-
-
 # Stability without Stagnation
 
-* Rust cares _a lot_ about the stability of your code
-* At the same time, we all want to experiment with new features
-* You should _never_ need to worry about breaking your code after updating Rust
-* But you should also be able to opt-in to newer "unstable" features!
+- Rust cares _a lot_ about the stability of your code
+- At the same time, we all want to experiment with new features
+- You should _never_ need to worry about breaking your code after updating Rust
+- But you should also be able to opt-in to newer "unstable" features!
 
 <!--
 https://doc.rust-lang.org/book/appendix-07-nightly-rust.html
 -->
 
-
 ---
-
 
 # The Rust Train
 
-Here is a high-level diagram of Rust's release cycle.
-
-```
-nightly: * - - * - - * - - * - - * - - * - * - *
-                     |                         |
-beta:                * - - - - - - - - *       *
-                                       |
-stable:                                *
-```
-
-* This is called the “train model”
-* Every six weeks, a release “leaves the station”
-* Still has to take a "journey" through the beta channel before it "arrives" as a stable release
-
+- New features follow the “train model”
+- They start in Nightly.
+- Every six weeks, a release “leaves the station”: the Beta branch is cut from `master`.
+- Still has to take a "journey" through the beta channel before it "arrives" as a stable release.
 
 ---
-
 
 # Unstable Features
 
 We can use features under development by enabling _unstable features_.
 
-* You can only use unstable features on nightly
-* Allows you to access cool new things in Rust
-    * Example: [`try_blocks`](https://doc.rust-lang.org/beta/unstable-book/language-features/try-blocks.html) with `#![feature(try_blocks)]`
-    * Example: [`downgrade` on `RwLock`](https://doc.rust-lang.org/std/sync/struct.RwLockWriteGuard.html#method.downgrade) with `#![feature(rwlock_downgrade)]`
+- You can only use unstable features on nightly
+- Allows you to access cool new things in Rust
+  - Example: [`try_blocks`](https://doc.rust-lang.org/beta/unstable-book/language-features/try-blocks.html) with `#![feature(try_blocks)]`
+  - The `#![]` syntax defines a _feature flag_ and must be included at the top of the crate root.
 
 <!--
 Connor's PR to Rust :D https://github.com/rust-lang/rust/pull/128219
 -->
 
-
 ---
 
+# Selecting a Channel
 
-# `rustup` Usage
+Here are some basic commands to remember:
 
-Here are some basic `rustup` commands to remember:
-
-* `rustup update`
-    - Updates your Rust toolchains to the latest versions
-* `rustup default set <stable/beta/nightly>`
-    - Sets the default rust toolchain
-* `rustup override set <stable/beta/nightly>`
-    - Overrides the toolchain for the specific directory
-
+- `rustup update`
+  - Updates your Rust toolchains to the latest versions.
+- `rustup default set <stable/beta/nightly>`
+  - Sets the default rust toolchain for all your projects.
+- `rustup override set <stable/beta/nightly>`
+  - Sets the default rust toolchain for the project only.
+- `cargo +<stable/beta/nightly> build`
+  - Uses a specific rust toolchain one-time.
 
 ---
-
 
 # **Clippy**
 
-
 ---
-
 
 # Clippy
 
 Clippy is a collection of lints that can catch common mistakes when writing Rust, improving the quality of your code.
 
-* _We have asked you to use clippy for your homeworks!_
-
+- _We have asked you to use clippy for your homeworks!_
 
 ---
-
 
 # Clippy Lint Levels
 
 Clippy offers many different lint levels.
 
-*  `clippy::all`: all lints that are on by default
-    - `clippy::correctness`: code that is outright wrong or useless
-    - `clippy::suspicious`: code that is most likely wrong or useless
-    - `clippy::style`: code that should be written in a more idiomatic way
-    - `clippy::complexity`: code that does something simple in a complex way
-    - `clippy::perf`: code that can be written to run faster
-* And more...
-* You can even make your own lints!
+- `clippy::all`: all lints that are on by default
+  - `clippy::correctness`: code that is outright wrong or useless
+  - `clippy::suspicious`: code that is most likely wrong or useless
+  - `clippy::style`: code that should be written in a more idiomatic way
+  - `clippy::complexity`: code that does something simple in a complex way
+  - `clippy::perf`: code that can be written to run faster
+- And more...
+- You can even make your own lints!
 
 <!--
 You don't have to know all of these things, we're just showing this so you know that there _are_ a lot of things!
 -->
 
-
 ---
-
 
 # `clippy` Usage
 
-* Already installed if using `rustup` (default profile)
-* To run all lints, run `cargo clippy`
-    * To run a specific lint, run `cargo clippy::___`
-* To automatically apply suggestions, run `cargo clippy --fix`
-* To run lints on tests and other files, run `cargo clippy --all-targets`
+- Already installed if using `rustup` (default profile)
+- To run all lints, run `cargo clippy`
+  - To run a specific lint, run `cargo clippy::___`
+- To automatically apply suggestions, run `cargo clippy --fix`
+- To run lints on tests and other files, run `cargo clippy --all-targets`
 
 <!--
 When you initially install `rustup`, you should choose the default profile. If you don't want to, then you already know why you want a different profile...
 -->
 
-
 ---
-
 
 # Clippy Source Code Usage
 
@@ -223,32 +185,26 @@ fn main() {
 This is a very basic example, look online for more information!
 -->
 
-
 ---
-
 
 # **`rustfmt`**
 
-
 ---
-
 
 # `rustfmt`
 
 `rustfmt` is a formatting tool that checks adherence to Rust's strict formatting standards.
 
-* Already installed if using `rustup` (default profile)
-* To format one file: `rustfmt file.rs`
-* To format whole project: `cargo fmt`
-* To only *check* format: `cargo fmt -- --check`
+- Already installed if using `rustup` (default profile)
+- To format one file: `rustfmt file.rs`
+- To format whole project: `cargo fmt`
+- To only _check_ format: `cargo fmt -- --check`
 
 <!--
 It's pretty rare that you would use `rustfmt` by itself, usually you are running `cargo fmt` for everything.
 -->
 
-
 ---
-
 
 # Configuring `rustfmt`
 
@@ -259,19 +215,17 @@ indent_style = "Block"
 reorder_imports = false
 ```
 
-* There are many configuration [options](https://rust-lang.github.io/rustfmt/?version=v1.8.0&search=) for `rustfmt`
-* **You probably shouldn't create your own unique formatting style**
-
+- There are many configuration [options](https://rust-lang.github.io/rustfmt/?version=v1.8.0&search=) for `rustfmt`
+- **You probably shouldn't create your own unique formatting style**
 
 ---
 
-
 # Consistent Formatting
 
-* The default Rust style is defined in the [Rust Style Guide](https://doc.rust-lang.org/style-guide/index.html)
-    * It is **strongly recommended** that developers use this style
-* Consistent formatting makes code more readable
-    * Also makes it easier to collaborate with others
+- The default Rust style is defined in the [Rust Style Guide](https://doc.rust-lang.org/style-guide/index.html)
+  - It is **strongly recommended** that developers use this style
+- Consistent formatting makes code more readable
+  - Also makes it easier to collaborate with others
 
 <!--
 This is a subtle thing, but when jumping into an unknown codebase, having consistent formatting of code across every single Rust repository lowers the barrier to entry (much more than you probably think).
@@ -279,15 +233,11 @@ This is a subtle thing, but when jumping into an unknown codebase, having consis
 This is one of the reasons it is much easier to start contributing to a code base over something like a C or C++ codebase. When jumping into a C or C++ codebase, a significant fraction of the time there will be custom macros and/or templates that you have to learn before you can even understand the code. TLDR you are basically learning a new language every time you jump into a C/C++ codebase.
 -->
 
-
 ---
-
 
 # **Performance and Analysis**
 
-
 ---
-
 
 # Performance Profiling
 
@@ -303,11 +253,9 @@ pub fn fibonacci(n: u64) -> u64 {
 }
 ```
 
-* How do we test/profile the _performance_ of our code?
-
+- How do we test/profile the _performance_ of our code?
 
 ---
-
 
 # Performance Profiling: Timer
 
@@ -331,9 +279,7 @@ fn main() {
 Elapsed: 14.00ms
 ```
 
-
 ---
-
 
 # Problem: Statistical Significance
 
@@ -347,36 +293,30 @@ Elapsed: 10.35ms
 Elapsed: 20.95ms
 ```
 
-* How do we control our environment?
-    * Compiler optimizations can skew results, the OS scheduler and other noise can create performance variations
-    * Seeing a number go up/down is one thing, whether it's statistically significant is another
+- How do we control our environment?
+  - Compiler optimizations can skew results, the OS scheduler and other noise can create performance variations
+  - Seeing a number go up/down is one thing, whether it's statistically significant is another
 
 <!--
 This is an overexaggeration, we ran other things at the same time on the same computer to make these
 numbers vary wildly.
 -->
 
-
 ---
-
 
 # **Criterion**
 
-
 ---
-
 
 # Criterion
 
 Criterion is a statistics-driven micro-benchmarking library written in Rust.
 
-* Collects detailed statistics, providing strong confidence that changes to performance are real, not measurement noise
-* Produces detailed charts and provides thorough understanding of your code’s performance behavior
-* Make sure to read the (very well-written) [library docs](https://docs.rs/criterion/latest/criterion/) and [user guide](https://bheisler.github.io/criterion.rs/book/index.html)!
-
+- Collects detailed statistics, providing strong confidence that changes to performance are real, not measurement noise
+- Produces detailed charts and provides thorough understanding of your code’s performance behavior
+- Make sure to read the (very well-written) [library docs](https://docs.rs/criterion/latest/criterion/) and [user guide](https://bheisler.github.io/criterion.rs/book/index.html)!
 
 ---
-
 
 # `criterion`
 
@@ -391,16 +331,13 @@ name = "my_benchmark"
 harness = false
 ```
 
-* `name = "my_benchmark"` declares that there is a benchmark file located at `my_crate/benches/my_benchmark.rs` (not in `src/` directory)
-
+- `name = "my_benchmark"` declares that there is a benchmark file located at `my_crate/benches/my_benchmark.rs` (not in `src/` directory)
 
 <!--
 Don't worry too much about the `harness = false`.
 -->
 
-
 ---
-
 
 # Example: Simple `criterion` Benchmark
 
@@ -411,8 +348,8 @@ use criterion::{black_box, criterion_group, criterion_main, Criterion};
 use my_crate::fibonacci;
 ```
 
-* Import `criterion` items
-* Import the function we want to bench (in this case, `my_crate::fibonacci`)
+- Import `criterion` items
+- Import the function we want to bench (in this case, `my_crate::fibonacci`)
 
 <!--
 Note we import the crate because we consider our crate an external crate when writing things like benchmarks and integration tests we're benchmarking as an external crate.
@@ -420,7 +357,6 @@ This is because Cargo compiles each benchmark under `/benches` as if each was a 
 -->
 
 ---
-
 
 # Example: Simple `criterion` Benchmark
 
@@ -439,9 +375,7 @@ criterion_main!(benches);
 If you are interested in how exactly those two macros at the bottom work, go read the documentation!
 -->
 
-
 ---
-
 
 # Example: Simple `criterion` Benchmark
 
@@ -451,12 +385,10 @@ pub fn criterion_benchmark(c: &mut Criterion) {
 }
 ```
 
-* `black_box` stops the compiler from optimizing away our entire function
-    * The compiler is allowed to replace `fibonacci(20)` with a constant
-
+- `black_box` stops the compiler from optimizing away our entire function
+  - The compiler is allowed to replace `fibonacci(20)` with a constant
 
 ---
-
 
 # `criterion`
 
@@ -478,9 +410,7 @@ Found 10 outliers among 100 measurements (10.00%)
 Some details omitted.
 -->
 
-
 ---
-
 
 # Fibonacci Improvements
 
@@ -496,12 +426,10 @@ pub fn fibonacci(n: u64) -> u64 {
 }
 ```
 
-* What's the complexity of the algorithm?
-    * Exponential!
-
+- What's the complexity of the algorithm?
+  - Exponential!
 
 ---
-
 
 # Fibonacci Improvements
 
@@ -526,9 +454,7 @@ pub fn fibonacci(n: usize) -> usize {
 This is from our homework solutions!
 -->
 
-
 ---
-
 
 # Fibonacci Improvements
 
@@ -546,35 +472,29 @@ fib 20                  time:   [2.2469 ns 2.2633 ns 2.2841 ns]
                         Performance has improved.
 ```
 
-* `change: [-99.978% -99.978% -99.978%] (p = 0.00 < 0.05)`
-    * This is a statistically significant improvement!
+- `change: [-99.978% -99.978% -99.978%] (p = 0.00 < 0.05)`
+  - This is a statistically significant improvement!
 
 <!--
 Some details omitted.
 -->
 
-
 ---
-
 
 # **Flamegraphs**
 
-
 ---
-
 
 # Flamegraphs
 
 Suppose you want to know _where_ your program is spending time.
 
-* We want to know which functions take the most time
-* We could add timers for every single function call
-    * Manually adding timers is error-prone, misses deeper call stacks
-* That's why we have `flamegraph`s!
-
+- We want to know which functions take the most time
+- We could add timers for every single function call
+  - Manually adding timers is error-prone, misses deeper call stacks
+- That's why we have `flamegraph`s!
 
 ---
-
 
 # Example: Concatenating Strings
 
@@ -595,32 +515,25 @@ build_string(5); // produces "01234"
 build_string(15); // produces "01234567891011121314"
 ```
 
-
 ---
-
 
 # Flamegraph
 
 We can generate flamegraphs for our code with `cargo flamegraph`:
 
-![](../images/week13/flamegraph-format.svg)
-
+![](../images/week7/flamegraph-format.svg)
 
 ---
-
 
 # Flamegraph Analysis
 
+![](../images/week7/flamegraph-format.svg)
 
-![](../images/week13/flamegraph-format.svg)
-
-* Flamegraphs are generated by _sampling_ the call stack many times
-* Flamgegraphs display the call stack from bottom to top
-    * The width of a block is the relative time spent in that function
-
+- Flamegraphs are generated by _sampling_ the call stack many times
+- Flamgegraphs display the call stack from bottom to top
+  - The width of a block is the relative time spent in that function
 
 ---
-
 
 # Flamegraph Usage
 
@@ -648,16 +561,13 @@ fn build_string_pushstr(n: usize) -> String {
 Make sure students understand the differences and similarities between the two functions
 -->
 
-
 ---
-
 
 # Flamegraph
 
 Here is the flamegraph for `build_string_format`:
 
-![](../images/week13/flamegraph-format.svg)
-
+![](../images/week7/flamegraph-format.svg)
 
 <!--
 Note that these were generated with `cargo flamegraph --skip-after my_crate::main --min-width 5`.
@@ -666,17 +576,14 @@ Also, the function was called 1000000 times to get better readings. If you only 
 likely that the sampling doesn't get enough information.
 -->
 
-
 ---
-
 
 # Flamegraph
 
-And here is the flamegraph for `build_string_pushstr`:
+Here is the flamegraph for `build_string_pushstr`:
 
-![](../images/week13/flamegraph-pushstr.svg)
+![](../images/week7/flamegraph-pushstr.svg)
 
-* This one is faster!
 
 <!--
 KEY OBSERVATIONS:
@@ -689,73 +596,68 @@ KEY OBSERVATIONS:
     - more time in the main algorithm, as opposed to overhead functions
 -->
 
-
 ---
 
+# Flamegraph
+
+And here is the flamegraph for running both 50,000 times:
+
+![](../images/week7/flamegraph_two_build_string.svg)
+
+---
 
 # **Reading Rust Documentation**
 
-
 ---
-
 
 # Reading Rust Documentation
 
 Reading the documentation of third-party libraries is super important!
 
-* When we are unfamiliar with a tool, the first thing we need to do is read through documentation
-* Rust's `rustdoc` tool provides a way for developers to write documentation consistently between packages
-    * _All of our homework writeups were generated with `rustdoc`!_
-
+- When we are unfamiliar with a tool, the first thing we need to do is read through documentation
+- Rust's `rustdoc` tool provides a way for developers to write documentation consistently between packages
+  - _All of our homework writeups were generated with `rustdoc`!_
 
 ---
-
 
 # `rustdoc`
 
 Usually, you use `rustdoc` via `cargo doc`. Here are some useful commands:
 
-* `cargo doc --open`: Generates docs and opens it in a browser
-* `cargo doc --document-private-items`: Generates documentation for private items like modules and functions
-* `cargo doc --no-deps`: Does not generate docs for any dependencies
-* `cargo doc --test`: Runs documentation tests
-
-
+- `cargo doc --open`: Generates docs and opens it in a browser
+- `cargo doc --document-private-items`: Generates documentation for private items like modules and functions
+- `cargo doc --no-deps`: Does not generate docs for any dependencies
+- `cargo doc --test`: Runs documentation tests
 
 ---
-
 
 # Rust Documentation
 
 All Rust library documentation has the same structure!
 
-* By making documentation consistent, it shortens the time needed to get familiar with a library
-* Because Rust has _excellent_ first-party tooling for generating documentation, Rust library writers tend to invest in writing _excellent_ documentation, guides, and tutorials
+- By making documentation consistent, it shortens the time needed to get familiar with a library
+- Because Rust has _excellent_ first-party tooling for generating documentation, Rust library writers tend to invest in writing _excellent_ documentation, guides, and tutorials
 
 <!--
 This is a much more important detail than it might seem at first. Many people do not understand that documentation is sometimes _even more_ important than the code it describes.
 -->
 
-
 ---
-
 
 # **`rand`**
 
-
 ---
-
 
 # `rand`
 
 Let's look at an example of a popular third-party crate, [`rand`](https://docs.rs/rand/latest/rand/).
 
-* Rust does not have a random module in the standard library (unlike Python)
-* Instead, the de-facto crate for dealing with randomness in Rust is `rand`!
-* Use `rand` for:
-  * Generating / sampling random numbers
-  * Creating probability distributions
-  * Providing random algorithms (like vector shuffling)
+- Rust does not have a random module in the standard library (unlike Python)
+- Instead, the de-facto crate for dealing with randomness in Rust is `rand`!
+- Use `rand` for:
+  - Generating / sampling random numbers
+  - Creating probability distributions
+  - Providing random algorithms (like vector shuffling)
 
 <!--
 Why do we not have a random module in the standard library?
@@ -765,67 +667,55 @@ https://www.reddit.com/r/rust/comments/rgueuz/why/
 Also, if you scroll down the comments, you'll find an example of randomness using the random state from the HashMap collection
 -->
 
-
 ---
-
 
 # `rand`?
 
-* How do we use `rand`?
-* We should really be asking "how do we learn how to use `rand`"?
-* Google is our friend!
-    * Search "Rust rand"
+- How do we use `rand`?
+- We should really be asking "how do we learn how to use `rand`"?
+- Google is our friend!
+  - Search "Rust rand"
 
 <!--
 Maybe google isn't actually your friend, but you get the point. Choose whatever search engine you would like!
 -->
 
-
 ---
-
 
 # Docs.rs
 
-![bg right:50% 100%](../images/week13/google-rand.png)
+![bg right:50% 100%](../images/week7/google-rand.png)
 
-* Docs.rs has documentation for essentially every third-party Rust library
-* When publishing your own crate, the documentation gets pushed to Docs.rs
-
-
----
-
-
-![bg 75%](../images/week13/rand-docs.png)
-
+- Docs.rs has documentation for essentially every third-party Rust library
+- When publishing your own crate, the documentation gets pushed to Docs.rs
 
 ---
 
+![bg 75%](../images/week7/rand-docs.png)
+
+---
 
 # Anatomy of `rustdoc`
 
-![bg right:50% 95%](../images/week13/hints.png)
+![bg right:50% 95%](../images/week7/hints.png)
 
 - Navigation Bar (on the left)
 - Search Bar (at the top)
-    - Press "s" to search
+  - Press "s" to search
 - Settings (at the top right)
 - Help menu (at the top right)
-    - Press "?" for pop-up
-    - Lots of cool tricks!
-
+  - Press "?" for pop-up
+  - Lots of cool tricks!
 
 ---
-
 
 # `rand` Docs
 
 Let's take a quick look at the actual documentation!
 
-https://docs.rs/rand/latest/rand/
-
+<https://docs.rs/rand/latest/rand/>
 
 ---
-
 
 # `rand`: Quick Start
 
@@ -851,30 +741,24 @@ Some comments omitted.
 Source: https://docs.rs/rand/latest/rand/
  -->
 
-
 ---
-
 
 # The Rust Rand Book
 
 If we click on the link under the Quick Start, we are taken to [The Rust Rand Book](https://rust-random.github.io/book/).
 
-![](../images/week13/rand-book.png)
-
+![](../images/week7/rand-book.png)
 
 ---
-
 
 # Aside: mdBook
 
-* **mdBook** is a command line tool to create books with Markdown
-* Used to make the official Rust Book
-* Commonly used to make higher-level tutorials
-    * Rust documentation structure can't cover everything
-
+- **mdBook** is a command line tool to create books with Markdown
+- Used to make the official Rust Book
+- Commonly used to make higher-level tutorials
+  - Rust documentation structure can't cover everything
 
 ---
-
 
 # The Rust Rand Book
 
@@ -887,65 +771,55 @@ The Rust Rand Book covers the higher-level concepts that might not be easily und
 - Performance considerations
 - Understanding the design and architecture of `rand`
 
-
 ---
-
 
 # `rand` Lower-level Documentation
 
 If we want to know the lower-level specific details about `rand`, then we need to read through the actual documentation.
 
-* Specific RNG implementations and their guarantees
-    - `ThreadRng`, `StdRng`, `SmallRng`, etc.
-    - Security properties
-    - Performance characteristics
-* Detailed distribution implementations
-    - `Uniform`, `Bernoulli`, `Alphanumeric`
-    - Parameter configurations / constructors
-    - Sampling methods
-
+- Specific RNG implementations and their guarantees
+  - `ThreadRng`, `StdRng`, `SmallRng`, etc.
+  - Security properties
+  - Performance characteristics
+- Detailed distribution implementations
+  - `Uniform`, `Bernoulli`, `Alphanumeric`
+  - Parameter configurations / constructors
+  - Sampling methods
 
 ---
-
 
 # Normal Distribution?
 
 `rand` provides some basic probability distributions for us.
 
-* `Uniform`, `Bernoulli`, `Alphanumeric`
-* Where are the others?
-* What about a Normal / Gaussian distribution?
-
+- `Uniform`, `Bernoulli`, `Alphanumeric`
+- Where are the others?
+- What about a Normal / Gaussian distribution?
 
 ---
 
-
 # Google is not your friend?
 
-![](../images/week13/normal-distr-wrong.png)
+![](../images/week7/normal-distr-wrong.png)
 
-* This is actually not correct...
-    * Make sure you are looking at Docs.rs!
+- This is actually not correct...
+  - Make sure you are looking at Docs.rs!
 
 <!--
 Again, you are free to use whatever search engine you prefer.
 -->
 
-
 ---
 
+# Google can _help_
 
-# Google can _help_!
-
-![](../images/week13/normal-distr-correct.png)
+![](../images/week7/normal-distr-correct.png)
 
 <!--
 Just like any tool, make sure you use it correctly! Do your due diligence.
 -->
 
-
 ---
-
 
 # `rand_distr`
 
@@ -959,9 +833,7 @@ let v = normal.sample(&mut rand::rng());
 println!("{} is from a N(2, 9) distribution", v)
 ```
 
-
 ---
-
 
 # `rand_distr`
 
@@ -973,76 +845,64 @@ let v = normal.sample(&mut rand::rng());
 println!("{} is from a N(2, 9) distribution", v)
 ```
 
-* `rand_distr` complements `rand` by providing more probability distributions
-* Crates that you use will often depend on each other
-* Anyone can create a type that implements `Distribution`, integrating it into the `rand` "ecosystem"
-    * Example: [`zipf`](https://docs.rs/zipf/latest/zipf/) distribution
+- `rand_distr` complements `rand` by providing more probability distributions
+- Crates that you use will often depend on each other
+- Anyone can create a type that implements `Distribution`, integrating it into the `rand` "ecosystem"
+  - Example: [`zipf`](https://docs.rs/zipf/latest/zipf/) distribution
 
 <!--
 Crates that you use will often depend on each other, and super important crates like rand will often have quite a lot of crates depending on it!
 -->
 
-
 ---
-
 
 # Aside: Large Language Models
 
 Large Language Models have proven that they can boost developer productivity.
 
-* Due to Rust's strict guardrails and a "if it compiles it works" mentality, LLMs are actually quite good at helping with small amounts of Rust code
-* However, LLMs are generally quite bad at the types of hard problems that Rust aims to solve
-    * Complex software systems, concurrent and parallel programs, etc.
-* Generally not that much training data (compared to Python or Javascript)
-* Leverage LLMs for basic syntax and boilerplate!
-
+- Due to Rust's strict guardrails and a "if it compiles it works" mentality, LLMs are actually quite good at helping with small amounts of Rust code
+- However, LLMs are generally quite bad at the types of hard problems that Rust aims to solve
+  - Complex software systems, concurrent and parallel programs, etc.
+- Generally not that much training data (compared to Python or Javascript)
+- Leverage LLMs for basic syntax and boilerplate!
 
 ---
-
 
 # **Rust Time**
 
-* Time for Rust!
-
+- Time for Rust!
 
 ---
-
 
 # Time?
 
 How do we keep time in Rust? There are several options:
 
-* `std::time`: Basic system time functionality
-* `time`: Some more time functionality (dates, months, parsing, formatting)
-* `chrono`: Even more functionality (UTC time zones, Gregorian calendar)
-
+- `std::time`: Basic system time functionality
+- `time`: Some more time functionality (dates, months, parsing, formatting)
+- `chrono`: Even more functionality (UTC time zones, Gregorian calendar)
 
 ---
-
 
 # How do you choose which `time` to use?
 
-* Google is your friend!
-
-
----
-
-
-# Google is your friend!
-
-https://www.google.com/search?q=Rust+chrono+vs+time
-
+- Google is your friend!
 
 ---
 
+# Google is your friend
 
-# Answer: It Depends!
+<https://www.google.com/search?q=Rust+chrono+vs+time>
+
+---
+
+# Answer: It Depends
 
 You should read through the documentation of each to figure out which is the best for you.
 
-- `std::time`: https://doc.rust-lang.org/std/time
-- `time`: https://docs.rs/time/latest/time/
-- `chrono`: https://docs.rs/chrono/latest/chrono/
+- `std::time`: <https://doc.rust-lang.org/std/time>
+- `time`: <https://docs.rs/time/latest/time/>
+- `chrono`: <https://docs.rs/chrono/latest/chrono/>
 
 <!--
 IMPORTANT: Actually go through the crate-level docs for each of these!
@@ -1050,39 +910,31 @@ IMPORTANT: Actually go through the crate-level docs for each of these!
 Note that you don't always want to use the most feature-full libraries! Simplicity >>> Complexity w.r.t. maintainability.
 -->
 
-
 ---
-
 
 # **Error Handling**
 
-
 ---
-
 
 # Error Handling
 
-* In lecture 5, we talked about how to handle errors on your own
-    * Hopefully you know what `Result<T, E>` is...
-* Creating `MyError` types for `Result<T, MyError>` everywhere can create a lot of boilerplate and become cumbersome
-* It is usually easier and faster to use a third-party library that can help you manage errors better!
-
+- In lecture 5, we talked about how to handle errors on your own
+  - Hopefully you know what `Result<T, E>` is...
+- Creating `MyError` types for `Result<T, MyError>` everywhere can create a lot of boilerplate and become cumbersome
+- It is usually easier and faster to use a third-party library that can help you manage errors better!
 
 ---
-
 
 # Error Handling Libraries
 
-* `anyhow`
-    - "I don't want to care about error types"
-* `thiserror`
-    - "I want to easily define errors for my library"
-* `snafu`
-    - "I want BOTH!"
-
+- `anyhow`
+  - "I don't want to care about error types"
+- `thiserror`
+  - "I want to easily define errors for my library"
+- `snafu`
+  - "I want BOTH!"
 
 ---
-
 
 # `anyhow`
 
@@ -1098,17 +950,15 @@ fn get_cluster_info() -> Result<ClusterMap> {
 }
 ```
 
-* Remember how painful it was to define a proper error type?
-* `anyhow` provides `anyhow::Error`, a trait object based error type for easy idiomatic error handling in Rust applications
-* Allows you to use `?` wherever you want (a better `Box<dyn Error>`)
+- Remember how painful it was to define a proper error type?
+- `anyhow` provides `anyhow::Error`, a trait object based error type for easy idiomatic error handling in Rust applications
+- Allows you to use `?` wherever you want (a better `Box<dyn Error>`)
 
 <!--
 Don't worry too much about the `serde_json`, basically it is a **deserializer** that can read in a structure like JSON and convert it into a proper rust struct (in this case, a `ClusterMap` - whatever that is)
 -->
 
-
 ---
-
 
 # `anyhow`: Attach context
 
@@ -1135,15 +985,12 @@ Caused by:
 
 ---
 
-
 # Summary: [`anyhow`](https://docs.rs/anyhow/latest/anyhow/)
 
-* `anyhow` is good for type erasure in binaries
-* `anyhow` is also good for attaching dynamic context to errors
-
+- `anyhow` is good for type erasure in binaries
+- `anyhow` is also good for attaching dynamic context to errors
 
 ---
-
 
 # `thiserror`
 
@@ -1167,9 +1014,7 @@ pub enum DataStoreError {
 `thiserror` is literally just that single derive macro!
 -->
 
-
 ---
-
 
 # `thiserror`: Format Strings
 
@@ -1197,9 +1042,7 @@ pub enum Error {
 These are just example use cases. `thiserror` is a relatively simple crate to use!
 -->
 
-
 ---
-
 
 # `thiserror`: To and `From`
 
@@ -1222,43 +1065,23 @@ pub struct MyError {
 }
 ```
 
-
 ---
-
 
 # Summary: [`thiserror`](https://docs.rs/thiserror/latest/thiserror/)
 
-* `thiserror` is good for creating error types in libraries
-* Use `thiserror` for libraries and `anyhow` for binaries
-* Use `snafu` when you need both!
-
+- `thiserror` is good for creating error types in libraries
+- Use `thiserror` for libraries and `anyhow` for binaries
+- Use `snafu` when you need both!
 
 ---
-
 
 # Aside: `snafu`
 
 `snafu` is like a combination of both `anyhow` and `thiserror`.
 
-* Less mature, but picking up a lot of traction
-* Look at the [docs](https://docs.rs/snafu/latest/snafu/) if you are interested!
+- Less mature, but picking up a lot of traction
+- Look at the [docs](https://docs.rs/snafu/latest/snafu/) if you are interested!
 
-
----
-
-# Homework - Ownership Quiz
-
-* This homework is a Gradescope Quiz!
-* 30 questions from the [Brown Rust Book](https://rust-book.cs.brown.edu/)
-* Read through chapter 4 on ownership
-    * Answer the quiz questions on the web page as you go through it
-    * All answers will be revealed after you attempt!
-* Each question is worth 5 points, so you don't need to do everything
-* Focus on _understanding_ rather than the questions themselves
-
-<!--
-It is hard, the editor got 3/15 for his own quiz when he was taking the course ;(
--->
 
 --- 
 
@@ -1273,4 +1096,4 @@ Thanks for coming!
 
 _Slides created by:_
 Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen
+Jessica Ruan, Fiona Fisher, Terrance Chen, Hugo Latendresse

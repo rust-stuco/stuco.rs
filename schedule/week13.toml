@@ -23,6 +23,5 @@ items = [
 name = "RowLab"
 slug = "rowlab"
 
-[homework_ec]
-name = "FilterLab"
-slug = "filterlab"
+[homework_alt]
+name = "Project Submission"

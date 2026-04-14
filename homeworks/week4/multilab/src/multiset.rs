@@ -32,10 +32,10 @@ use std::hash::Hash;
 /// hash method that allows us to hash an element of type `K`.
 /// _This may or may not be useful for the inner data structure that you choose..._
 ///
-/// This shouldn't have any effect your implementation,
+/// This shouldn't have any effect on your implementation,
 /// but if you run into trouble with this, please let us know!
 pub struct MultiSet<K: Eq + Hash> {
-    _replace_me: std::marker::PhantomData<K>
+    _replace_me: std::marker::PhantomData<K>,
 }
 
 impl<K> MultiSet<K>

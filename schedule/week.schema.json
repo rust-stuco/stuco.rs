@@ -41,6 +41,16 @@
         }
       ]
     },
+    "homework_alt": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Homework"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
     "rustlings": {
       "type": [
         "array",

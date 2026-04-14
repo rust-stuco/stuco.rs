@@ -11,7 +11,7 @@ For this lab, we will only give you testing and benchmarking code. You should se
 the `src/` directory. We want you to structure your code however you would like! If you are unsure,
 you can write all of your code in the `lib.rs` file and then move things out into different files as
 necessary. If you have trouble setting things up, you can always reference the reference solution on
-our [GitHub](https://github.com/rust-stuco/homeworks).
+our [GitHub](https://github.com/rust-stuco/stuco.rs/tree/main/homeworks/).
 
 We will additionally give you access to the `Cargo.toml` file for the first time! There are many
 ways to abuse this. For example, you could import someone else's implementation of a bloom filter,
@@ -32,16 +32,16 @@ probabilistic data structures in all of Computer Systems (and perhaps even Compu
 If you are unfamiliar with bloom filters, there are great resources online explaining how they work.
 Here are three of many good explanations:
 
--   [YouTube Video](https://youtu.be/kfFacplFY4Y?si=3gYtD9HBE3_mWOh1)
--   [System Design Article](https://systemdesign.one/bloom-filters-explained/)
--   [Brilliant Article](https://brilliant.org/wiki/bloom-filter/)
+- [YouTube Video](https://youtu.be/kfFacplFY4Y?si=3gYtD9HBE3_mWOh1)
+- [System Design Article](https://systemdesign.one/bloom-filters-explained/)
+- [Brilliant Article](https://brilliant.org/wiki/bloom-filter/)
 
 TLDR; Bloom filters comprise of 2 main components:
 
--   The bit vector that stores the set bits
--   The hashing scheme, which is a combination of:
-    -   The "class" of hash functions
-    -   The number of times you need to hash each element
+- The bit vector that stores the set bits
+- The hashing scheme, which is a combination of:
+    - The "class" of hash functions
+    - The number of times you need to hash each element
 
 ## Bit Vector
 
@@ -50,7 +50,7 @@ recommend implementing the bit vector with a vector of bytes, or a `Vec<u8>`.
 
 If you are unfamiliar with bit vectors, you can read [this](https://en.wikipedia.org/wiki/Bit_array)
 for a high-level summary. Please let us know if you need help with this part! You can always
-reference the reference solution on our [GitHub](https://github.com/rust-stuco/homeworks) (as long
+reference the reference solution on our [GitHub](https://github.com/rust-stuco/stuco.rs/tree/main/homeworks/) (as long
 as you are not copying and pasting it verbatim).
 
 As a reminder, you are _not_ allowed to import someone else's implementation of a bit vector.

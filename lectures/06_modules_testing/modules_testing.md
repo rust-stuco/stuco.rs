@@ -22,24 +22,19 @@ code {
 
 # Modules and Testing
 
-
 ---
-
 
 # Today: Modules and Testing
 
-
 * Modules, Packages, and Crates
-    * The `use` keyword
-    * Module Paths and the File System
+  * The `use` keyword
+  * Module Paths and the File System
 * Testing
-    * Unit Testing
-    * Integration Testing
+  * Unit Testing
+  * Integration Testing
 * Code Review
 
-
 ---
-
 
 # Large Programs
 
@@ -51,9 +46,7 @@ As your programs get larger, the organization of the code becomes increasingly i
 * _Encapsulate_ implementation details
 * _Modularize_ your program
 
-
 ---
-
 
 # Module System
 
@@ -64,19 +57,15 @@ Rust implements a number of organizational features, collectively referred to as
 * **Modules**: Lets you control the organization, scope, and privacy of paths
 * **Paths**: A way of naming an item, such as a struct, function, or module
 
-
 <!--
 Paths are what we've been calling namespaces this whole time basically
 -->
 
 ---
 
-
 # **Packages and Crates**
 
-
 ---
-
 
 # Crate
 
@@ -85,8 +74,8 @@ A _crate_ is the smallest amount of code that the Rust compiler considers at a t
 * The equivalent in C/C++ is a _compilation unit_
 * Running `rustc` on a single file also builds a crate
 * Crates contain modules
-    * Modules can be defined in other files
-    * Paths allow modules to refer to other modules
+  * Modules can be defined in other files
+  * Paths allow modules to refer to other modules
 
 <!--
 You've probably never heard of compilation units---
@@ -97,38 +86,32 @@ source c/cxx/cpp file and all of its dependents is one compilation unit.
 Explicitly state that in C/C++ each file is treated as a compilation unit, and that is NOT the case in Rust
 -->
 
-
 ---
-
-
 
 # Crate
 
 There are two types of crates: **binary** crates and **library** crates.
 
 * A binary crate can be compiled to an executable
-    * Contains a `main` function
-    * Examples include command-line utilities or servers
+  * Contains a `main` function
+  * Examples include command-line utilities or servers
 * A library crate has no `main` function, and does not compile to an executable
-    * Defines functionality intended to be shared with multiple projects
+  * Defines functionality intended to be shared with multiple projects
 * Each crate also has a file referred to as the _crate root_
-    * _The Rust compiler looks at this file first, and it is also the root module of the crate (more on modules later!)_
-
+  * _The Rust compiler looks at this file first, and it is also the root module of the crate (more on modules later!)_
 
 ---
-
 
 # Package
 
 A package is a bundle of one or more crates.
 
 * A package is defined by a `Cargo.toml` file at the root of your directory
-    * `Cargo.toml` describes how to build all of the crates
-* A package can contain **any number of** binary crates, but **at most one** library crate
-
+  * `Cargo.toml` describes how to build all of the crates
+* A package can _define_ **any number of** binary crates, but **at most one** library crate.
+  * A package can _depend_ on any number of library crates.
 
 ---
-
 
 # `cargo new`
 
@@ -154,9 +137,7 @@ main.rs
 Some stuff has been elided for slide real estate...
 -->
 
-
 ---
-
 
 # `Cargo.toml`
 
@@ -182,9 +163,7 @@ When we say root, we mean root _modules_
 You _can_ have both lib.rs and main.rs
 -->
 
-
 ---
-
 
 # Example: `cargo`
 
@@ -198,38 +177,32 @@ It is typical for binary executables in Rust to be thin wrappers around library 
 testing the program easier
 -->
 
-
 ---
-
 
 # Aside: Package vs Project vs Program
 
 * "Package" is the only term of these three with a formal definition in Rust
 * "Project" is a very overloaded term
-    * More meaningful in the context of an _IDE_
+  * More meaningful in the context of an _IDE_
 * "Program"
-    * Ask the mathematicians ¯\\_(ツ)_/¯
-
+  * Ask the mathematicians ¯\\_(ツ)_/¯
 
 ---
-
 
 # **Modules**
 
-
 ---
-
 
 # Modules
 
 _Modules_ let us organize code within a crate for readability and easy reuse.
 
 * Modules are collections of _items_
-    * Items are functions, structs, traits, etc.
+  * Items are functions, structs, traits, etc.
+* Similar to C++ namespaces.
 * Allows us to control the privacy of items
 * Mitigates namespace collisions
 * Here is a [cheat sheet](https://doc.rust-lang.org/book/ch07-02-defining-modules-to-control-scope-and-privacy.html) from the Rust Book!
-
 
 <!--
 Generally, a mechanism for encapsulation
@@ -237,16 +210,16 @@ Generally, a mechanism for encapsulation
 
 ---
 
-
 # Root Module
 
 The root module is in our `main.rs` (for a binary crate) or `lib.rs` (for a library crate).
 
 ```sh
-$ cargo new restaurant
+cargo new restaurant
 ```
 
 ###### src/main.rs
+
 ```rust
 fn main() {
     println!("Hello, world!");
@@ -259,44 +232,44 @@ Root module is implicit here, no `mod` keyword
 
 ---
 
-
 # Declaring Modules
 
 We can declare a new module with the keyword `mod`.
 
 ###### src/main.rs
-```rust
-fn main() {
-    println!("Hello, World!");
-}
 
+```rust
 mod kitchen {
     // `cook` is defined in the module `kitchen`
     fn cook() {
         println!("I'm cooking");
     }
 }
+
+fn main() {
+    println!("Hello, World!");
+}
+
 ```
 
-
 ---
-
 
 # Using Modules
 
 To use items outside of a module, we must declare them as `pub`.
 
 ###### src/main.rs
-```rust
-fn main() {
-    kitchen::cook();
-}
 
+```rust
 mod kitchen {
     pub fn cook() { println!("I'm cooking"); }
 
     // Only items internal to the `kitchen` should be able to access this
     fn examine_ingredients() {}
+}
+
+fn main() {
+    kitchen::cook();
 }
 ```
 
@@ -307,33 +280,30 @@ In fact, generally everything is private by default in Rust
 Private by default is very very good
 -->
 
-
 ---
-
 
 # Declaring Submodules
 
 We can declare submodules inside of other modules.
 
 ###### src/main.rs
-```rust
-fn main() {
-    kitchen::stove::cook();
-}
 
+```rust
 mod kitchen {
     pub mod stove {
         pub fn cook() { println!("I'm cooking"); }
     }
+}
+
+fn main() {
+    kitchen::stove::cook();
 }
 ```
 
 * Submodules also have to be declared as `pub mod` to be accessible
 * The module system is a tree, just like a file system
 
-
 ---
-
 
 # Modules as Files
 
@@ -348,13 +318,12 @@ src
 * Allows us to represent our module structure in the file system
 * Let's try moving the `kitchen` module to its own file!
 
-
 ---
-
 
 # Modules as Files
 
 ###### src/main.rs
+
 ```rust
 mod kitchen; // The compiler will look for `kitchen.rs`
 
@@ -364,6 +333,7 @@ fn main() {
 ```
 
 ###### src/kitchen.rs
+
 ```rust
 pub mod stove {
     pub fn cook() { println!("I'm cooking"); }
@@ -374,15 +344,14 @@ fn examine_ingredients() {}
 
 * What about moving the `stove` submodule to its own file as well?
 
-
 ---
-
 
 # Submodules as Files
 
 We can move the `stove` submodule into a file  `src/kitchen/stove.rs` to indicate that `stove` is a submodule of `kitchen`.
 
 ###### src/kitchen.rs
+
 ```rust
 pub mod stove; // note this still has to be `pub`
 
@@ -390,6 +359,7 @@ fn examine_ingredients() {}
 ```
 
 ###### src/kitchen/stove.rs
+
 ```rust
 pub fn cook() {
     println!("I'm cooking");
@@ -398,15 +368,14 @@ pub fn cook() {
 
 * `main.rs` is unchanged (omitted for slide real estate)
 
-
 ---
-
 
 # Alternate Submodule File Naming
 
 We could also replace `src/kitchen.rs` with `src/kitchen/mod.rs`.
 
 ###### src/kitchen/mod.rs
+
 ```rust
 pub mod stove;
 
@@ -414,6 +383,7 @@ fn examine_ingredients() {}
 ```
 
 ###### src/kitchen/stove.rs
+
 ```rust
 pub fn cook() {
     println!("I'm cooking");
@@ -422,9 +392,7 @@ pub fn cook() {
 
 * The only difference is in which file the `kitchen` module is defined
 
-
 ---
-
 
 # Alternate Submodule File Naming
 
@@ -446,8 +414,7 @@ src
 └── main.rs
 ```
 
-* This is a stylistic choice that each instructor has a very strong opinion on
-    * Ask at your own peril...
+* The Rust book says that having kitchen.rs is more idiomatic than kitchen/mod.rs, but ultimately this is a stylistic choice.
 
 <!--
 Connor and also Terrance prefers `mod.rs`
@@ -457,9 +424,7 @@ David is partial to both based on the project
 Connor also believes that `mod.rs` files should only have docs, `use` statements, and type definitions.
 -->
 
-
 ---
-
 
 # File Structure Comparison: Choice 1
 
@@ -487,9 +452,7 @@ src
 └── lib.rs
 ```
 
-
 ---
-
 
 # File Structure Comparison: Choice 2
 
@@ -517,9 +480,7 @@ src
 └── lib.rs
 ```
 
-
 ---
-
 
 # File Structure Comparison
 
@@ -527,17 +488,15 @@ Consistency with surrounding codebase is _**always**_ most important!
 
 See discussions:
 
-- [Rust Users Forum](https://users.rust-lang.org/t/module-mod-rs-or-module-rs/122653)
-- [Rust Internals Forum](https://internals.rust-lang.org/t/the-module-scheme-module-rs-file-module-folder-instead-of-just-module-mod-rs-introduced-by-the-2018-edition-maybe-a-little-bit-more-confusing/21977/17?u=zirconium-n)
-- [Reddit](https://www.reddit.com/r/rust/comments/18pytwt/noob_question_foomodrs_vs_foors_foo_for_module/)
+* [Rust Users Forum](https://users.rust-lang.org/t/module-mod-rs-or-module-rs/122653)
+* [Rust Internals Forum](https://internals.rust-lang.org/t/the-module-scheme-module-rs-file-module-folder-instead-of-just-module-mod-rs-introduced-by-the-2018-edition-maybe-a-little-bit-more-confusing/21977/17?u=zirconium-n)
+* [Reddit](https://www.reddit.com/r/rust/comments/18pytwt/noob_question_foomodrs_vs_foors_foo_for_module/)
 
 <!--
 You don't really need to explain the discussions in here, leave it for interested students to find out on their own
 -->
 
-
 ---
-
 
 # The Module Tree, Visualized
 
@@ -558,9 +517,7 @@ crate restaurant
 Emphasize that the above module tree can be represented by many different file structures
 -->
 
-
 ---
-
 
 # Module Paths
 
@@ -572,9 +529,7 @@ There are two types of paths:
 * A _relative path_ starts from the current module and use `self`, `super`, or an identifier in the current module
 * Components of paths are separated by double colons (`::`)
 
-
 ---
-
 
 # Paths for Referring to Modules
 
@@ -585,18 +540,18 @@ kitchen::stove::cook();
 ```
 
 This is saying:
+
 * In the module `kitchen`
-    * In the submodule `stove`
-        * Call the function `cook`
+  * In the submodule `stove`
+    * Call the function `cook`
 * This is a path relative to the current module (in this case, the root)
 
-
 ---
-
 
 # Using Paths
 
 ###### src/main.rs
+
 ```rust
 mod kitchen;
 
@@ -607,15 +562,14 @@ fn main() {
 
 * Not too hard to write...
 
-
 ---
-
 
 # Using Verbose Paths
 
 What if we had a deeper module tree?
 
 ###### src/main.rs
+
 ```rust
 fn main() {
     kitchen::stove::stovetop::burner::gas::gasknob::pot::cook();
@@ -625,17 +579,16 @@ fn main() {
 ```
 
 * A lot more verbose...
-    * Especially if we need to write this multiple times
-
+  * Especially if we need to write this multiple times
 
 ---
-
 
 # The `use` Keyword
 
 We can bring paths into scope with the `use` keyword.
 
 ###### src/main.rs
+
 ```rust
 mod kitchen;
 
@@ -650,18 +603,15 @@ fn main() {
 
 * It is idiomatic to `use` up to the _parent_ of a function, rather than the function item itself
 
-
 <!--
 It is idiomatic to do it this way, because it makes it clear that the item is not locally defined
 -->
 
-
 ---
-
 
 # More `use` Syntax
 
-We can also import items from the Rust standard library (`std`).
+We can also import items from other crates. One common example is the Rust standard library (`std`).
 
 ```rust
 use std::collections::HashMap;
@@ -669,6 +619,8 @@ use std::io::Bytes;
 use std::io::Write;
 ```
 
+* `std` is a crate
+* `collections` and `io` are modules
 * `HashMap` and `Bytes` are structs, and `Write` is a trait
 * It is idiomatic to import structs, enums, traits, etc. directly
 
@@ -679,9 +631,7 @@ If you do have types that have identical names, you need to bring in the types r
 parent modules anyways.
 -->
 
-
 ---
-
 
 # More `use` Syntax
 
@@ -695,8 +645,8 @@ use std::io::*; // Also possible!
 ```
 
 * You could also write `use std::io::*` to bring in everything from the `std::io` module (including `Bytes` and `Write`)
-    * Called the "glob operator"
-    * Generally not recommended since it clutters the namespace
+  * Called the "glob operator"
+  * Generally not recommended since it clutters the namespace
 
 <!--
 The one case where glob is idiomatic is with the `use some_crate::prelude::*` pattern.
@@ -705,9 +655,7 @@ It does not actually increase compilation cost, it just makes dealing with names
 annoying, so it is good practice to only bring in what you actually need.
 -->
 
-
 ---
-
 
 # Aside: Binary and Library Crate Paths
 
@@ -724,9 +672,7 @@ src
 └── main.rs
 ```
 
-
 ---
-
 
 # Aside: Binary and Library Crate Paths
 
@@ -748,20 +694,20 @@ Typically when you have both a binary and library crate in the same package, you
 Since both are crate roots, there are technically 2 separate module trees
 -->
 
-
 ---
-
 
 # Accessing Library from Binary
 
 Let's try to refactor our previous example:
 
 ###### restaurant/src/lib.rs
+
 ```rust
 pub mod kitchen; // Now marked `pub`!
 ```
 
 ###### restaurant/src/main.rs
+
 ```rust
 fn main() {
     ???::kitchen::stove::cook();
@@ -775,15 +721,14 @@ fn main() {
 Make sure the mention that the paths are now relative to outside package directory now
 -->
 
-
 ---
-
 
 # Accessing Library from Binary
 
 We treat our library crate as an _external_ crate, with the same name as our package.
 
 ###### restaurant/src/main.rs
+
 ```rust
 fn main() {
     restaurant::kitchen::stove::cook();
@@ -793,9 +738,7 @@ fn main() {
 * Similar to how you would treat `std` as an external crate
 * We'll talk about external crates more next week!
 
-
 ---
-
 
 # The `super` Keyword
 
@@ -811,6 +754,7 @@ crate restaurant
 ```
 
 ###### src/kitchen/stove.rs
+
 ```rust
 pub fn cook() {
     super::examine_ingredients(); // Make sure you do this before cooking!
@@ -818,9 +762,7 @@ pub fn cook() {
 }
 ```
 
-
 ---
-
 
 # Privacy
 
@@ -830,7 +772,9 @@ mod kitchen: pub(crate)
 └── mod stove: pub
     └── fn cook: pub
 ```
+
 ###### src/kitchen/stove.rs
+
 ```rust
 pub fn cook() {
     super::examine_ingredients(); // Make sure you do this before cooking!
@@ -840,16 +784,14 @@ pub fn cook() {
 
 * `examine_ingredients` does not need to be public in this case
 * `stove` can access anything in its parent module `kitchen`
-    * Note that privacy only applies upwards, not downwards
+  * Note that privacy only applies upwards, not downwards
 
 <!--
 Child modules can access anything the parent module has access to, but not the other way around.
 This means child modules can also access any public item in a sibling module.
 -->
 
-
 ---
-
 
 # Privacy of Types
 
@@ -870,27 +812,21 @@ pub enum Appetizer {
 * We can mark specific fields of structs public, allowing direct access
 * If an enum is public, so are its variants!
 
-
 ---
-
 
 # Recap: Modules
 
 * You can split a package into crates
-    * Crates into modules
-        * Modules into items
+  * Crates into modules
+    * Modules into items
 * You can refer to items defined in other modules with paths
 * All module components are private by default, unless you mark them as `pub`
 
-
 ---
-
 
 # **Testing**
 
-
 ---
-
 
 # Testing
 
@@ -898,9 +834,7 @@ pub enum Appetizer {
 
 * Edsger W. Dijkstra, _The Humble Programmer_
 
-
 ---
-
 
 # Testing
 
@@ -909,9 +843,7 @@ Correctness of a program is complex and not easy to prove.
 * Rust's type system helps with this, but it certainly cannot catch everything
 * Rust includes a testing framework for this reason!
 
-
 ---
-
 
 # What is a Test?
 
@@ -921,15 +853,14 @@ Generally we want to perform at least 3 actions when running a test:
 2) Run the evaluated code
 3) Determine if the results are as expected
 
-
 ---
-
 
 # Writing Tests
 
 In Rust, a test is a function annotated with the `#[test]` attribute.
 
 ###### src/lib.rs
+
 ```rust
 #[cfg(test)]
 mod tests {
@@ -943,9 +874,7 @@ mod tests {
 
 * After running `cargo new adder --lib`, this code will be in `src/lib.rs`
 
-
 ---
-
 
 # Writing Tests
 
@@ -964,9 +893,7 @@ fn it_works() {
 * We use the `assert_eq!` macro to assert that `result` is correct
 * We don't need to return anything, since not panicking _is_ the test!
 
-
 ---
-
 
 # Running Tests
 
@@ -990,9 +917,7 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 ```
 
-
 ---
-
 
 # Running Tests
 
@@ -1012,9 +937,7 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 Disregard the "0 measured", that is for nightly benchmarking
 -->
 
-
 ---
-
 
 # Documentation Tests
 
@@ -1031,9 +954,7 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 * All of the code examples in documentation comments are treated as tests!
 * This is useful for keeping your docs and code in sync
 
-
 ---
-
 
 # `#[cfg(test)]`
 
@@ -1049,9 +970,7 @@ mod tests {
 * This tells the compiler that this entire module should _only_ be used for testing
 * The compiler ignores this module when compiling with `cargo build`
 
-
 ---
-
 
 # Writing Better Tests
 
@@ -1072,9 +991,7 @@ mod tests {
 }
 ```
 
-
 ---
-
 
 # Failing Tests
 
@@ -1101,12 +1018,9 @@ test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 error: test failed, to rerun pass `--lib`
 ```
 
-
 ---
 
-
 # Failing Tests
-
 
 ```
 failures:
@@ -1126,9 +1040,7 @@ error: test failed, to rerun pass `--lib`
 
 * Instead of `ok`, we get that the result of `tests:another` is `FAILED`
 
-
 ---
-
 
 # Checking Results
 
@@ -1155,9 +1067,7 @@ Say in lecture that `assert!` will give you a nicer error message
 than if you did an if check and panic manually
 -->
 
-
 ---
-
 
 # Testing Equality
 
@@ -1170,9 +1080,7 @@ fn it_adds_two() {
 }
 ```
 
-
 ---
-
 
 # Testing Equality
 
@@ -1189,9 +1097,7 @@ note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 * You get a nicer error message from `assert_eq!` versus using
 `assert!(left == right)`
 
-
 ---
-
 
 # Custom Error Messages
 
@@ -1209,9 +1115,7 @@ fn greeting_contains_name() {
 }
 ```
 
-
 ---
-
 
 # `#[should_panic]`
 
@@ -1232,10 +1136,8 @@ fn greater_than_100() {
 We don't actually use this anymore... But it is helpful to know nonetheless
 -->
 
-
 <!--
 ---
-
 
 # Using `Result<T, E>` in Tests
 
@@ -1257,9 +1159,7 @@ fn it_works() -> Result<(), String> {
 * Note that you can't use `#[should_panic]` on tests that return a `Result`
 -->
 
-
 ---
-
 
 # Controlling Test Behavior
 
@@ -1275,30 +1175,25 @@ Formally, "capturing" means that is won't display any `println!`s or error messa
 Parallel stuff leads into next slide...
 -->
 
-
 ---
-
 
 # Running Tests in Parallel
 
 * Suppose each of your tests all write to some shared file on disk
-    * All tests write to a file `output.txt`
+  * All tests write to a file `output.txt`
 * They later assert that the file still contains that data they wrote
 * You probably don't want all of them to run at the same time!
 
-
 ---
 
-
 # Test Threads
-
 
 By default, Rust will run all tests in parallel, on different threads.
 
 You can use `--test-threads` flag to control the number of threads.
 
 ```
-$ cargo test -- --test-threads=1
+cargo test -- --test-threads=1
 ```
 
 * Only use this when you actually need to, otherwise the benefits of running tests in parallel are lost
@@ -1307,17 +1202,15 @@ $ cargo test -- --test-threads=1
 Take 15-445 if you want to do this safely without losing parallelism!
 -->
 
-
 ---
-
 
 # Showing Output
 
 If you want to prevent the capturing of output, you can use `--no-capture`.
 
 ```
-$ cargo test -- --no-capture
-$ cargo test -- --show-output
+cargo test -- --no-capture
+cargo test -- --show-output
 ```
 
 * `--no-capture` will print the full output of every test that is run
@@ -1329,9 +1222,7 @@ $ cargo test -- --show-output
 Note that `cargo test` will show the print output of failed tests
 -->
 
-
 ---
-
 
 # Running Tests by Name
 
@@ -1348,9 +1239,7 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 999 filtered out; fi
 
 * Notice how there are now `999 filtered out` tests, these were the tests that didn't match the name `one_hundred`
 
-
 ---
-
 
 # Multiple Tests by Name
 
@@ -1368,9 +1257,7 @@ test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 998 filtered out; fi
 
 * If you want an exact name, use `cargo test {name} -- --exact`
 
-
 ---
-
 
 # Ignoring Tests
 
@@ -1396,9 +1283,7 @@ fn expensive_test() {
 This can be useful if you have super specialized tests that need to run by themselves
 -->
 
-
 ---
-
 
 # Test Organization
 
@@ -1407,25 +1292,21 @@ The Rust community thinks about tests in terms of two main categories: unit test
 * Unit tests test each unit of code in isolation
 * Integration tests are external to your library, testing the entire system
 
-
 ---
-
 
 # Unit Tests
 
 Unit tests are almost always contained within the `src` directory.
 
 * The convention is to create submodules named `tests` for every module you want to test
-    * Make sure to add the attribute `#[cfg(test)]`!
+  * Make sure to add the attribute `#[cfg(test)]`!
 * Prevents deploying extra code in production that is only used for testing
 
 <!--
 Make sure to briefly re-explain what `#[cfg(test)]` is just in case
 -->
 
-
 ---
-
 
 # Testing Private Functions
 
@@ -1456,9 +1337,7 @@ There's debate within the testing community about whether or not private functio
 If you don't think private functions should be tested, there's nothing in Rust that will compel you to do so.
 -->
 
-
 ---
-
 
 # Integration Tests
 
@@ -1474,9 +1353,7 @@ your library crate.
 The main difference here is that integration tests don't have any access to private items
 -->
 
-
 ---
-
 
 # Integration Tests
 
@@ -1494,15 +1371,14 @@ adder
 
 * Notice how `tests` is _outside_ of `src`
 
-
 ---
-
 
 # Integration Tests
 
 Since we are now external to our own library, we must import everything as if it were a 3rd-party crate.
 
 ###### adder/tests/integration_test.rs
+
 ```rust
 use adder;
 
@@ -1516,9 +1392,7 @@ fn it_adds_two() {
 * We run test files using the name of the integration test file, like
 `cargo test --test integration_test`
 
-
 ---
-
 
 <!--
 # Submodules in Integration Tests
@@ -1527,15 +1401,11 @@ As you add more integration tests, you might want to make more files in the `tes
 
 * You can use submodules in the `tests` directory just like in the `src` directory
 
-
 // Comment this below:
 You can treat the `tests` directory almost exactly the same as the `src` directory, and you can
 also use the alternate module file naming that we talked about earlier in the lecture.
 
-
-
 ---
-
 
 # Submodules in Integration Tests
 
@@ -1552,9 +1422,7 @@ Using the alternate naming convention with `common/mod.rs` tells Rust not to tre
     └── integration_test.rs
 ```
 
-
 ---
-
 
 # Submodules in Integration Tests
 
@@ -1579,10 +1447,8 @@ fn it_adds_two() {
 }
 ```
 
-
 ---
 -->
-
 
 # Integration Tests for Binary Crates
 
@@ -1591,9 +1457,7 @@ We cannot create integration tests for a binary crate.
 * Binary crates do not expose their functions
 * This is why most binary crates will be paired with a library crate, even if they don't _need_ to expose any functions
 
-
 ---
-
 
 # Recap: Testing
 
@@ -1601,9 +1465,7 @@ We cannot create integration tests for a binary crate.
 * Integration tests check that many parts of the library work together correctly
 * Even though Rust can prevent some kinds of bugs, tests are still extremely important to reduce logical bugs!
 
-
 ---
-
 
 # Homework 6
 
@@ -1614,24 +1476,18 @@ Homework 6 is going to be very different from the previous 5 homeworks!
 * We are not giving you _any_ starter code
 * Your assignment will be manually graded on both correctness and robustness
 
-
 ---
-
 
 # **Code Review**
 
-
 ---
-
 
 # Code?
 
 * What is code?
 * Why do we write code?
 
-
 ---
-
 
 # Typical Assignment Workflow
 
@@ -1642,16 +1498,14 @@ You are probably very used to [this workflow](https://www.cs.cmu.edu/~410/lectur
 * Debug a few things
 * Graded by autograder
 * **All done!**
-    * Never use this code again
-    * Delete it at the end of the semester
+  * Never use this code again
+  * Delete it at the end of the semester
 
 <!--
 This slide is inspired very directly from 15-410's Boot Camp Slides, page 45
 -->
 
-
 ---
-
 
 # Real World Workflow
 
@@ -1662,30 +1516,25 @@ In the real world, the workflow is almost the complete opposite:
 * Read and debug someone else's code
 * Run tests that may not be exhaustive
 * **Not done!**
-    * Your users and your team are constantly "grading" your work
-
+  * Your users and your team are constantly "grading" your work
 
 ---
-
 
 # Homework 6 Grading
 
 We will be manually grading for both correctness and _robustness_.
 
 * By following the tutorial, you will easily get 100% on this assignment
-* We will give you up to 100 extra credit points for style, quality, documentation, and robustness
-* If you simply copy and paste everything from the tutorial, _you may get around 15/100 extra credit points_
-    * We are going to be super strict!
-        * Adopting the 15-410 (CMU Operating Systems) mindset
+* If you opt in to a code review, we may give up to 100 extra credit points for style, quality, documentation, and robustness
+  * We are going to be super strict!
+    * Adopting the 15-410 (CMU Operating Systems) mindset
 
 <!--
 A perfect 100 is basically the highest quality open source code.
 That is basically impossible to get in an hour...
 -->
 
-
 ---
-
 
 # Style
 
@@ -1698,47 +1547,20 @@ Key things:
 * Make sure comments are styled correctly
 * Use descriptive naming
 
-
 ---
-
 
 # Documentation
 
 Most of the extra credit grade will come from your documentation.
 
 * Documentation should be [descriptive and succinct](https://rust-lang.github.io/api-guidelines/documentation.html)
-    * For this assignment, explain the features of your executable!
+  * For this assignment, explain the features of your executable!
 * For fellow developers, explain:
-    * Design
-    * Architecture / structure of your code
-    * _Why_ does this function need to exist?
-
-
----
-
-
-# Errors
-
-There are [3 types of errors](https://www.cs.cmu.edu/~410/lectures/L10a_Errors.pdf):
-
-* Hmm...
-    * Try to _resolve_
-* That's not right...
-    * Try to _report_
-* Uh-oh
-    * Try to help the developer find the _fatal_ problem faster
-
-<!--
-Taken directly from 15-410's Error's lecture, page 37
-We're being purposefully ambiguous here since there is not time to do an entire lecture on error handling
-
-Note that for the purposes of this assignment, the only type of error that should really happen is reportable errors,
-unless someone is adding a VERY interesting feature...
--->
-
+  * Design
+  * Architecture / structure of your code
+  * _Why_ does this function need to exist?
 
 ---
-
 
 # Testing
 
@@ -1747,9 +1569,7 @@ Write good tests!
 * 1000 tests testing the same thing?
 * 5 tests testing edge cases?
 
-
 ---
-
 
 # Next Lecture: Crates, Closures, and Iterators
 
@@ -1761,4 +1581,4 @@ Thanks for coming!
 
 _Slides created by:_
 Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen
+Jessica Ruan, Fiona Fisher, Terrance Chen, Hugo Latendresse

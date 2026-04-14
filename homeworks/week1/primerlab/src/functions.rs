@@ -26,7 +26,7 @@ pub fn add(left: usize, right: usize) -> usize {
 /// # Note
 ///
 /// `isPrime` must be efficient. Refer to `fasterIsPrime` from [15-112](
-/// https://www.kosbie.net/cmu/spring-22/15-112/notes/notes-loops.html#isPrime).
+/// https://www.kosbie.net/cmu/spring-22/15-112/notes/notes-loops.html#:~:text=fasterIsPrime).
 pub fn is_prime(n: usize) -> bool {
     todo!()
 }

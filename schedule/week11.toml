@@ -41,3 +41,7 @@ url = "https://github.com/usagi/rust-memory-container-cs"
 [[extras]]
 title = "Container Cheat Sheet"
 url = "https://docs.google.com/presentation/d/1q-c7UAyrUlM-eZyTo1pd8SZ0qwA_wYxmPZVOQkoDmH4/edit#slide=id.p"
+
+[homework_ec]
+name = "FilterLab"
+slug = "filterlab"

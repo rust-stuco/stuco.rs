@@ -26,7 +26,7 @@ pub fn add(left: usize, right: usize) -> usize {
 /// # Note
 ///
 /// `isPrime` must be efficient. Refer to `fasterIsPrime` from [15-112](
-/// https://www.kosbie.net/cmu/spring-22/15-112/notes/notes-loops.html#isPrime).
+/// https://www.kosbie.net/cmu/spring-22/15-112/notes/notes-loops.html#:~:text=fasterIsPrime).
 pub fn is_prime(n: usize) -> bool {
     if n == 0 || n == 1 {
         return false;
@@ -34,12 +34,12 @@ pub fn is_prime(n: usize) -> bool {
     if n == 2 {
         return true;
     }
-    if n % 2 == 0 {
+    if n.is_multiple_of(2) {
         return false;
     }
-    let max_factor = f64::sqrt(n as f64) as usize + 1;
-    for i in (3..max_factor).step_by(2) {
-        if n % i == 0 {
+    let max_factor = n.isqrt();
+    for i in (3..=max_factor).step_by(2) {
+        if n.is_multiple_of(i) {
             return false;
         }
     }

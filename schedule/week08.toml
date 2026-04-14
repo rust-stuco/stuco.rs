@@ -28,6 +28,9 @@ items = [
 name = "IterLab"
 slug = "iterlab"
 
+[homework_alt]
+name = "Project Proposal"
+
 [[extras]]
 title = "Rust Iterator Optimization"
 url = "https://ntietz.com/blog/rusts-iterators-optimize-footgun/"

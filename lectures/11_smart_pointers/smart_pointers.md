@@ -51,7 +51,7 @@ What is a pointer?
 
 * A _pointer_ is a general concept for a variable that contains an address in memory
 * The address "points to" or "points at" some other data
-* In Rust, the most common pointer is a reference (`&`)
+* In Rust, pointers most commonly occur inside references (`&`)
 * No overhead other than dereferencing
 
 
@@ -62,7 +62,7 @@ What is a pointer?
 
 What is a _smart pointer?_
 
-* Data structures that act like a pointer
+* Data structures that act like a pointer (and that probably contain a pointer).
 * Contain additional metadata and capabilities beyond dereferencing
 * This concept is not unique to Rust (C++)
 
@@ -131,8 +131,8 @@ help: insert some indirection (e.g., a `Box`, `Rc`, or `&`) to break the cycle
   |               ++++    +
 ```
 
-* The compiler is complaining because we've defined a type with _infinite size_
-
+* The compiler is complaining because we've defined a type with _infinite size_.
+* The compiler needs to know the size of the enum at compile time.
 
 ---
 
@@ -266,8 +266,7 @@ Cons(1.1, Cons(2.2, Cons(3.3, Nil)))
 # More about `Box<T>`
 
 * `Box<T>` is a simple "smart" pointer to memory allocated on the heap*
-* `Box<T>` fully owns the data it points to (just like `Vec<T>`)
-  * It is a "smart" pointer because it frees the data it owns when dropped
+* `Box<T>` (just like `Vec<T>`) is a "smart" pointer and frees the data it owns when dropped.
 * Low overhead (other than allocation)
 
 <!--
@@ -334,6 +333,29 @@ pub trait Deref {
   * Note that this does not recurse infinitely
 * We can treat anything that implements `Deref` like a pointer!
 
+---
+
+
+# The `Deref` Trait on `Box<T>`
+
+Here is the implementation of `Deref` for `Box<T>`.
+
+```rust
+impl<T: ?Sized, A: Allocator> Deref for Box<T, A> {
+    type Target = T;
+
+    fn deref(&self) -> &T {
+        &**self
+    }
+}
+```
+
+* Don't worry about the generics, just focus on the `deref()` method!
+* What's surprising about this?
+
+<!--
+When doing `**self`, we are dereferencing a Box! This appears circular. 
+-->
 
 ---
 
@@ -353,12 +375,31 @@ impl<T: ?Sized, A: Allocator> Deref for Box<T, A> {
 ```
 
 * Don't worry about the generics, just focus on the `deref()` method!
+* `Box<T>` is special: the compiler already knows how to dereference it. 
 
 <!--
 This code is copied and pasted directly from the standard library
 https://doc.rust-lang.org/std/boxed/struct.Box.html#impl-Deref-for-Box%3CT,+A%3E
 -->
 
+
+---
+
+# The `Deref` Trait on `CustomBox<T>`
+
+If we were to implement `Box<T>` ourselves, `deref` would look something like this.
+
+```rust
+impl<T: ?Sized, A: Allocator> Deref for CustomBox<T, A> {
+    type Target = T;
+
+    fn deref(&self) -> &T {
+        &self.0 // Accessing an inner field
+    }
+}
+```
+
+* In our `CustomBox`, `deref` must return a reference to a specific field.
 
 ---
 
@@ -431,7 +472,9 @@ hello(&m);
 
 # Deref Coercion Rules
 
-Rust is able to coerce mutable to immutable but not the reverse.
+The Rust compiler coerces mutable to immutable but not the reverse. 
+Suppose `T` is the _provided type_ and `U` is the _expected type_.
+Each type implements `Deref` for exactly one target type.
 
 * From `&T` to `&U` when `T: Deref<Target=U>`
 * From `&mut T` to `&mut U` when `T: DerefMut<Target=U>`
@@ -503,7 +546,7 @@ fn corge(v: Vec<T>) { ... }
 fn grault(v: &[T]) { ... }
 ```
 
-* `bar`, `qux`, and `grault` are strictly more powerful!
+* `bar`, `qux`, and `grault` are more powerful - they accept more types.
 
 
 ---
@@ -1386,4 +1429,4 @@ Thanks for coming!
 
 _Slides created by:_
 Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen
+Jessica Ruan, Fiona Fisher, Terrance Chen, Hugo Latendresse

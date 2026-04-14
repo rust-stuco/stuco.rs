@@ -6,7 +6,7 @@ use std::sync::LazyLock;
 const LAST_WEEK_SHOWN: usize = if cfg!(debug_assertions) {
     usize::MAX
 } else {
-    2
+    12
 };
 
 static WEEKS: LazyLock<Vec<Week>> = LazyLock::new(load_weeks);
@@ -53,6 +53,7 @@ pub fn Schedule() -> Element {
 }
 
 #[component]
+#[allow(clippy::absurd_extreme_comparisons)]
 fn WeekRow(week_num: usize, week: &'static Week) -> Element {
     let mut expanded = use_signal(|| false);
     let mut open_upward = use_signal(|| false);
@@ -131,6 +132,12 @@ fn WeekRow(week_num: usize, week: &'static Week) -> Element {
                         div { class: "mt-1",
                             span { class: "text-secondary text-sm", "EC: " }
                             HomeworkLinks { homework: hw_ec }
+                        }
+                    }
+                    if let Some(hw_alt) = &week.homework_alt {
+                        div { class: "mt-1",
+                            span { class: "text-secondary text-sm", "OR " }
+                            HomeworkLinks { homework: hw_alt }
                         }
                     }
                 }
@@ -349,7 +356,8 @@ fn HomeworkLinks(homework: &'static Homework) -> Element {
         }
     } else {
         rsx! {
-            span { "{homework.name}" }
+            span { "{homework.name} " }
+            span { class: "text-sm", "(Gradescope)" }
         }
     }
 }

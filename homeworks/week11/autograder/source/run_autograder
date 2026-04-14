@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Copy student's submission into the test crate.
+cp -r /autograder/submission/src/. /autograder/source/filterlab/src
+
+# For this lab, we also want to copy the `Cargo.toml` file
+cp /autograder/submission/Cargo.toml /autograder/source/filterlab/Cargo.toml
+
+# Run the test suite.
+cd /autograder/source
+python3 run_tests.py

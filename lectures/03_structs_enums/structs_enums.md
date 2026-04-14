@@ -96,7 +96,7 @@ error[E0382]: borrow of moved value: `s`
   |                                          ^ value borrowed here after move
   |
 ```
-* Looks like `taker` does not still own `s`, after all
+* Looks like `taker` took the ownership of `s` and did not give it back.
 
 
 ---
@@ -203,7 +203,7 @@ help: consider changing this to be mutable
 # Review Question 2 (Solution)
 
 ```rust
-fn cool_guy() {
+fn main() {
 //      +++ Add `mut` here
     let mut favorite_computers = Vec::new();
     add_to_list(favorite_computers, String::from("Framework Laptop"));
@@ -222,7 +222,7 @@ fn add_to_list(mut fav_items: Vec<String>, item: String) {
 # Review Question 2b
 
 ```rust
-fn cool_guy() {
+fn main() {
     let favorite_computers = Vec::new();
     add_to_list(favorite_computers, String::from("Framework Laptop"));
     println!("{:?}", favorite_computers); // <-- I want to print this!
@@ -246,7 +246,7 @@ fn add_to_list(mut fav_items: Vec<String>, item: String) {
 Let's try a mutable reference instead of moving the entire value.
 
 ```rust
-fn cool_guy() {
+fn main() {
     let favorite_computers = Vec::new();
     add_to_list(&mut favorite_computers, String::from("Framework Laptop"));
     println!("{:?}", favorite_computers);
@@ -259,8 +259,74 @@ fn add_to_list(fav_items: &mut Vec<String>, item: String) {
 
 * This now works as intended!
 
+---
+
+
+# Review Question 3
+
+
+Does this compile?
+
+```rust
+fn main() {
+    let mut data = 1;
+    let r = &data;
+    read(r); 
+    println!("{}", r);
+}
+
+fn read(x: &i32) {
+    println!("{}", x);
+}
+```
+
 
 ---
+
+
+# Review Question 3 (Solution)
+
+Yes it compiles!
+
+Immutable references are Copy. When `r` is passed to read(), the reference is _copied_, not _moved_.
+
+---
+
+
+# Review Question 4
+
+
+Does this compile?
+
+```rust
+fn main() {
+    let mut data = 0;
+    let r = &mut data;
+    modify(r); 
+    *r += 20; 
+    println!("{}", r);
+}
+
+fn modify(x: &mut i32) {
+    *x += 10;
+}
+```
+
+
+---
+
+
+# Review Question 4 (Solution)
+
+Yes it compiles!
+
+Mutable references are NOT Copy. However, they are _reborrowed_.
+
+* The compiler temporarily disables the original references r.
+* `modify(r)` gets silently replaced by `modify(&mut *r)`.
+
+---
+
 
 
 # **Structs**
@@ -1604,4 +1670,4 @@ Thanks for coming!
 
 _Slides created by:_
 Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen
+Jessica Ruan, Fiona Fisher, Terrance Chen, Hugo Latendresse
