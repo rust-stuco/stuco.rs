@@ -47,12 +47,14 @@ code {
 
 **Problem** of handling many tasks at once
 
+* User perceives that multiple things are happening at once.
+
 
 ## Parallelism
 
 **Solution** of working on multiple tasks at the same time
 
-* **Key difference:** Parallelism utilizes **multiple** workers
+* At a given moment, the machine is currently executing more than one task.
 
 
 ---
@@ -60,13 +62,12 @@ code {
 
 # Workers
 
-Parallelism divides tasks among workers.
+Concurrency means dividing tasks among workers.
 
 * In hardware, we call these workers **processors** and **cores**
 * In software, workers are abstracted as **processes** and **threads**
   * Processes contain many threads
-* Parallelism requires **multiple** workers
-  * Concurrency models can have any number of workers!
+* Parallelism requires multiple hardware workers.
 
 <!-- Note:
 21st century relevance of parallelism is due to the slowing of Moore's Law
@@ -89,13 +90,13 @@ invisible to the programmer
 ---
 
 
-# Designing Parallel Solutions
+# Designing Concurrent Solutions
 
 There are two important questions we need to ask:
 
 * Division of labour
   * Who are the workers and how do we divide the work?
-* Thread communication
+* Worker communication
   * What information needs to be shared and how?
     * Approach 1: Shared Memory
     * Approach 2: Message Passing
