@@ -224,7 +224,7 @@ Here is another possible program output:
 Main thread says: Hello 1!
 Child thread says: Hello 1!
 Main thread says: Hello 2!
-Main thread says: Hello 3
+Main thread says: Hello 3!
 ```
 
 <!--
