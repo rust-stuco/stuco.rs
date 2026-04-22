@@ -35,7 +35,7 @@ const HOMEWORKS: &[(&str, &str)] = &[
     ("homeworks/week6/greplab", "greplab"),
     ("homeworks/week8/iterlab", "iterlab"),
     ("homeworks/week10/splitlab", "splitlab"),
-    ("homeworks/week12/filterlab", "filterlab"),
+    ("homeworks/week11/filterlab", "filterlab"),
     ("homeworks/week13/rowlab", "rowlab"),
 ];
 
