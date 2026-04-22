@@ -237,7 +237,7 @@ $ cd my-redis
 ```
 [dependencies]
 tokio = { version = "1", features = ["full"] }
-mini-redis = "0.4
+mini-redis = "0.4"
 ```
 
 <!--
@@ -565,8 +565,8 @@ world
     * Async code will not run without being `.await`ed
 * This results in dramatically different runtime semantics
 
-<!-- 
-In comparison, async in Javascript is not lazy. Async functions begin executing the moment they are called until they reach the first await. 
+<!--
+In comparison, async in Javascript is not lazy. Async functions begin executing the moment they are called until they reach the first await.
 -->
 
 ---
@@ -1287,13 +1287,13 @@ Also note that the linux project has adopted Rust (the first language other than
 ![bg right](<fish-rewrite-in-rust.png>)
 
 
-<!-- 
+<!--
 The reason that the team decide to port to Rust. (excerpted from https://github.com/fish-shell/fish-shell/pull/9512)
 
 - Nobody really likes C++ or CMake, and there's no clear path for getting off old toolchains. Every year the pain will get worse.
 - C++ is becoming a legacy language and finding contributors in the future will become difficult, while Rust has an active and growing community.
 - Rust is what we need to turn on concurrent function execution.
-- Being written in Rust will help fish continue to be perceived as modern and relevant. 
+- Being written in Rust will help fish continue to be perceived as modern and relevant.
 -->
 
 ---
@@ -1342,13 +1342,13 @@ We hope that you all can answer this question now!
 
 _Rust StuCo (98-008) has been created by:_
 Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen, 
-Stephen Mao, Hugo Latendresse, Anish Pallati, 
+Jessica Ruan, Fiona Fisher, Terrance Chen,
+Stephen Mao, Hugo Latendresse, Anish Pallati,
 Max Wen
 
 <!-- Include this section if still missing instructor candidates -->
 
-<!-- 
+<!--
 ---
 
 
