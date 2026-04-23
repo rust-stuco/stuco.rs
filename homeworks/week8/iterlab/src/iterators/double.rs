@@ -5,7 +5,7 @@ use super::interleave::Interleave;
 /// This iterator yields each element of the original iterator twice in succession.
 /// Is that similar to another thing that you may have implemented in this homework?
 ///
-/// Note that you are allowed to important anything from this crate into this file with `use`.
+/// Note that you are allowed to import anything from this crate into this file with `use`.
 #[derive(Clone)]
 pub struct Double<I> {
     todo: std::marker::PhantomData<I>, // Replace me!
