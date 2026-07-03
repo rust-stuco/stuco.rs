@@ -132,7 +132,7 @@ Ideally, your implementation should be faster since our reference solution is pu
 However, we will be lenient with grading this, and as long as you made an effort to try and make it
 faster, you will likely get full credit.
 
-We will be manually grading your submission. We will be looking at he robustness of your code (does
+We will be manually grading your submission. We will be looking at the robustness of your code (does
 your code run without modifications), correctness of your feature, the quality of your tests,
 and general style (documentation and comments).
 
