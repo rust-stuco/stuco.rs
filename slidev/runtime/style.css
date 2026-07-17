@@ -1,0 +1,189 @@
+.slidev-layout {
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 400;
+}
+
+.slidev-layout.default {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 22px;
+  line-height: 1.35;
+}
+
+.slidev-layout.default h1 {
+  margin-bottom: 0.35em;
+  font-size: 46px;
+  line-height: 1.15;
+}
+
+.slidev-layout.default h2 {
+  font-size: 38px;
+  line-height: 1.2;
+}
+
+.slidev-layout.default h3 {
+  font-size: 31px;
+  line-height: 1.25;
+}
+
+.slidev-layout.default p,
+.slidev-layout.default li {
+  line-height: 1.5;
+}
+
+.slidev-layout.default p {
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+}
+
+.slidev-layout.default li + li {
+  margin-top: 0.1em;
+}
+
+.slidev-layout.default blockquote {
+  padding: 0.5em 0.75em;
+  font-size: 1.05em;
+  line-height: 1.45;
+}
+
+.slidev-layout.default blockquote > p {
+  margin: 0;
+  line-height: inherit;
+}
+
+.slidev-layout code,
+.slidev-layout pre {
+  font-family: "Noto Sans Mono", monospace;
+}
+
+.slidev-layout h1,
+.slidev-layout h2,
+.slidev-layout h3,
+.slidev-layout h4,
+.slidev-layout h5,
+.slidev-layout h6 {
+  font-family: "Noto Sans", sans-serif;
+}
+
+html:not(.dark) .slidev-layout,
+html:not(.dark) .slidev-layout p {
+  color: #000 !important;
+}
+
+html.dark .slidev-layout,
+html.dark .slidev-layout p {
+  color: #fff !important;
+}
+
+html:not(.dark) .slidev-layout.end,
+html:not(.dark) .slidev-layout.end p {
+  color: #fff !important;
+}
+
+.slidev-layout p {
+  opacity: 1 !important;
+}
+
+:root {
+  --slidev-code-background: #f1f3f5;
+  --slidev-code-foreground: #111;
+  --slidev-code-font-family: "Noto Sans Mono", monospace;
+  --slidev-code-font-size: 17px;
+  --slidev-code-line-height: 23px;
+  --slidev-code-padding: 12px;
+}
+
+html.dark {
+  --slidev-code-background: #1f2328;
+  --slidev-code-foreground: #f0f3f6;
+}
+
+.slidev-layout .slidev-code {
+  opacity: 1;
+  font-weight: 400;
+}
+
+.slidev-layout h6 {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.slidev-layout.communism {
+  background-image: url("../images/bg4.jpg");
+  background-position: center;
+  background-size: cover;
+}
+
+.slidev-layout.communism h1,
+.slidev-layout.communism h2,
+.slidev-layout.communism h3 {
+  max-width: 65%;
+  color: #fc9c36;
+  font-style: italic;
+  font-weight: 700;
+  text-shadow: 3px 3px 0 #000;
+}
+
+.slidev-layout.communism h1 {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.slidev-layout.communism h2 {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.slidev-layout.image-right-25 {
+  padding-right: 27%;
+}
+
+.slidev-layout.image-right-30 {
+  padding-right: 32%;
+}
+
+.slidev-layout.image-right-50 {
+  padding-right: 52%;
+}
+
+.slidev-layout.image-right-25::after,
+.slidev-layout.image-right-30::after,
+.slidev-layout.image-right-50::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 1.5rem;
+  z-index: 10;
+  height: 80%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.slidev-layout.image-right-25::after {
+  width: 20%;
+}
+
+.slidev-layout.image-right-30::after {
+  width: 24%;
+}
+
+.slidev-layout.image-right-50::after {
+  width: 40%;
+}
+
+.slidev-layout.image-happy::after {
+  background-image: url("../images/ferris_happy.svg");
+}
+
+.slidev-layout.image-confused::after {
+  background-image: url("../images/ferris_does_not_compile.svg");
+}
+
+.slidev-layout.image-cargo::after {
+  background-image: url("../images/cargo-ship.avif");
+}
