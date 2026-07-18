@@ -11,17 +11,17 @@ permissions:
 
 concurrency:
   group: website-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install Taplo
-        uses: taiki-e/install-action@v2
+        uses: taiki-e/install-action@v2.79.11
         with:
           tool: taplo
           fallback: none
@@ -37,19 +37,26 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.event_name == 'pull_request' && format('preview-pr-{0}', github.event.pull_request.number) || 'production' }}
-      url: ${{ steps.preview.outputs.deployment-url || steps.production.outputs.deployment-url }}
+      url: >-
+        ${{
+          github.event_name == 'pull_request' &&
+          format(
+            'https://pr-{0}-stuco-rs.rust-stuco.workers.dev',
+            github.event.pull_request.number
+          ) ||
+          steps.production.outputs.deployment-url
+        }}
       deployment: >-
         ${{
           github.ref == 'refs/heads/main' ||
           (
             github.event_name == 'pull_request' &&
-            github.event.pull_request.head.repo.full_name == github.repository &&
-            github.actor != 'dependabot[bot]'
+            github.event.pull_request.head.repo.full_name == github.repository
           )
         }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -90,13 +97,13 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Install Dioxus CLI
-        uses: cargo-bins/cargo-binstall@main
-
-      - name: Install Dioxus CLI 0.7.2
-        run: cargo binstall dioxus-cli@0.7.2 --no-confirm --force
+        uses: taiki-e/install-action@v2.79.11
+        with:
+          tool: dioxus-cli@0.7.2
 
       - name: Build
         env:
+          # Limit parallel rendering to avoid exhausting CI runner resources.
           RAYON_NUM_THREADS: 2
         run: dx build --release
 
@@ -120,8 +127,7 @@ jobs:
         id: preview
         if: >-
           github.event_name == 'pull_request' &&
-          github.event.pull_request.head.repo.full_name == github.repository &&
-          github.actor != 'dependabot[bot]'
+          github.event.pull_request.head.repo.full_name == github.repository
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
