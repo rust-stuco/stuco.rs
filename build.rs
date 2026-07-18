@@ -78,12 +78,16 @@ fn build_lectures() {
         let md_file = src_dir.join(format!("{topic}.md"));
 
         if !md_file.exists() {
-            println!("cargo:warning=Lecture not found: {}", md_file.display());
-            return;
+            panic!("required lecture not found: {}", md_file.display());
         }
 
         let topic_out_dir = out_dir.join(dir_name);
-        fs::create_dir_all(&topic_out_dir).ok();
+        fs::create_dir_all(&topic_out_dir).unwrap_or_else(|error| {
+            panic!(
+                "failed to create lecture output directory {}: {error}",
+                topic_out_dir.display()
+            )
+        });
 
         let dark_pdf = topic_out_dir.join(format!("{topic}-dark.pdf"));
         let light_pdf = topic_out_dir.join(format!("{topic}-light.pdf"));
@@ -96,7 +100,8 @@ fn build_lectures() {
         let config = lectures_dir.join("marp_config.json");
 
         // Render dark theme
-        render_marp(&md_file, &dark_pdf, &config, &src_dir);
+        render_marp(&md_file, &dark_pdf, &config, &src_dir)
+            .unwrap_or_else(|error| panic!("{error}"));
 
         // Render light theme
         let content = fs::read_to_string(&md_file).expect("Failed to read markdown");
@@ -104,14 +109,30 @@ fn build_lectures() {
         let temp_light = src_dir.join(format!("{topic}-light-temp.md"));
         fs::write(&temp_light, &light_content).expect("Failed to write temp file");
 
-        render_marp(&temp_light, &light_pdf, &config, &src_dir);
-        fs::remove_file(&temp_light).ok();
+        let light_result = render_marp(&temp_light, &light_pdf, &config, &src_dir);
+        let cleanup_result = fs::remove_file(&temp_light);
+
+        light_result.unwrap_or_else(|error| panic!("{error}"));
+        cleanup_result.unwrap_or_else(|error| {
+            panic!(
+                "failed to remove temporary lecture source {}: {error}",
+                temp_light.display()
+            )
+        });
+
+        require_nonempty_file(&dark_pdf);
+        require_nonempty_file(&light_pdf);
 
         println!("cargo:warning=Rendered {topic}");
     });
 }
 
-fn render_marp(input: &Path, output: &Path, config: &Path, working_dir: &Path) {
+fn render_marp(
+    input: &Path,
+    output: &Path,
+    config: &Path,
+    working_dir: &Path,
+) -> Result<(), String> {
     let status = Command::new("marp")
         .arg(input.file_name().unwrap())
         .arg("-c")
@@ -119,16 +140,23 @@ fn render_marp(input: &Path, output: &Path, config: &Path, working_dir: &Path) {
         .arg("-o")
         .arg(output)
         .current_dir(working_dir)
-        .status();
+        .status()
+        .map_err(|error| {
+            format!(
+                "failed to run Marp for {}: {error} (kind: {:?})",
+                input.display(),
+                error.kind()
+            )
+        })?;
 
-    match status {
-        Ok(s) if s.success() => {}
-        Ok(s) => println!("cargo:warning=marp exited with: {:?}", s),
-        Err(e) => println!(
-            "cargo:warning=Failed to run marp: {e} (kind: {:?})",
-            e.kind()
-        ),
+    if !status.success() {
+        return Err(format!(
+            "Marp failed for {} with status {status}",
+            input.display()
+        ));
     }
+
+    Ok(())
 }
 
 fn watch_homeworks() {
@@ -142,35 +170,44 @@ fn watch_homeworks() {
 
 fn build_homeworks() {
     HOMEWORKS.par_iter().for_each(|(path, slug)| {
-        if Path::new(path).exists() {
-            let out_dir = format!("public/hw/{slug}");
-            fs::create_dir_all(&out_dir).ok();
-
-            // Create zip handout
-            let zip_path = format!("{out_dir}/{slug}.zip");
-            if let Err(e) = create_zip(path, &zip_path, slug) {
-                println!("cargo:warning=Failed to zip {slug}: {e}");
-            }
-
-            // Generate docs
-            let manifest = format!("{path}/Cargo.toml");
-            let status = Command::new("cargo")
-                .args([
-                    "doc",
-                    "--no-deps",
-                    "--manifest-path",
-                    &manifest,
-                    "--target-dir",
-                    &out_dir,
-                ])
-                .status();
-
-            match status {
-                Ok(s) if s.success() => {}
-                Ok(_) => println!("cargo:warning=cargo doc failed for {slug}"),
-                Err(e) => println!("cargo:warning=Failed to run cargo doc for {slug}: {e}"),
-            }
+        let homework_path = Path::new(path);
+        if !homework_path.exists() {
+            panic!("required homework not found: {}", homework_path.display());
         }
+
+        let out_dir = PathBuf::from(format!("public/hw/{slug}"));
+        fs::create_dir_all(&out_dir).unwrap_or_else(|error| {
+            panic!(
+                "failed to create homework output directory {}: {error}",
+                out_dir.display()
+            )
+        });
+
+        // Create zip handout
+        let zip_path = out_dir.join(format!("{slug}.zip"));
+        create_zip(path, &zip_path, slug)
+            .unwrap_or_else(|error| panic!("failed to zip {slug}: {error}"));
+
+        // Generate docs
+        let manifest = format!("{path}/Cargo.toml");
+        let status = Command::new("cargo")
+            .args([
+                "doc",
+                "--no-deps",
+                "--manifest-path",
+                &manifest,
+                "--target-dir",
+            ])
+            .arg(&out_dir)
+            .status()
+            .unwrap_or_else(|error| panic!("failed to run cargo doc for {slug}: {error}"));
+
+        if !status.success() {
+            panic!("cargo doc failed for {slug} with status {status}");
+        }
+
+        require_nonempty_file(&zip_path);
+        require_nonempty_file(&out_dir.join("doc").join(slug).join("index.html"));
     });
 }
 
@@ -183,6 +220,8 @@ fn build_syllabus() {
     if !status.success() {
         panic!("typst compilation failed");
     }
+
+    require_nonempty_file(Path::new("public/syllabus.pdf"));
 }
 
 fn main() {
@@ -194,7 +233,7 @@ fn main() {
     watch_lectures();
 
     // Create public dir if it doesn't exist
-    std::fs::create_dir_all("public").ok();
+    std::fs::create_dir_all("public").expect("failed to create public output directory");
 
     // Build everything in parallel
     rayon::join(
@@ -203,7 +242,18 @@ fn main() {
     );
 }
 
-fn create_zip(src_dir: &str, zip_path: &str, root_name: &str) -> io::Result<()> {
+fn require_nonempty_file(path: &Path) {
+    let metadata = fs::metadata(path)
+        .unwrap_or_else(|error| panic!("required output {} is missing: {error}", path.display()));
+
+    assert!(
+        metadata.is_file() && metadata.len() > 0,
+        "required output {} is not a non-empty file",
+        path.display()
+    );
+}
+
+fn create_zip(src_dir: &str, zip_path: &Path, root_name: &str) -> io::Result<()> {
     let file = File::create(zip_path)?;
     let mut zip = ZipWriter::new(file);
     let options = SimpleFileOptions::default().compression_method(zip::CompressionMethod::Deflated);
