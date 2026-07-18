@@ -2,6 +2,7 @@ use std::{
     env, io,
     path::{Path, PathBuf},
     process::Command,
+    slice,
 };
 
 #[path = "build/homeworks.rs"]
@@ -33,6 +34,10 @@ fn main() -> io::Result<()> {
 fn build_syllabus(manifest_dir: &Path) -> io::Result<()> {
     let source = manifest_dir.join("src/syllabus.typ");
     let output = manifest_dir.join("public/syllabus.pdf");
+
+    if utils::generated_files_are_current(slice::from_ref(&source), &[&output]) {
+        return Ok(());
+    }
 
     let mut command = Command::new("typst");
     command.arg("compile").arg(&source).arg(&output);
