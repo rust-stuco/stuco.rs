@@ -1,14 +1,18 @@
-name: Deploy to GitHub Pages
+name: Deploy website
 
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
+  pull-requests: write
+
+concurrency:
+  group: website-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   validate:
@@ -71,6 +75,7 @@ jobs:
             ~/.cargo/registry/
             ~/.cargo/git/
             target/
+            !target/dx/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Install Dioxus CLI
@@ -80,27 +85,75 @@ jobs:
       - name: Build
         run: dx build --release
 
-      - name: Copy index.html to 404.html
-        run: cp target/dx/stuco-rs/release/web/public/index.html target/dx/stuco-rs/release/web/public/404.html
-
       - name: Upload syllabus artifact
         uses: actions/upload-artifact@v4
         with:
           name: syllabus
           path: target/dx/stuco-rs/release/web/public/syllabus.pdf
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
+      - name: Deploy production website
+        if: github.ref == 'refs/heads/main'
+        uses: cloudflare/wrangler-action@v4
         with:
-          path: target/dx/stuco-rs/release/web/public
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4"
+          command: deploy
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Deploy preview website
+        id: preview
+        if: >-
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.actor != 'dependabot[bot]'
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4"
+          command: versions upload --preview-alias pr-${{ github.event.pull_request.number }}
+
+      - name: Add preview link to pull request
+        if: >-
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.actor != 'dependabot[bot]'
+        uses: actions/github-script@v8
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.deployment-url }}
+        with:
+          script: |
+            const marker = "<!-- cloudflare-preview -->";
+            const previewUrl = process.env.PREVIEW_URL;
+
+            if (!previewUrl) {
+              core.setFailed("Wrangler did not return a preview URL.");
+              return;
+            }
+
+            const body = `${marker}\nCloudflare preview: ${previewUrl}`;
+            const issue = {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            };
+            const comments = await github.paginate(
+              github.rest.issues.listComments,
+              issue,
+            );
+            const previous = comments.find(
+              (comment) =>
+                comment.user?.login === "github-actions[bot]" &&
+                comment.body?.startsWith(marker),
+            );
+
+            if (previous) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: previous.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({ ...issue, body });
+            }
