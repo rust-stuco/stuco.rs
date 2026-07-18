@@ -8,7 +8,7 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write
+  deployments: write
 
 concurrency:
   group: website-${{ github.event.pull_request.number || github.ref }}
@@ -117,7 +117,7 @@ jobs:
           wranglerVersion: "4"
           command: versions upload --preview-alias pr-${{ github.event.pull_request.number }}
 
-      - name: Add preview link to pull request
+      - name: Record preview deployment
         if: >-
           github.event_name == 'pull_request' &&
           github.event.pull_request.head.repo.full_name == github.repository &&
@@ -127,7 +127,6 @@ jobs:
           PREVIEW_URL: ${{ steps.preview.outputs.deployment-url }}
         with:
           script: |
-            const marker = "<!-- cloudflare-preview -->";
             const previewUrl = process.env.PREVIEW_URL;
 
             if (!previewUrl) {
@@ -135,29 +134,24 @@ jobs:
               return;
             }
 
-            const body = `${marker}\nCloudflare preview: ${previewUrl}`;
-            const issue = {
+            const { data: deployment } = await github.rest.repos.createDeployment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: context.issue.number,
-            };
-            const comments = await github.paginate(
-              github.rest.issues.listComments,
-              issue,
-            );
-            const previous = comments.find(
-              (comment) =>
-                comment.user?.login === "github-actions[bot]" &&
-                comment.body?.startsWith(marker),
-            );
+              ref: context.sha,
+              environment: `preview-pr-${context.issue.number}`,
+              description: "Cloudflare preview",
+              transient_environment: true,
+              production_environment: false,
+              auto_merge: false,
+              required_contexts: [],
+            });
 
-            if (previous) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: previous.id,
-                body,
-              });
-            } else {
-              await github.rest.issues.createComment({ ...issue, body });
-            }
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: deployment.id,
+              state: "success",
+              environment_url: previewUrl,
+              description: "Cloudflare preview is ready.",
+              auto_inactive: true,
+            });
