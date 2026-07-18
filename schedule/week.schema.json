@@ -31,7 +31,7 @@
         }
       ]
     },
-    "homework_ec": {
+    "homework_alt": {
       "anyOf": [
         {
           "$ref": "#/$defs/Homework"
@@ -41,7 +41,7 @@
         }
       ]
     },
-    "homework_alt": {
+    "homework_ec": {
       "anyOf": [
         {
           "$ref": "#/$defs/Homework"

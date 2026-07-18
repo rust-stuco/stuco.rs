@@ -61,10 +61,20 @@ mod tests {
     use super::*;
 
     #[test]
-    fn generate_schema() {
+    fn week_schema_is_current() {
         let schema = schemars::schema_for!(Week);
-        let json = serde_json::to_string_pretty(&schema).unwrap();
+        let json = format!("{}\n", serde_json::to_string_pretty(&schema).unwrap());
         let path = concat!(env!("CARGO_MANIFEST_DIR"), "/schedule/week.schema.json");
-        std::fs::write(path, json).unwrap();
+
+        if std::env::var_os("UPDATE_SCHEMAS").is_some() {
+            std::fs::write(path, json).unwrap();
+        } else {
+            assert_eq!(
+                std::fs::read_to_string(path).unwrap(),
+                json,
+                "week schema is stale; regenerate it with \
+                 `UPDATE_SCHEMAS=1 cargo test schema_is_current`"
+            );
+        }
     }
 }

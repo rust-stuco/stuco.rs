@@ -6,7 +6,7 @@
     "resources": {
       "type": "array",
       "items": {
-        "$ref": "#/$defs/Resource"
+        "$ref": "#/$defs/ResourceEntry"
       }
     }
   },
@@ -14,7 +14,7 @@
     "resources"
   ],
   "$defs": {
-    "Resource": {
+    "ResourceEntry": {
       "type": "object",
       "properties": {
         "author": {
