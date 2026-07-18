@@ -82,6 +82,35 @@ pub fn create_directory(path: &Path) -> io::Result<()> {
     })
 }
 
+/// Recreates a directory so it contains no stale files from earlier builds.
+pub fn recreate_directory(path: &Path) -> io::Result<()> {
+    match fs::remove_dir_all(path) {
+        Ok(()) => {}
+        Err(error) if error.kind() == io::ErrorKind::NotFound => {}
+        Err(error) => return Err(error),
+    }
+
+    create_directory(path)
+}
+
+/// Recursively copies a directory and its contents to a new location.
+pub fn copy_directory(source: &Path, destination: &Path) -> io::Result<()> {
+    create_directory(destination)?;
+
+    for entry in fs::read_dir(source)? {
+        let entry = entry?;
+        let destination = destination.join(entry.file_name());
+
+        if entry.file_type()?.is_dir() {
+            copy_directory(&entry.path(), &destination)?;
+        } else {
+            fs::copy(entry.path(), destination)?;
+        }
+    }
+
+    Ok(())
+}
+
 /// Verifies that a required path exists and is a directory.
 pub fn require_directory(path: &Path) -> io::Result<()> {
     let metadata = fs::metadata(path).map_err(|error| {

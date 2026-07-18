@@ -37,9 +37,11 @@ pub fn build(manifest_dir: &Path) -> io::Result<()> {
 fn build_homework(homework: &Homework, manifest_dir: &Path) -> io::Result<()> {
     let source = manifest_dir.join(homework.source);
     let output_dir = manifest_dir.join("public/hw").join(homework.slug);
+    let target_dir = manifest_dir
+        .join("target/homework-docs")
+        .join(homework.slug);
 
     utils::require_directory(&source)?;
-    utils::create_directory(&output_dir)?;
 
     let manifest = source.join("Cargo.toml");
     let mut command = Command::new("cargo");
@@ -51,14 +53,17 @@ fn build_homework(homework: &Homework, manifest_dir: &Path) -> io::Result<()> {
         .arg("--manifest-path")
         .arg(&manifest)
         .arg("--target-dir")
-        .arg(&output_dir);
+        .arg(&target_dir);
     utils::run_command(command)?;
 
-    let documentation = output_dir
+    let generated_documentation = target_dir
         .join("doc")
         .join(homework.slug)
         .join("index.html");
-    utils::require_nonempty_file(&documentation)?;
+    utils::require_nonempty_file(&generated_documentation)?;
+
+    utils::recreate_directory(&output_dir)?;
+    utils::copy_directory(&target_dir.join("doc"), &output_dir.join("doc"))?;
 
     let archive = output_dir.join(format!("{}.zip", homework.slug));
     create_zip(&source, &archive, homework.slug).map_err(|error| {
