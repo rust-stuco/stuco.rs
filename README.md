@@ -1,4 +1,4 @@
-# 98-008: Intro to Rust
+# 98-008: Intro to Rust Lang
 
 This course is an introduction to the Rust programming language, a memory-safe systems programming language. We cover a range of topics, from the Rust borrow checker to parallelism and the `unsafe` keyword.
 
