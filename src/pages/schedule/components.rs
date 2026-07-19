@@ -1,32 +1,14 @@
-use crate::pages::schedule::data::{Homework, Week, load_weeks};
 use dioxus::prelude::*;
-use std::sync::LazyLock;
 
-// Update this as the semester goes
-const LAST_WEEK_SHOWN: usize = if cfg!(debug_assertions) {
-    usize::MAX
-} else {
-    14
+use super::data::{WEEKS, rustling_url, week_is_published};
+use super::display::{
+    DEFAULT_VIEWPORT_HEIGHT, OPEN_UPWARD_THRESHOLD, VideoColors, book_chapter_label, slide_name,
+    video_colors,
 };
-
-static WEEKS: LazyLock<Vec<Week>> = LazyLock::new(load_weeks);
-
-fn video_color(title: &str) -> (&'static str, &'static str, &'static str) {
-    // (background, border, text color)
-    match title {
-        "No Boilerplate Rust Talks" => ("#F59E0B20", "#F59E0B", "#D97706"), // amber
-        "The Rust Programming Language Book" => ("#F8717120", "#F87171", "#F87171"), // red
-        "Connor's Lectures" => ("#8B5CF620", "#8B5CF6", "#A78BFA"),         // violet
-        "Code to the Moon" => ("#3B82F620", "#3B82F6", "#60A5FA"),          // blue
-        "Crust of Rust" => ("#06B6D420", "#06B6D4", "#22D3EE"),             // cyan
-        "Idiomatic Rust" => ("#10B98120", "#10B981", "#34D399"),            // emerald
-        "Low Level Learning Rust Talks" => ("#EC489920", "#EC4899", "#F472B6"), // pink
-        _ => ("#6B728020", "#6B7280", "#6B7280"),
-    }
-}
+use super::week::{Extra, Homework, Materials, VideoGroup, Week};
 
 #[component]
-pub fn Schedule() -> Element {
+pub(crate) fn Schedule() -> Element {
     rsx! {
         document::Title { "Schedule - Rust StuCo" }
         div { class: "max-w-4xl mx-auto px-8 pt-16",
@@ -53,22 +35,19 @@ pub fn Schedule() -> Element {
 }
 
 #[component]
-#[allow(clippy::absurd_extreme_comparisons)]
 fn WeekRow(week_num: usize, week: &'static Week) -> Element {
     let mut expanded = use_signal(|| false);
     let mut open_upward = use_signal(|| false);
     let mut button_ref = use_signal(|| None::<std::rc::Rc<MountedData>>);
 
-    let has_materials = week.videos.is_some()
-        || week.book_chapters.is_some()
-        || week.rustlings.is_some()
-        || week.extras.is_some();
+    let published = week_is_published(week_num);
+    let assignments = &week.assignments;
 
     let handle_click = move |_| {
         if expanded() {
             expanded.set(false);
         } else {
-            // Check if we should open upward
+            // Open the menu upward when there is insufficient space below it.
             spawn(async move {
                 if let Some(mounted) = button_ref()
                     && let Ok(rect) = mounted.get_client_rect().await
@@ -76,10 +55,9 @@ fn WeekRow(week_num: usize, week: &'static Week) -> Element {
                     let viewport_height = web_sys::window()
                         .and_then(|w| w.inner_height().ok())
                         .and_then(|h| h.as_f64())
-                        .unwrap_or(800.0);
+                        .unwrap_or(DEFAULT_VIEWPORT_HEIGHT);
 
-                    // If button is in bottom 40% of viewport, open upward
-                    open_upward.set(rect.origin.y > viewport_height * 0.6);
+                    open_upward.set(rect.origin.y > viewport_height * OPEN_UPWARD_THRESHOLD);
                 }
                 expanded.set(true);
             });
@@ -91,10 +69,12 @@ fn WeekRow(week_num: usize, week: &'static Week) -> Element {
             td { class: "p-2 align-top", "{week_num}" }
             td { class: "p-2 align-top",
                 span { class: "font-semibold", "{week.title}" }
-                if has_materials {
+                if week.materials.has_any() {
                     div { class: "inline-block relative ml-2",
                         button {
+                            r#type: "button",
                             class: "text-secondary hover:text-primary text-sm",
+                            aria_expanded: expanded(),
                             onmounted: move |e| button_ref.set(Some(e.data())),
                             onclick: handle_click,
                             if expanded() {
@@ -112,32 +92,32 @@ fn WeekRow(week_num: usize, week: &'static Week) -> Element {
                                 class: "absolute left-0 z-20 w-96 p-3 bg-background border border-tertiary/50 rounded-lg shadow-lg space-y-3 text-sm",
                                 class: if open_upward() { "bottom-full mb-1" } else { "top-full mt-1" },
                                 onclick: move |e| e.stop_propagation(),
-                                MaterialsDropdown { week }
+                                MaterialsDropdown { materials: &week.materials }
                             }
                         }
                     }
                 }
             }
             td { class: "p-2 align-top",
-                if week_num <= LAST_WEEK_SHOWN {
+                if published {
                     SlideLinks { slides: &week.slides }
                 }
             }
             td { class: "p-2 align-top",
-                if week_num <= LAST_WEEK_SHOWN {
-                    if let Some(hw) = &week.homework {
-                        HomeworkLinks { homework: hw }
+                if published {
+                    if let Some(homework) = &assignments.primary {
+                        HomeworkLinks { homework }
                     }
-                    if let Some(hw_ec) = &week.homework_ec {
+                    if let Some(homework) = &assignments.extra_credit {
                         div { class: "mt-1",
                             span { class: "text-secondary text-sm", "EC: " }
-                            HomeworkLinks { homework: hw_ec }
+                            HomeworkLinks { homework }
                         }
                     }
-                    if let Some(hw_alt) = &week.homework_alt {
+                    if let Some(homework) = &assignments.alternative {
                         div { class: "mt-1",
                             span { class: "text-secondary text-sm", "OR " }
-                            HomeworkLinks { homework: hw_alt }
+                            HomeworkLinks { homework }
                         }
                     }
                 }
@@ -147,10 +127,9 @@ fn WeekRow(week_num: usize, week: &'static Week) -> Element {
 }
 
 #[component]
-fn MaterialsDropdown(week: &'static Week) -> Element {
+fn MaterialsDropdown(materials: &'static Materials) -> Element {
     rsx! {
-        // Rustlings
-        if let Some(rustlings) = &week.rustlings {
+        if let Some(rustlings) = &materials.rustlings {
             div { class: "space-y-3",
                 span { class: "text-secondary font-semibold", "Rustlings" }
                 div { class: "flex flex-wrap gap-1",
@@ -161,8 +140,7 @@ fn MaterialsDropdown(week: &'static Week) -> Element {
             }
         }
 
-        // Book chapters
-        if let Some(chapters) = &week.book_chapters {
+        if let Some(chapters) = &materials.book_chapters {
             div { class: "space-y-3",
                 span { class: "text-secondary font-semibold", "Book Chapters" }
                 div { class: "flex flex-wrap gap-1",
@@ -173,8 +151,7 @@ fn MaterialsDropdown(week: &'static Week) -> Element {
             }
         }
 
-        // Videos
-        if let Some(videos) = &week.videos {
+        if let Some(videos) = &materials.videos {
             div { class: "space-y-3",
                 span { class: "text-secondary font-semibold", "Videos" }
                 div { class: "flex flex-wrap gap-1",
@@ -185,8 +162,7 @@ fn MaterialsDropdown(week: &'static Week) -> Element {
             }
         }
 
-        // Extras
-        if let Some(extras) = &week.extras {
+        if let Some(extras) = &materials.extras {
             div { class: "space-y-3",
                 span { class: "text-secondary font-semibold", "Extras" }
                 div { class: "flex flex-wrap gap-1",
@@ -200,16 +176,21 @@ fn MaterialsDropdown(week: &'static Week) -> Element {
 }
 
 #[component]
-fn VideoPills(group: &'static crate::pages::schedule::data::VideoGroup) -> Element {
-    let (bg, border, text) = video_color(&group.title);
+fn VideoPills(group: &'static VideoGroup) -> Element {
+    let VideoColors {
+        background,
+        border,
+        text,
+    } = video_colors(&group.title);
 
     rsx! {
         for (i , url) in group.items.iter().enumerate() {
             a {
                 class: "inline-flex items-center px-2 py-0.5 rounded text-xs font-medium hover:brightness-110 transition-all border",
-                style: "background: {bg}; border-color: {border}; color: {text};",
+                style: "background: {background}; border-color: {border}; color: {text};",
                 href: "{url}",
                 target: "_blank",
+                rel: "noopener noreferrer",
                 if group.items.len() == 1 {
                     "{group.title}"
                 } else {
@@ -222,22 +203,7 @@ fn VideoPills(group: &'static crate::pages::schedule::data::VideoGroup) -> Eleme
 
 #[component]
 fn BookChapterLinks(chapter: &'static str) -> Element {
-    // chapter format: "ch04-01-what-is-ownership" -> "4.1"
-    let display = chapter
-        .strip_prefix("ch")
-        .map(|s| {
-            let parts: Vec<&str> = s.split('-').take(2).collect();
-            if parts.len() == 2 {
-                format!(
-                    "{}.{}",
-                    parts[0].trim_start_matches('0'),
-                    parts[1].trim_start_matches('0')
-                )
-            } else {
-                chapter.to_string()
-            }
-        })
-        .unwrap_or_else(|| chapter.to_string());
+    let display = book_chapter_label(chapter);
 
     let official_url = format!("https://doc.rust-lang.org/book/{chapter}.html");
     let brown_url = format!("https://rust-book.cs.brown.edu/{chapter}.html");
@@ -248,6 +214,7 @@ fn BookChapterLinks(chapter: &'static str) -> Element {
                 class: "px-2 py-0.5 text-xs bg-tertiary/20 hover:bg-tertiary/40 transition-colors",
                 href: "{official_url}",
                 target: "_blank",
+                rel: "noopener noreferrer",
                 title: "Official Rust Book",
                 "§{display}"
             }
@@ -255,6 +222,7 @@ fn BookChapterLinks(chapter: &'static str) -> Element {
                 class: "px-2 py-0.5 text-xs bg-amber-900/30 hover:bg-amber-900/50 transition-colors border-l border-tertiary/50",
                 href: "{brown_url}",
                 target: "_blank",
+                rel: "noopener noreferrer",
                 title: "Brown University Edition",
                 "🐻"
             }
@@ -264,53 +232,22 @@ fn BookChapterLinks(chapter: &'static str) -> Element {
 
 #[component]
 fn RustlingLink(exercise: &'static str) -> Element {
-    let order = rustling_order(exercise);
-    let url =
-        format!("https://github.com/rust-lang/rustlings/tree/main/exercises/{order:02}_{exercise}");
+    let url = rustling_url(exercise);
 
     rsx! {
         a {
             class: "inline-flex items-center px-2 py-0.5 rounded text-xs bg-orange-900/30 hover:bg-orange-900/50 transition-colors",
             href: "{url}",
             target: "_blank",
+            rel: "noopener noreferrer",
             "🦀 {exercise}"
         }
     }
 }
 
-fn rustling_order(name: &str) -> usize {
-    match name {
-        "intro" => 0,
-        "variables" => 1,
-        "functions" => 2,
-        "if" => 3,
-        "primitive_types" => 4,
-        "vecs" => 5,
-        "move_semantics" => 6,
-        "structs" => 7,
-        "enums" => 8,
-        "strings" => 9,
-        "modules" => 10,
-        "hashmaps" => 11,
-        "options" => 12,
-        "error_handling" => 13,
-        "generics" => 14,
-        "traits" => 15,
-        "lifetimes" => 16,
-        "tests" => 17,
-        "iterators" => 18,
-        "smart_pointers" => 19,
-        "threads" => 20,
-        "macros" => 21,
-        "clippy" => 22,
-        "conversions" => 23,
-        _ => 99,
-    }
-}
-
 #[component]
 fn SlideLinks(slides: &'static str) -> Element {
-    let name = slides.split('_').skip(1).collect::<Vec<_>>().join("_");
+    let name = slide_name(slides);
 
     rsx! {
         div { class: "flex gap-2 text-sm",
@@ -318,6 +255,7 @@ fn SlideLinks(slides: &'static str) -> Element {
                 class: "text-primary hover:underline",
                 href: "/lectures/{slides}/{name}-light.pdf",
                 target: "_blank",
+                rel: "noopener noreferrer",
                 "light"
             }
             span { class: "text-secondary", "/" }
@@ -325,6 +263,7 @@ fn SlideLinks(slides: &'static str) -> Element {
                 class: "text-primary hover:underline",
                 href: "/lectures/{slides}/{name}-dark.pdf",
                 target: "_blank",
+                rel: "noopener noreferrer",
                 "dark"
             }
         }
@@ -342,6 +281,7 @@ fn HomeworkLinks(homework: &'static Homework) -> Element {
                     class: "text-primary hover:underline",
                     href: "/hw/{slug}/{slug}.zip",
                     target: "_blank",
+                    rel: "noopener noreferrer",
                     "handout"
                 }
                 " / "
@@ -349,6 +289,7 @@ fn HomeworkLinks(homework: &'static Homework) -> Element {
                     class: "text-primary hover:underline",
                     href: "/hw/{slug}/doc/{slug}/index.html",
                     target: "_blank",
+                    rel: "noopener noreferrer",
                     "writeup"
                 }
                 ")"
@@ -363,12 +304,13 @@ fn HomeworkLinks(homework: &'static Homework) -> Element {
 }
 
 #[component]
-fn ExtraLink(extra: &'static crate::pages::schedule::data::Extra) -> Element {
+fn ExtraLink(extra: &'static Extra) -> Element {
     rsx! {
         a {
             class: "inline-flex items-center px-2 py-0.5 rounded text-xs bg-tertiary/20 hover:bg-tertiary/40 transition-colors border border-tertiary/50",
             href: "{extra.url}",
             target: "_blank",
+            rel: "noopener noreferrer",
             "{extra.title}"
         }
     }

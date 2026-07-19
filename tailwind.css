@@ -1,4 +1,5 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
+@source "./src";
 
 @theme {
     --color-foreground: #D1D5DB;

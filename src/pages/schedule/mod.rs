@@ -1,4 +1,6 @@
+mod components;
 mod data;
-mod page;
+mod display;
+mod week;
 
-pub use page::Schedule;
+pub(super) use components::Schedule;

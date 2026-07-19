@@ -1,67 +1,10 @@
+use super::semesters::{
+    CURRENT_SEMESTER, PREVIOUS_SEMESTERS, Semester, StaffMember, format_staff_names,
+};
 use dioxus::prelude::*;
 
-#[derive(PartialEq)]
-pub struct Semester {
-    pub name: &'static str,
-    pub instructors: &'static [(&'static str, Option<&'static str>)], // (name, optional email)
-    pub tas: &'static [(&'static str, Option<&'static str>)],
-    pub link: &'static str,
-}
-
-pub const CURRENT_SEMESTER: Semester = Semester {
-    name: "Spring 2026",
-    instructors: &[
-        ("Stephen Mao", Some("stmao@andrew.cmu.edu")),
-        ("Hugo Latendresse", Some("hlatendr@andrew.cmu.edu")),
-        ("Anish Pallati", Some("apallati@andrew.cmu.edu")),
-    ],
-    tas: &[("Max Wen", Some("maxwen@andrew.cmu.edu"))],
-    link: "https://stuco.rs",
-};
-
-const PREVIOUS_SEMESTERS: &[Semester] = &[
-    Semester {
-        name: "F25",
-        instructors: &[("Fiona Fisher", None), ("Terrance Chen", None)],
-        tas: &[("Stephen Mao", None)],
-        link: "https://rust-stuco.github.io/",
-    },
-    Semester {
-        name: "S25",
-        instructors: &[("Connor Tsui", None), ("Jessica Ruan", None)],
-        tas: &[("Fiona Fisher", None), ("Terrance Chen", None)],
-        link: "https://rust-stuco.github.io/old/s25/",
-    },
-    Semester {
-        name: "F24",
-        instructors: &[
-            ("Benjamin Owad", None),
-            ("Connor Tsui", None),
-            ("David Rudo", None),
-        ],
-        tas: &[],
-        link: "https://rust-stuco.github.io/old/f24/",
-    },
-    Semester {
-        name: "S24",
-        instructors: &[
-            ("Benjamin Owad", None),
-            ("Connor Tsui", None),
-            ("David Rudo", None),
-        ],
-        tas: &[],
-        link: "https://rust-stuco.github.io/old/s24/",
-    },
-    Semester {
-        name: "S22, F22, and S23",
-        instructors: &[("Jack Duvall", None), ("Cooper Pierce", None)],
-        tas: &[],
-        link: "https://old-rust-stuco.duvallj.pw/",
-    },
-];
-
 #[component]
-pub fn About() -> Element {
+pub(super) fn About() -> Element {
     rsx! {
         document::Title { "About - Rust StuCo" }
         div { class: "max-w-prose mx-auto px-8 pt-16",
@@ -87,23 +30,19 @@ pub fn About() -> Element {
             ul { class: "list-disc ml-8 marker:text-foreground/50",
                 for semester in PREVIOUS_SEMESTERS {
                     {
-                        let instructors = semester
-                            .instructors
-                            .iter()
-                            .map(|(name, _)| *name)
-                            .collect::<Vec<_>>()
-                            .join(", ");
+                        let instructors = format_staff_names(semester.instructors);
                         let ta_label = if semester.tas.len() == 1 { "TA" } else { "TAs" };
-                        let tas = semester
-                            .tas
-                            .iter()
-                            .map(|(name, _)| *name)
-                            .collect::<Vec<_>>()
-                            .join(", ");
+                        let tas = format_staff_names(semester.tas);
 
                         rsx! {
                             li {
-                                a { class: "text-secondary", href: "{semester.link}", target: "_blank", "{semester.name}" }
+                                a {
+                                    class: "text-secondary",
+                                    href: "{semester.link}",
+                                    target: "_blank",
+                                    rel: "noopener noreferrer",
+                                    "{semester.name}"
+                                }
                                 ": {instructors}"
                                 if !semester.tas.is_empty() {
                                     "; {ta_label}: {tas}"
@@ -122,32 +61,21 @@ fn StaffList(semester: &'static Semester) -> Element {
     let ta_label = if semester.tas.len() == 1 { "TA" } else { "TAs" };
 
     rsx! {
-        if !semester.instructors.is_empty() {
-            h3 { class: "font-bold mb-2 text-white", "Instructors" }
+        StaffGroup { title: "Instructors", members: semester.instructors }
+        StaffGroup { title: ta_label, members: semester.tas }
+    }
+}
+
+#[component]
+fn StaffGroup(title: &'static str, members: &'static [StaffMember]) -> Element {
+    rsx! {
+        if !members.is_empty() {
+            h3 { class: "font-bold mb-2 text-white", "{title}" }
             ul { class: "list-disc ml-8 mb-4 marker:text-foreground/50",
-                for (name , email) in semester.instructors {
+                for member in members {
                     li {
-                        "{name}"
-                        if let Some(email) = email {
-                            " ("
-                            a {
-                                href: "mailto:{email}",
-                                class: "text-secondary",
-                                "{email}"
-                            }
-                            ")"
-                        }
-                    }
-                }
-            }
-        }
-        if !semester.tas.is_empty() {
-            h3 { class: "font-bold mb-2 text-white", "{ta_label}" }
-            ul { class: "list-disc ml-8 mb-4 marker:text-foreground/50",
-                for (name , email) in semester.tas {
-                    li {
-                        "{name}"
-                        if let Some(email) = email {
+                        "{member.name}"
+                        if let Some(email) = member.email {
                             " ("
                             a {
                                 href: "mailto:{email}",

@@ -1,10 +1,10 @@
-use crate::Route;
+use crate::pages::Route;
 use dioxus::prelude::*;
 
 const FERRIS: Asset = asset!("/assets/ferris.png");
 
 #[component]
-pub fn Navbar() -> Element {
+pub(crate) fn Navbar() -> Element {
     let mut menu_open = use_signal(|| false);
 
     rsx! {
