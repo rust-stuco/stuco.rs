@@ -1,21 +1,24 @@
-name: Deploy to GitHub Pages
+name: Deploy website
 
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
+
+concurrency:
+  group: website-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install Taplo
         uses: taiki-e/install-action@v2
@@ -32,9 +35,28 @@ jobs:
   build:
     needs: validate
     runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.event_name == 'pull_request' && format('preview-pr-{0}', github.event.pull_request.number) || 'production' }}
+      url: >-
+        ${{
+          github.event_name == 'pull_request' &&
+          format(
+            'https://pr-{0}-stuco-rs.rust-stuco.workers.dev',
+            github.event.pull_request.number
+          ) ||
+          steps.production.outputs.deployment-url
+        }}
+      deployment: >-
+        ${{
+          github.ref == 'refs/heads/main' ||
+          (
+            github.event_name == 'pull_request' &&
+            github.event.pull_request.head.repo.full_name == github.repository
+          )
+        }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -71,17 +93,19 @@ jobs:
             ~/.cargo/registry/
             ~/.cargo/git/
             target/
+            !target/dx/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Install Dioxus CLI
-        uses: cargo-bins/cargo-binstall@main
-      - run: cargo binstall dioxus-cli --no-confirm
+        uses: taiki-e/install-action@v2
+        with:
+          tool: dioxus-cli@0.7.2
 
       - name: Build
+        env:
+          # Limit parallel rendering to avoid exhausting CI runner resources.
+          RAYON_NUM_THREADS: 2
         run: dx build --release
-
-      - name: Copy index.html to 404.html
-        run: cp target/dx/stuco-rs/release/web/public/index.html target/dx/stuco-rs/release/web/public/404.html
 
       - name: Upload syllabus artifact
         uses: actions/upload-artifact@v4
@@ -89,18 +113,24 @@ jobs:
           name: syllabus
           path: target/dx/stuco-rs/release/web/public/syllabus.pdf
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
+      - name: Deploy production website
+        id: production
+        if: github.ref == 'refs/heads/main'
+        uses: cloudflare/wrangler-action@v4
         with:
-          path: target/dx/stuco-rs/release/web/public
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4"
+          command: deploy
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Deploy preview website
+        id: preview
+        if: >-
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4"
+          command: versions upload --preview-alias pr-${{ github.event.pull_request.number }}
