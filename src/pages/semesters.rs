@@ -38,17 +38,26 @@ pub(super) fn format_staff_names(staff: &[StaffMember]) -> String {
 }
 
 pub(super) const CURRENT_SEMESTER: Semester = Semester {
-    name: "Spring 2026",
+    name: "Fall 2026",
     instructors: &[
-        StaffMember::new("Stephen Mao", Some("stmao@andrew.cmu.edu")),
-        StaffMember::new("Hugo Latendresse", Some("hlatendr@andrew.cmu.edu")),
         StaffMember::new("Anish Pallati", Some("apallati@andrew.cmu.edu")),
+        StaffMember::new("Max Wen", Some("maxwen@andrew.cmu.edu")),
     ],
-    tas: &[StaffMember::new("Max Wen", Some("maxwen@andrew.cmu.edu"))],
+    tas: &[StaffMember::new("Bright Zheng", Some("brightz@andrew.cmu.edu"))],
     link: "https://stuco.rs",
 };
 
 pub(super) const PREVIOUS_SEMESTERS: &[Semester] = &[
+    Semester {
+        name: "S26",
+        instructors: &[
+            StaffMember::new("Stephen Mao", Some("stmao@andrew.cmu.edu")),
+            StaffMember::new("Hugo Latendresse", Some("hlatendr@andrew.cmu.edu")),
+            StaffMember::new("Anish Pallati", Some("apallati@andrew.cmu.edu")),
+        ],
+        tas: &[StaffMember::new("Max Wen", Some("maxwen@andrew.cmu.edu"))],
+        link: "https://stuco.rs",
+    },
     Semester {
         name: "F25",
         instructors: &[
