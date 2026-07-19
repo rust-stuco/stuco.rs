@@ -1,31 +1,44 @@
-use schemars::JsonSchema;
-use serde::Deserialize;
+use dioxus::prelude::*;
 
-#[derive(Debug, Deserialize, JsonSchema)]
-struct ResourceFile {
-    resources: Vec<ResourceEntry>,
-}
-
-#[derive(Debug, Deserialize, JsonSchema)]
-struct ResourceEntry {
-    title: String,
-    url: String,
-    description: Option<String>,
-    author: Option<String>,
-    official: Option<bool>,
+#[component]
+pub fn Resources() -> Element {
+    rsx! {
+        document::Title { "Resources - Rust StuCo" }
+        div { class: "max-w-prose mx-auto px-8 pt-16",
+            h1 { class: "text-3xl font-bold italic text-primary mb-6 text-center",
+                "Resources"
+            }
+            p { "Under construction" }
+        }
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use schemars::JsonSchema;
+    use serde::Deserialize;
+
+    #[derive(Debug, Deserialize, JsonSchema)]
+    struct ResourceFile {
+        resources: Vec<ResourceEntry>,
+    }
+
+    #[derive(Debug, Deserialize, JsonSchema)]
+    struct ResourceEntry {
+        title: String,
+        url: String,
+        description: Option<String>,
+        author: Option<String>,
+        official: Option<bool>,
+    }
 
     const RESOURCE_FILES: &[&str] = &[
-        include_str!("../../../resources/blog-posts.toml"),
-        include_str!("../../../resources/books.toml"),
-        include_str!("../../../resources/cheatsheets.toml"),
-        include_str!("../../../resources/interactive.toml"),
-        include_str!("../../../resources/meta.toml"),
-        include_str!("../../../resources/playlists.toml"),
+        include_str!("../../resources/blog-posts.toml"),
+        include_str!("../../resources/books.toml"),
+        include_str!("../../resources/cheatsheets.toml"),
+        include_str!("../../resources/interactive.toml"),
+        include_str!("../../resources/meta.toml"),
+        include_str!("../../resources/playlists.toml"),
     ];
 
     #[test]
