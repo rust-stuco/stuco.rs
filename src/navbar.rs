@@ -1,4 +1,4 @@
-use crate::Route;
+use crate::pages::Route;
 use dioxus::prelude::*;
 
 const FERRIS: Asset = asset!("/assets/ferris.png");

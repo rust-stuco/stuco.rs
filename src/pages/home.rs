@@ -1,11 +1,11 @@
-use crate::Route;
-use crate::semesters::CURRENT_SEMESTER;
+use super::Route;
+use super::semesters::{CURRENT_SEMESTER, format_staff_names};
 use dioxus::prelude::*;
 
 const BACKGROUND: Asset = asset!("/assets/elixir-rust-cover.webp");
 
 #[component]
-pub(crate) fn Home() -> Element {
+pub(super) fn Home() -> Element {
     rsx! {
         document::Title { "Intro to Rust Lang" }
         div {
@@ -13,7 +13,7 @@ pub(crate) fn Home() -> Element {
             style: format!("background-image: url('{}')", BACKGROUND),
             div { class: "bg-black/25 text-primary text-center px-8 py-6",
                 h1 { class: "text-4xl sm:text-6xl font-bold", "Intro to Rust Lang" }
-                p { class: "text-xl sm:text-2xl mt-2", "Spring 2026" }
+                p { class: "text-xl sm:text-2xl mt-2", "{CURRENT_SEMESTER.name}" }
             }
         }
         div { class: "max-w-prose mx-auto px-8 pt-16",
@@ -22,23 +22,11 @@ pub(crate) fn Home() -> Element {
             }
             p {
                 {
-                    let names: Vec<_> = CURRENT_SEMESTER
-                        .instructors
-                        .iter()
-                        .map(|(n, _)| *n)
-                        .collect();
-                    let instructors = if names.len() <= 1 {
-                        names.join("")
-                    } else {
-                        format!(
-                            "{}, and {}",
-                            names[..names.len() - 1].join(", "),
-                            names.last().unwrap(),
-                        )
-                    };
+                    let instructors = format_staff_names(CURRENT_SEMESTER.instructors);
+                    let semester = CURRENT_SEMESTER.name;
 
                     rsx! {
-                        "Welcome to Intro to Rust Lang (98-008). The course will be offered in Spring 2026 by {instructors} at Carnegie Mellon University. Please see the "
+                        "Welcome to Intro to Rust Lang (98-008). The course will be offered in {semester} by {instructors} at Carnegie Mellon University. Please see the "
                         Link { to: Route::About {}, class: "text-secondary", "about page" }
                         " for more!"
                     }

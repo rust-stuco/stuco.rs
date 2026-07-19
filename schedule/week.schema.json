@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Week",
   "type": "object",
   "properties": {
@@ -18,13 +18,13 @@
         "null"
       ],
       "items": {
-        "$ref": "#/$defs/Extra"
+        "$ref": "#/definitions/Extra"
       }
     },
     "homework": {
       "anyOf": [
         {
-          "$ref": "#/$defs/Homework"
+          "$ref": "#/definitions/Homework"
         },
         {
           "type": "null"
@@ -34,7 +34,7 @@
     "homework_alt": {
       "anyOf": [
         {
-          "$ref": "#/$defs/Homework"
+          "$ref": "#/definitions/Homework"
         },
         {
           "type": "null"
@@ -44,7 +44,7 @@
     "homework_ec": {
       "anyOf": [
         {
-          "$ref": "#/$defs/Homework"
+          "$ref": "#/definitions/Homework"
         },
         {
           "type": "null"
@@ -72,7 +72,7 @@
         "null"
       ],
       "items": {
-        "$ref": "#/$defs/VideoGroup"
+        "$ref": "#/definitions/VideoGroup"
       }
     }
   },
@@ -80,7 +80,7 @@
     "title",
     "slides"
   ],
-  "$defs": {
+  "definitions": {
     "Extra": {
       "type": "object",
       "properties": {

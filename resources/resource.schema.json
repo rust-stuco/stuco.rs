@@ -1,19 +1,19 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "ResourceFile",
   "type": "object",
   "properties": {
     "resources": {
       "type": "array",
       "items": {
-        "$ref": "#/$defs/ResourceEntry"
+        "$ref": "#/definitions/ResourceEntry"
       }
     }
   },
   "required": [
     "resources"
   ],
-  "$defs": {
+  "definitions": {
     "ResourceEntry": {
       "type": "object",
       "properties": {
@@ -30,10 +30,8 @@
           ]
         },
         "official": {
-          "type": [
-            "boolean",
-            "null"
-          ]
+          "type": "boolean",
+          "default": false
         },
         "title": {
           "type": "string"
