@@ -1,11 +1,11 @@
 use crate::Route;
-use crate::pages::about::CURRENT_SEMESTER;
+use crate::semesters::CURRENT_SEMESTER;
 use dioxus::prelude::*;
 
 const BACKGROUND: Asset = asset!("/assets/elixir-rust-cover.webp");
 
 #[component]
-pub fn Home() -> Element {
+pub(crate) fn Home() -> Element {
     rsx! {
         document::Title { "Intro to Rust Lang" }
         div {

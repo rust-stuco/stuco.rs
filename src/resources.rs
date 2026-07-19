@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
 #[component]
-pub fn Resources() -> Element {
+pub(crate) fn Resources() -> Element {
     rsx! {
         document::Title { "Resources - Rust StuCo" }
         div { class: "max-w-prose mx-auto px-8 pt-16",
@@ -33,12 +33,12 @@ mod tests {
     }
 
     const RESOURCE_FILES: &[&str] = &[
-        include_str!("../../resources/blog-posts.toml"),
-        include_str!("../../resources/books.toml"),
-        include_str!("../../resources/cheatsheets.toml"),
-        include_str!("../../resources/interactive.toml"),
-        include_str!("../../resources/meta.toml"),
-        include_str!("../../resources/playlists.toml"),
+        include_str!("../resources/blog-posts.toml"),
+        include_str!("../resources/books.toml"),
+        include_str!("../resources/cheatsheets.toml"),
+        include_str!("../resources/interactive.toml"),
+        include_str!("../resources/meta.toml"),
+        include_str!("../resources/playlists.toml"),
     ];
 
     #[test]

@@ -1,8 +1,9 @@
-use crate::pages::schedule::data::{Homework, Week, load_weeks};
 use dioxus::prelude::*;
+use schemars::JsonSchema;
+use serde::Deserialize;
 use std::sync::LazyLock;
 
-// Update this as the semester goes
+// Update this as the semester progresses.
 const LAST_WEEK_SHOWN: usize = if cfg!(debug_assertions) {
     usize::MAX
 } else {
@@ -11,22 +12,8 @@ const LAST_WEEK_SHOWN: usize = if cfg!(debug_assertions) {
 
 static WEEKS: LazyLock<Vec<Week>> = LazyLock::new(load_weeks);
 
-fn video_color(title: &str) -> (&'static str, &'static str, &'static str) {
-    // (background, border, text color)
-    match title {
-        "No Boilerplate Rust Talks" => ("#F59E0B20", "#F59E0B", "#D97706"), // amber
-        "The Rust Programming Language Book" => ("#F8717120", "#F87171", "#F87171"), // red
-        "Connor's Lectures" => ("#8B5CF620", "#8B5CF6", "#A78BFA"),         // violet
-        "Code to the Moon" => ("#3B82F620", "#3B82F6", "#60A5FA"),          // blue
-        "Crust of Rust" => ("#06B6D420", "#06B6D4", "#22D3EE"),             // cyan
-        "Idiomatic Rust" => ("#10B98120", "#10B981", "#34D399"),            // emerald
-        "Low Level Learning Rust Talks" => ("#EC489920", "#EC4899", "#F472B6"), // pink
-        _ => ("#6B728020", "#6B7280", "#6B7280"),
-    }
-}
-
 #[component]
-pub fn Schedule() -> Element {
+pub(crate) fn Schedule() -> Element {
     rsx! {
         document::Title { "Schedule - Rust StuCo" }
         div { class: "max-w-4xl mx-auto px-8 pt-16",
@@ -68,7 +55,7 @@ fn WeekRow(week_num: usize, week: &'static Week) -> Element {
         if expanded() {
             expanded.set(false);
         } else {
-            // Check if we should open upward
+            // Open the menu upward when there is insufficient space below it.
             spawn(async move {
                 if let Some(mounted) = button_ref()
                     && let Ok(rect) = mounted.get_client_rect().await
@@ -78,7 +65,6 @@ fn WeekRow(week_num: usize, week: &'static Week) -> Element {
                         .and_then(|h| h.as_f64())
                         .unwrap_or(800.0);
 
-                    // If button is in bottom 40% of viewport, open upward
                     open_upward.set(rect.origin.y > viewport_height * 0.6);
                 }
                 expanded.set(true);
@@ -149,7 +135,6 @@ fn WeekRow(week_num: usize, week: &'static Week) -> Element {
 #[component]
 fn MaterialsDropdown(week: &'static Week) -> Element {
     rsx! {
-        // Rustlings
         if let Some(rustlings) = &week.rustlings {
             div { class: "space-y-3",
                 span { class: "text-secondary font-semibold", "Rustlings" }
@@ -161,7 +146,6 @@ fn MaterialsDropdown(week: &'static Week) -> Element {
             }
         }
 
-        // Book chapters
         if let Some(chapters) = &week.book_chapters {
             div { class: "space-y-3",
                 span { class: "text-secondary font-semibold", "Book Chapters" }
@@ -173,7 +157,6 @@ fn MaterialsDropdown(week: &'static Week) -> Element {
             }
         }
 
-        // Videos
         if let Some(videos) = &week.videos {
             div { class: "space-y-3",
                 span { class: "text-secondary font-semibold", "Videos" }
@@ -185,7 +168,6 @@ fn MaterialsDropdown(week: &'static Week) -> Element {
             }
         }
 
-        // Extras
         if let Some(extras) = &week.extras {
             div { class: "space-y-3",
                 span { class: "text-secondary font-semibold", "Extras" }
@@ -199,8 +181,21 @@ fn MaterialsDropdown(week: &'static Week) -> Element {
     }
 }
 
+fn video_color(title: &str) -> (&'static str, &'static str, &'static str) {
+    match title {
+        "No Boilerplate Rust Talks" => ("#F59E0B20", "#F59E0B", "#D97706"),
+        "The Rust Programming Language Book" => ("#F8717120", "#F87171", "#F87171"),
+        "Connor's Lectures" => ("#8B5CF620", "#8B5CF6", "#A78BFA"),
+        "Code to the Moon" => ("#3B82F620", "#3B82F6", "#60A5FA"),
+        "Crust of Rust" => ("#06B6D420", "#06B6D4", "#22D3EE"),
+        "Idiomatic Rust" => ("#10B98120", "#10B981", "#34D399"),
+        "Low Level Learning Rust Talks" => ("#EC489920", "#EC4899", "#F472B6"),
+        _ => ("#6B728020", "#6B7280", "#6B7280"),
+    }
+}
+
 #[component]
-fn VideoPills(group: &'static crate::pages::schedule::data::VideoGroup) -> Element {
+fn VideoPills(group: &'static VideoGroup) -> Element {
     let (bg, border, text) = video_color(&group.title);
 
     rsx! {
@@ -222,7 +217,7 @@ fn VideoPills(group: &'static crate::pages::schedule::data::VideoGroup) -> Eleme
 
 #[component]
 fn BookChapterLinks(chapter: &'static str) -> Element {
-    // chapter format: "ch04-01-what-is-ownership" -> "4.1"
+    // Convert a chapter slug such as "ch04-01-what-is-ownership" to "4.1".
     let display = chapter
         .strip_prefix("ch")
         .map(|s| {
@@ -363,13 +358,91 @@ fn HomeworkLinks(homework: &'static Homework) -> Element {
 }
 
 #[component]
-fn ExtraLink(extra: &'static crate::pages::schedule::data::Extra) -> Element {
+fn ExtraLink(extra: &'static Extra) -> Element {
     rsx! {
         a {
             class: "inline-flex items-center px-2 py-0.5 rounded text-xs bg-tertiary/20 hover:bg-tertiary/40 transition-colors border border-tertiary/50",
             href: "{extra.url}",
             target: "_blank",
             "{extra.title}"
+        }
+    }
+}
+
+#[derive(Debug, Deserialize, JsonSchema, PartialEq)]
+struct Week {
+    title: String,
+    slides: String,
+    rustlings: Option<Vec<String>>,
+    book_chapters: Option<Vec<String>>,
+    videos: Option<Vec<VideoGroup>>,
+    homework: Option<Homework>,
+    homework_ec: Option<Homework>,
+    homework_alt: Option<Homework>,
+    extras: Option<Vec<Extra>>,
+}
+
+#[derive(Debug, Deserialize, JsonSchema, PartialEq)]
+struct VideoGroup {
+    title: String,
+    items: Vec<String>,
+}
+
+#[derive(Debug, Deserialize, JsonSchema, PartialEq)]
+struct Homework {
+    name: String,
+    slug: Option<String>,
+}
+
+#[derive(Debug, Deserialize, JsonSchema, PartialEq)]
+struct Extra {
+    title: String,
+    url: String,
+}
+
+fn load_weeks() -> Vec<Week> {
+    let files = [
+        include_str!("../schedule/week01.toml"),
+        include_str!("../schedule/week02.toml"),
+        include_str!("../schedule/week03.toml"),
+        include_str!("../schedule/week04.toml"),
+        include_str!("../schedule/week05.toml"),
+        include_str!("../schedule/week06.toml"),
+        include_str!("../schedule/week07.toml"),
+        include_str!("../schedule/week08.toml"),
+        include_str!("../schedule/week09.toml"),
+        include_str!("../schedule/week10.toml"),
+        include_str!("../schedule/week11.toml"),
+        include_str!("../schedule/week12.toml"),
+        include_str!("../schedule/week13.toml"),
+        include_str!("../schedule/week14.toml"),
+    ];
+
+    files
+        .iter()
+        .map(|contents| toml::from_str::<Week>(contents).expect("week should be valid TOML"))
+        .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn week_schema_is_current() {
+        let schema = schemars::schema_for!(Week);
+        let json = format!("{}\n", serde_json::to_string_pretty(&schema).unwrap());
+        let path = concat!(env!("CARGO_MANIFEST_DIR"), "/schedule/week.schema.json");
+
+        if std::env::var_os("UPDATE_SCHEMAS").is_some() {
+            std::fs::write(path, json).unwrap();
+        } else {
+            assert_eq!(
+                std::fs::read_to_string(path).unwrap(),
+                json,
+                "week schema is stale; regenerate it with \
+                 `UPDATE_SCHEMAS=1 cargo test schema_is_current`"
+            );
         }
     }
 }

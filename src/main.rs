@@ -1,10 +1,17 @@
-mod components;
-mod pages;
-
 use dioxus::prelude::*;
 
-use components::Navbar;
-use pages::{About, Home, Resources, Schedule};
+mod about;
+mod home;
+mod navbar;
+mod resources;
+mod schedule;
+mod semesters;
+
+use about::About;
+use home::Home;
+use navbar::Navbar;
+use resources::Resources;
+use schedule::Schedule;
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
 const FAVICON_16: Asset = asset!("/assets/favicon-16x16.png");
@@ -15,7 +22,7 @@ const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
 
 #[derive(Debug, Clone, Routable, PartialEq)]
 #[rustfmt::skip]
-pub enum Route {
+pub(crate) enum Route {
     #[layout(Navbar)]
         #[route("/")]
         Home {},

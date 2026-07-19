@@ -1,67 +1,8 @@
+use crate::semesters::{CURRENT_SEMESTER, PREVIOUS_SEMESTERS, Semester};
 use dioxus::prelude::*;
 
-#[derive(PartialEq)]
-pub struct Semester {
-    pub name: &'static str,
-    pub instructors: &'static [(&'static str, Option<&'static str>)], // (name, optional email)
-    pub tas: &'static [(&'static str, Option<&'static str>)],
-    pub link: &'static str,
-}
-
-pub const CURRENT_SEMESTER: Semester = Semester {
-    name: "Spring 2026",
-    instructors: &[
-        ("Stephen Mao", Some("stmao@andrew.cmu.edu")),
-        ("Hugo Latendresse", Some("hlatendr@andrew.cmu.edu")),
-        ("Anish Pallati", Some("apallati@andrew.cmu.edu")),
-    ],
-    tas: &[("Max Wen", Some("maxwen@andrew.cmu.edu"))],
-    link: "https://stuco.rs",
-};
-
-const PREVIOUS_SEMESTERS: &[Semester] = &[
-    Semester {
-        name: "F25",
-        instructors: &[("Fiona Fisher", None), ("Terrance Chen", None)],
-        tas: &[("Stephen Mao", None)],
-        link: "https://rust-stuco.github.io/",
-    },
-    Semester {
-        name: "S25",
-        instructors: &[("Connor Tsui", None), ("Jessica Ruan", None)],
-        tas: &[("Fiona Fisher", None), ("Terrance Chen", None)],
-        link: "https://rust-stuco.github.io/old/s25/",
-    },
-    Semester {
-        name: "F24",
-        instructors: &[
-            ("Benjamin Owad", None),
-            ("Connor Tsui", None),
-            ("David Rudo", None),
-        ],
-        tas: &[],
-        link: "https://rust-stuco.github.io/old/f24/",
-    },
-    Semester {
-        name: "S24",
-        instructors: &[
-            ("Benjamin Owad", None),
-            ("Connor Tsui", None),
-            ("David Rudo", None),
-        ],
-        tas: &[],
-        link: "https://rust-stuco.github.io/old/s24/",
-    },
-    Semester {
-        name: "S22, F22, and S23",
-        instructors: &[("Jack Duvall", None), ("Cooper Pierce", None)],
-        tas: &[],
-        link: "https://old-rust-stuco.duvallj.pw/",
-    },
-];
-
 #[component]
-pub fn About() -> Element {
+pub(crate) fn About() -> Element {
     rsx! {
         document::Title { "About - Rust StuCo" }
         div { class: "max-w-prose mx-auto px-8 pt-16",
