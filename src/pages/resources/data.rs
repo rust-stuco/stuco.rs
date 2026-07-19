@@ -1,7 +1,6 @@
 use schemars::JsonSchema;
 use serde::Deserialize;
 
-// For TOML deserialization + schema
 #[derive(Debug, Deserialize, JsonSchema)]
 struct ResourceFile {
     resources: Vec<ResourceEntry>,
@@ -16,74 +15,50 @@ struct ResourceEntry {
     official: Option<bool>,
 }
 
-// For runtime use
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum Category {
-    Books,
-    BlogPosts,
-    Cheatsheets,
-    Interactive,
-    Meta,
-    Playlists,
-}
-
-#[derive(Debug)]
-pub struct Resource {
-    title: String,
-    url: String,
-    description: Option<String>,
-    author: Option<String>,
-    official: Option<bool>,
-    category: Category,
-}
-
-pub fn load_resources() -> Vec<Resource> {
-    let files: &[(&str, Category)] = &[
-        (
-            include_str!("../../../resources/blog-posts.toml"),
-            Category::BlogPosts,
-        ),
-        (
-            include_str!("../../../resources/books.toml"),
-            Category::Books,
-        ),
-        (
-            include_str!("../../../resources/cheatsheets.toml"),
-            Category::Cheatsheets,
-        ),
-        (
-            include_str!("../../../resources/interactive.toml"),
-            Category::Interactive,
-        ),
-        (include_str!("../../../resources/meta.toml"), Category::Meta),
-        (
-            include_str!("../../../resources/playlists.toml"),
-            Category::Playlists,
-        ),
-    ];
-
-    files
-        .iter()
-        .flat_map(|(s, cat)| {
-            toml::from_str::<ResourceFile>(s)
-                .expect("Invalid TOML")
-                .resources
-                .into_iter()
-                .map(|r| Resource {
-                    title: r.title,
-                    url: r.url,
-                    description: r.description,
-                    author: r.author,
-                    official: r.official,
-                    category: *cat,
-                })
-        })
-        .collect()
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    const RESOURCE_FILES: &[&str] = &[
+        include_str!("../../../resources/blog-posts.toml"),
+        include_str!("../../../resources/books.toml"),
+        include_str!("../../../resources/cheatsheets.toml"),
+        include_str!("../../../resources/interactive.toml"),
+        include_str!("../../../resources/meta.toml"),
+        include_str!("../../../resources/playlists.toml"),
+    ];
+
+    #[test]
+    fn resource_files_are_valid() {
+        let resources = RESOURCE_FILES
+            .iter()
+            .flat_map(|contents| {
+                toml::from_str::<ResourceFile>(contents)
+                    .expect("resource file should be valid TOML")
+                    .resources
+            })
+            .collect::<Vec<_>>();
+
+        assert!(!resources.is_empty());
+        assert!(
+            resources
+                .iter()
+                .any(|resource| resource.official.unwrap_or(false))
+        );
+
+        for resource in resources {
+            assert!(!resource.title.trim().is_empty());
+            assert!(resource.url.starts_with("https://"));
+
+            if let Some(description) = resource.description {
+                assert!(!description.trim().is_empty());
+            }
+
+            if let Some(author) = resource.author {
+                assert!(!author.trim().is_empty());
+            }
+        }
+    }
 
     #[test]
     fn resource_schema_is_current() {
