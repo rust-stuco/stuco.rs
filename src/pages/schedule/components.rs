@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 
-use super::data::{WEEKS, rustling_url, week_is_published};
+use super::data::{WEEKS, is_revealed, rustling_url, semester_name};
 use super::display::{
     DEFAULT_VIEWPORT_HEIGHT, OPEN_UPWARD_THRESHOLD, VideoColors, book_chapter_label, slide_name,
     video_colors,
@@ -9,12 +9,17 @@ use super::week::{Extra, Homework, Materials, VideoGroup, Week};
 
 #[component]
 pub(crate) fn Schedule() -> Element {
+    // The browser clock decides what is revealed, so the schedule advances without a redeploy.
+    let now_ms = jiff::Timestamp::now().as_millisecond();
+    let mut show_upcoming = use_signal(|| false);
+
     rsx! {
         document::Title { "Schedule - Rust StuCo" }
         div { class: "max-w-4xl mx-auto px-8 pt-16",
-            h1 { class: "text-3xl font-bold italic text-primary mb-6 text-center",
+            h1 { class: "text-3xl font-bold italic text-primary mb-2 text-center",
                 "Schedule"
             }
+            p { class: "text-center text-secondary mb-6", "{semester_name()}" }
             table { class: "w-full border-collapse",
                 thead {
                     tr { class: "border-b border-tertiary",
@@ -25,9 +30,30 @@ pub(crate) fn Schedule() -> Element {
                     }
                 }
                 tbody {
-                    for (i , week) in WEEKS.iter().enumerate() {
-                        WeekRow { week_num: i + 1, week }
+                    for (i , &week) in WEEKS.iter().enumerate() {
+                        WeekRow {
+                            week_num: i + 1,
+                            week,
+                            revealed: is_revealed(i, now_ms),
+                            show_upcoming: show_upcoming(),
+                        }
                     }
+                }
+            }
+            div { class: "group mt-8 mb-4 text-center",
+                button {
+                    r#type: "button",
+                    class: "text-sm text-foreground hover:text-secondary transition-colors",
+                    onclick: move |_| show_upcoming.set(!show_upcoming()),
+                    if show_upcoming() {
+                        "Hide upcoming content"
+                    } else {
+                        "Show upcoming content"
+                    }
+                }
+                p {
+                    class: "mt-1 text-xs text-tertiary italic opacity-0 group-hover:opacity-100 transition-opacity",
+                    "Upcoming content is subject to change"
                 }
             }
         }
@@ -35,12 +61,21 @@ pub(crate) fn Schedule() -> Element {
 }
 
 #[component]
-fn WeekRow(week_num: usize, week: &'static Week) -> Element {
+fn WeekRow(week_num: usize, week: &'static Week, revealed: bool, show_upcoming: bool) -> Element {
     let mut expanded = use_signal(|| false);
     let mut open_upward = use_signal(|| false);
     let mut button_ref = use_signal(|| None::<std::rc::Rc<MountedData>>);
 
-    let published = week_is_published(week_num);
+    // Slides and homework always occupy the row so toggling never shifts layout; classes control
+    // visibility and dimming. Hidden until revealed; peeking shows future weeks dimmed.
+    let visible = revealed || show_upcoming;
+    let content_class = if !visible {
+        "invisible"
+    } else if !revealed {
+        "opacity-60"
+    } else {
+        ""
+    };
     let assignments = &week.assignments;
 
     let handle_click = move |_| {
@@ -98,27 +133,25 @@ fn WeekRow(week_num: usize, week: &'static Week) -> Element {
                     }
                 }
             }
-            td { class: "p-2 align-top",
-                if published {
-                    SlideLinks { slides: &week.slides }
-                }
+            td {
+                class: "p-2 align-top {content_class}",
+                SlideLinks { slides: &week.slides }
             }
-            td { class: "p-2 align-top",
-                if published {
-                    if let Some(homework) = &assignments.primary {
+            td {
+                class: "p-2 align-top {content_class}",
+                if let Some(homework) = &assignments.primary {
+                    HomeworkLinks { homework }
+                }
+                if let Some(homework) = &assignments.extra_credit {
+                    div { class: "mt-1",
+                        span { class: "text-secondary text-sm", "EC: " }
                         HomeworkLinks { homework }
                     }
-                    if let Some(homework) = &assignments.extra_credit {
-                        div { class: "mt-1",
-                            span { class: "text-secondary text-sm", "EC: " }
-                            HomeworkLinks { homework }
-                        }
-                    }
-                    if let Some(homework) = &assignments.alternative {
-                        div { class: "mt-1",
-                            span { class: "text-secondary text-sm", "OR " }
-                            HomeworkLinks { homework }
-                        }
+                }
+                if let Some(homework) = &assignments.alternative {
+                    div { class: "mt-1",
+                        span { class: "text-secondary text-sm", "OR " }
+                        HomeworkLinks { homework }
                     }
                 }
             }

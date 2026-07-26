@@ -27,7 +27,7 @@ jobs:
           fallback: none
 
       - name: Validate TOML formatting
-        run: taplo fmt --check resources/*.toml schedule/*.toml Cargo.toml
+        run: taplo fmt --check resources/*.toml schedule/*.toml schedule/weeks/*.toml Cargo.toml
 
       - name: Validate TOML against schemas
         run: taplo check

@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Semester",
+  "description": "The current semester's schedule: which content weeks run this term, in order, and when each\nunlocks. Weeks are selected from the content library by slug, so reordering or dropping a week\nis a config edit, never a code change.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "reveal_time": {
+      "description": "Local time each week unlocks, as `\"HH:MM\"` (24-hour).",
+      "type": "string"
+    },
+    "timezone": {
+      "description": "IANA time zone the reveal time is expressed in, e.g. `\"America/New_York\"`.",
+      "type": "string"
+    },
+    "weeks": {
+      "description": "The weeks shown this term, in schedule order.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ScheduledWeek"
+      }
+    }
+  },
+  "required": [
+    "name",
+    "reveal_time",
+    "timezone",
+    "weeks"
+  ],
+  "definitions": {
+    "ScheduledWeek": {
+      "description": "One entry in a semester schedule: which content week to show, and when it unlocks.",
+      "type": "object",
+      "properties": {
+        "date": {
+          "description": "Calendar date the week's slides and homework unlock.",
+          "type": "string"
+        },
+        "week": {
+          "description": "Slug of the content week — the file stem under `schedule/weeks/` (e.g. `\"ecosystem\"`).",
+          "type": "string"
+        }
+      },
+      "required": [
+        "week",
+        "date"
+      ]
+    }
+  }
+}

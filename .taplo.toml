@@ -13,8 +13,15 @@ path = "./resources/resource.schema.json"
 enabled = true
 
 [[rule]]
-include = ["schedule/*.toml"]
+include = ["schedule/weeks/*.toml"]
 
 [rule.schema]
 path = "./schedule/week.schema.json"
+enabled = true
+
+[[rule]]
+include = ["schedule/semester.toml"]
+
+[rule.schema]
+path = "./schedule/semester.schema.json"
 enabled = true
