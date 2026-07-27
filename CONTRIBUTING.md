@@ -8,19 +8,29 @@ This project uses the `typst` CLI to compile the [syllabus source file](src/syll
 
 Download and install `typst` from the [official website](https://typst.app/open-source/#download)!
 
-### Website
+### Lecture slides
 
-You need to install `dioxus-cli` to build and run the website:
+The build renders every lecture deck to PDF with the `marp` CLI, so you need it installed even if you
+are only working on the website:
 
 ```bash
-cargo install dioxus-cli
+npm install -g @marp-team/marp-cli
+```
+
+### Website
+
+You need to install `dioxus-cli` to build and run the website. Pin the same version CI uses, since a
+mismatch can fail to build the crate:
+
+```bash
+cargo install dioxus-cli --version 0.7.2
 ```
 
 Alternatively, you can use `cargo binstall` to install a pre-built binary (faster):
 
 ```bash
 cargo install cargo-binstall
-cargo binstall dioxus-cli
+cargo binstall dioxus-cli@0.7.2
 ```
 
 ## Development
