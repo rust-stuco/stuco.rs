@@ -53,8 +53,8 @@ The first time you run this, it will take longer since it needs to build the `pu
 
 ### The week one deck
 
-`dx serve` serves the deck at `/slidev/week01/`, the same path deployments use, so the link on the
-resources page works locally too. Nothing extra to run.
+`dx serve` serves the deck at `/slidev/week01/light/` and `/slidev/week01/dark/`, the same paths
+deployments use, so the links on the resources page work locally too. Nothing extra to run.
 
 It takes a detour to get there. `dx` runs every JavaScript file under `public/` through its own asset
 pipeline, and re-bundling Slidev's chunks leaves the deck a blank page, so the build writes the deck

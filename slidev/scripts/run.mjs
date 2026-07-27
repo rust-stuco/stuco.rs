@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process'
 import { accessSync, constants, rmSync } from 'node:fs'
-import { copyFile, mkdir, rm, symlink } from 'node:fs/promises'
+import { copyFile, mkdir, readFile, rm, symlink, writeFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 
@@ -22,6 +22,12 @@ const siteOutputRoot = process.env.STUCO_SLIDEV_SITE_OUTPUT
 const pdfOutputRoot = process.env.STUCO_SLIDEV_PDF_OUTPUT
   ? path.resolve(process.env.STUCO_SLIDEV_PDF_OUTPUT)
   : outputRoot
+// Set to `light` or `dark` to pin the built deck's color scheme; unset follows the viewer's system
+// preference and leaves Slidev's own toggle working, which is what `dev` wants.
+const colorSchema = process.env.STUCO_SLIDEV_COLOR_SCHEMA
+const siteBase = colorSchema
+  ? `/slidev/week01/${colorSchema}/`
+  : '/slidev/week01/'
 const slidevCli = path.join(
   slidevRoot,
   'node_modules',
@@ -46,7 +52,7 @@ async function runTask(taskName, extraArgs) {
   const workspaceRoot = path.join(
     slidevRoot,
     '.slidev-work',
-    taskName.replace(':', '-'),
+    [taskName.replace(':', '-'), colorSchema].filter(Boolean).join('-'),
   )
   const lectureRoot = path.join(workspaceRoot, 'lectures', '01_introduction')
   const setupRoot = path.join(lectureRoot, 'setup')
@@ -60,7 +66,7 @@ async function runTask(taskName, extraArgs) {
   try {
     await mkdir(lectureRoot, { recursive: true })
     await mkdir(setupRoot, { recursive: true })
-    await symlink(sourceDeck, workspaceDeck, 'file')
+    await materializeDeck(workspaceDeck)
     await symlink(
       sourceImages,
       workspaceImages,
@@ -100,7 +106,7 @@ async function runTask(taskName, extraArgs) {
         'build',
         workspaceDeck,
         '--base',
-        '/slidev/week01/',
+        siteBase,
         '--out',
         siteOutputRoot,
         '--without-notes',
@@ -142,6 +148,30 @@ async function runTask(taskName, extraArgs) {
     process.removeListener('exit', cleanupWorkspace)
     await rm(workspaceRoot, { recursive: true, force: true })
   }
+}
+
+/// Links the deck into the workspace, or writes a copy with the color scheme pinned.
+///
+/// Slidev reads `colorSchema` from the deck's headmatter and fixes it at build time, and the CLI has
+/// no flag to override it, so a pinned variant needs its own copy of the source.
+async function materializeDeck(destination) {
+  if (!colorSchema) {
+    await symlink(sourceDeck, destination, 'file')
+    return
+  }
+
+  const markdown = await readFile(sourceDeck, 'utf8')
+  const pinned = markdown.replace(
+    /^colorSchema:.*$/m,
+    `colorSchema: ${colorSchema}`,
+  )
+  if (pinned === markdown) {
+    throw new Error(
+      `${sourceDeck} has no \`colorSchema\` line to pin to ${colorSchema}`,
+    )
+  }
+
+  await writeFile(destination, pinned)
 }
 
 /// Slidev exports through Playwright, which otherwise wants its own browser download. The marp

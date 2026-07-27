@@ -56,9 +56,17 @@ makes. Set `STUCO_SLIDEV_CHROME` to override the choice.
 the tree rather than in `dist/`. Week one therefore ships two ways, in production
 and in every pull request preview:
 
-- the deck itself at `/slidev/week01/`, linked from the resources page
+- the deck itself at `/slidev/week01/light/` and `/slidev/week01/dark/`, both
+  linked from the resources page
 - `introduction-light.pdf` and `introduction-dark.pdf` under
   `/lectures/01_introduction/`, which is where the schedule page links slides
+
+Slidev resolves `colorSchema` when it builds and the CLI has no flag for it, so
+each scheme is a separate site built from a copy of the deck with that one
+headmatter line rewritten. Pinning it also settles the question for the viewer:
+Slidev's own toggle only does anything while `colorSchema` is `auto`, which is
+what `npm run dev` still builds, since following the system preference is the
+nicer default while writing slides.
 
 The PDFs go directly into `public/`, but the deck goes to `target/slidev/week01/`
 and is overlaid onto the bundle by the deploy workflow. It cannot live in

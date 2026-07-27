@@ -1,12 +1,7 @@
 use crate::utils;
-use std::{
-    env, fs, io,
-    path::{Path, PathBuf},
-    process::Command,
-    slice,
-};
+use std::{env, ffi::OsStr, fs, io, path::Path, process::Command, slice};
 
-/// Where the built deck lands, matching the `/slidev/week01/` base it is built for.
+/// Where the built deck lands, holding one site per color scheme: `light/` and `dark/`.
 ///
 /// Deliberately outside `public/`: `dx` runs every JavaScript file it finds there through its asset
 /// pipeline, which re-bundles each of Slidev's chunks into a standalone copy of the whole deck. The
@@ -20,6 +15,10 @@ const PDF_OUTPUT: &str = "public/lectures/01_introduction";
 /// The rewrite file Slidev generates for its client-side routes, which Cloudflare rejects.
 const REDIRECTS: &str = "_redirects";
 
+/// The color schemes the deck is built for, each its own site under [`SITE_OUTPUT`].
+const LIGHT: &str = "light";
+const DARK: &str = "dark";
+
 /// Renders the Slidev week-one deck, as both a browsable site and the slide PDFs.
 ///
 /// Slidev is still an experiment, so this stage owns the one deck that has been converted while
@@ -28,7 +27,8 @@ const REDIRECTS: &str = "_redirects";
 pub fn build(manifest_dir: &Path) -> io::Result<()> {
     let slidev_root = manifest_dir.join("slidev");
     let output_dir = manifest_dir.join(SITE_OUTPUT);
-    let index = output_dir.join("index.html");
+    let light_index = output_dir.join("light/index.html");
+    let dark_index = output_dir.join("dark/index.html");
     let pdf_dir = manifest_dir.join(PDF_OUTPUT);
     let light_pdf = pdf_dir.join("introduction-light.pdf");
     let dark_pdf = pdf_dir.join("introduction-dark.pdf");
@@ -49,7 +49,12 @@ pub fn build(manifest_dir: &Path) -> io::Result<()> {
         dependencies.extend(utils::files_in_tree(&manifest_dir.join(directory))?);
     }
 
-    let generated_files = [index.as_path(), light_pdf.as_path(), dark_pdf.as_path()];
+    let generated_files = [
+        light_index.as_path(),
+        dark_index.as_path(),
+        light_pdf.as_path(),
+        dark_pdf.as_path(),
+    ];
     if utils::generated_files_are_current(&dependencies, &generated_files) {
         // Still mirror: the render is current, but the bundle may have been cleaned since.
         return mirror_into_bundle(manifest_dir, &output_dir);
@@ -61,36 +66,32 @@ pub fn build(manifest_dir: &Path) -> io::Result<()> {
     utils::recreate_directory(&output_dir)?;
     utils::create_directory(&pdf_dir)?;
 
-    run_task(
-        &slidev_root,
-        "build",
-        &[("STUCO_SLIDEV_SITE_OUTPUT", &output_dir)],
-    )?;
-    utils::require_nonempty_file(&index)?;
+    // Slidev pins the color scheme at build time, so each one is a separate site, mirroring the two
+    // PDFs the schedule page links.
+    for schema in [LIGHT, DARK] {
+        let variant = output_dir.join(schema);
+        run_task(
+            &slidev_root,
+            "build",
+            &[
+                ("STUCO_SLIDEV_SITE_OUTPUT", variant.as_os_str()),
+                ("STUCO_SLIDEV_COLOR_SCHEMA", OsStr::new(schema)),
+            ],
+        )?;
+        utils::require_nonempty_file(&variant.join("index.html"))?;
+        remove_generated_redirects(&variant)?;
+    }
 
     // Exporting drives a browser, so run the two color schemes sequentially rather than in parallel.
     for task in ["export:light", "export:dark"] {
-        run_task(&slidev_root, task, &[("STUCO_SLIDEV_PDF_OUTPUT", &pdf_dir)])?;
+        run_task(
+            &slidev_root,
+            task,
+            &[("STUCO_SLIDEV_PDF_OUTPUT", pdf_dir.as_os_str())],
+        )?;
     }
     utils::require_nonempty_file(&light_pdf)?;
     utils::require_nonempty_file(&dark_pdf)?;
-
-    // Slidev writes a rewrite that points its own wildcard back at `index.html`. Cloudflare rejects
-    // that as an infinite loop, and hash routing means nothing needs the rule, so drop it.
-    let generated_redirects = output_dir.join(REDIRECTS);
-    match fs::remove_file(&generated_redirects) {
-        Ok(()) => {}
-        Err(error) if error.kind() == io::ErrorKind::NotFound => {}
-        Err(error) => {
-            return Err(io::Error::new(
-                error.kind(),
-                format!(
-                    "failed to remove {}: {error}",
-                    generated_redirects.display()
-                ),
-            ));
-        }
-    }
 
     mirror_into_bundle(manifest_dir, &output_dir)?;
 
@@ -118,8 +119,24 @@ fn mirror_into_bundle(manifest_dir: &Path, site: &Path) -> io::Result<()> {
     utils::copy_directory(site, &destination)
 }
 
-/// Runs one of the `slidev/` npm scripts with the environment it needs to write into `public/`.
-fn run_task(slidev_root: &Path, task: &str, environment: &[(&str, &PathBuf)]) -> io::Result<()> {
+/// Removes the rewrite Slidev generates, which points its own wildcard back at `index.html`.
+///
+/// Cloudflare rejects that rule as an infinite loop, and hash routing leaves nothing that needs it.
+fn remove_generated_redirects(site: &Path) -> io::Result<()> {
+    let redirects = site.join(REDIRECTS);
+
+    match fs::remove_file(&redirects) {
+        Ok(()) => Ok(()),
+        Err(error) if error.kind() == io::ErrorKind::NotFound => Ok(()),
+        Err(error) => Err(io::Error::new(
+            error.kind(),
+            format!("failed to remove {}: {error}", redirects.display()),
+        )),
+    }
+}
+
+/// Runs one of the `slidev/` npm scripts with the environment it needs to write into the tree.
+fn run_task(slidev_root: &Path, task: &str, environment: &[(&str, &OsStr)]) -> io::Result<()> {
     let mut command = Command::new("npm");
     command.arg("run").arg(task).current_dir(slidev_root);
     for (name, value) in environment {

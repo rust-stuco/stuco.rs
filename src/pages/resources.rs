@@ -17,13 +17,23 @@ pub(super) fn Resources() -> Element {
             }
             ul { class: "list-disc ml-8 mb-12 marker:text-foreground/50",
                 li {
+                    "Week 1: Introduction ("
                     a {
                         class: "text-secondary",
-                        href: "/slidev/week01/",
+                        href: "/slidev/week01/light/",
                         target: "_blank",
                         rel: "noopener noreferrer",
-                        "Week 1: Introduction"
+                        "light"
                     }
+                    " / "
+                    a {
+                        class: "text-secondary",
+                        href: "/slidev/week01/dark/",
+                        target: "_blank",
+                        rel: "noopener noreferrer",
+                        "dark"
+                    }
+                    ")"
                 }
             }
 
