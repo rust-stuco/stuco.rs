@@ -35,6 +35,20 @@ jobs:
   build:
     needs: validate
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Needed to post the preview link on the pull request.
+      pull-requests: write
+    env:
+      SITE_URL: >-
+        ${{
+          github.event_name == 'pull_request' &&
+          format(
+            'https://pr-{0}-stuco-rs.rust-stuco.workers.dev',
+            github.event.pull_request.number
+          ) ||
+          'https://stuco.rs'
+        }}
     environment:
       name: ${{ github.event_name == 'pull_request' && format('preview-pr-{0}', github.event.pull_request.number) || 'production' }}
       # The production hostname is a Cloudflare custom domain rather than a Wrangler-managed target,
@@ -136,3 +150,57 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           wranglerVersion: "4"
           command: versions upload --preview-alias pr-${{ github.event.pull_request.number }}
+
+      # Routes fall back to the single-page application shell, so a missing file is served as HTML
+      # with a 200 status. Compare content types against the build output to catch that.
+      - name: Smoke-test the deployed site
+        if: ${{ steps.production.outcome == 'success' || steps.preview.outcome == 'success' }}
+        run: |
+          root=target/dx/stuco-rs/release/web/public
+          failed=0
+
+          check() {
+            local path=$1 expected=$2 actual
+            actual=$(curl -sSI --max-time 30 "$SITE_URL$path" |
+              tr -d '\r' | awk -F': ' 'tolower($1) == "content-type" { print $2 }')
+            case $actual in
+              "$expected"*) ;;
+              *) echo "::error::$path served as '${actual:-nothing}', expected $expected"; failed=1 ;;
+            esac
+          }
+
+          while IFS= read -r file; do
+            case $file in
+              *.pdf) check "${file#"$root"}" application/pdf ;;
+              *.zip) check "${file#"$root"}" application/zip ;;
+            esac
+          done < <(find "$root" -type f \( -name '*.pdf' -o -name '*.zip' \) | sort)
+
+          check / text/html
+          check /schedule text/html
+
+          if [ "$failed" -ne 0 ]; then
+            echo "::error::$SITE_URL is missing generated content"
+            exit 1
+          fi
+
+      # A single edited comment keeps the current link in one place, rather than appending a
+      # deployment entry to the pull request timeline on every push.
+      - name: Comment the preview link
+        if: ${{ steps.preview.outcome == 'success' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          marker='<!-- preview-link -->'
+          body=$(printf '%s\n**Preview:** %s\n\nBuilt from `%s`.\n' "$marker" "$SITE_URL" "${SHA:0:7}")
+
+          existing=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+            --jq "map(select(.body | startswith(\"$marker\"))) | first | .id // empty")
+
+          if [ -n "$existing" ]; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$existing" -f body="$body"
+          else
+            gh api -X POST "repos/$GITHUB_REPOSITORY/issues/$PR/comments" -f body="$body"
+          fi
