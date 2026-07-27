@@ -1,7 +1,14 @@
 {
+  // Served at https://stuco.rs, attached to this Worker as a Cloudflare custom domain. `www`
+  // redirects to the apex through a zone redirect rule. Both live in Cloudflare rather than here,
+  // because a `routes` entry would make every deploy reassert the binding and need a broader API
+  // token than deploying assets does.
   "name": "stuco-rs",
   "compatibility_date": "2026-07-18",
-  "workers_dev": true,
+  // Off so `stuco-rs.rust-stuco.workers.dev` stops serving a public duplicate of the site. Preview
+  // URLs default to this setting, so `preview_urls` below keeps the `pr-<number>` aliases that the
+  // deploy workflow uploads.
+  "workers_dev": false,
   "preview_urls": true,
   "assets": {
     "directory": "./target/dx/stuco-rs/release/web/public",
