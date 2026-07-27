@@ -5,8 +5,13 @@ use std::{
     process::Command,
 };
 
-/// The deployment base that `scripts/run.mjs` passes to Slidev, relative to `public/`.
-const SITE_OUTPUT: &str = "public/slidev/week01";
+/// Where the built deck lands, matching the `/slidev/week01/` base it is built for.
+///
+/// Deliberately outside `public/`: `dx` runs every JavaScript file it finds there through its asset
+/// pipeline, which re-bundles each of Slidev's chunks into a standalone copy of the whole deck. The
+/// module graph does not survive that, and the deck renders as a blank page. The deployment overlays
+/// this directory onto the bundle afterwards instead.
+const SITE_OUTPUT: &str = "target/slidev/week01";
 
 /// Where the schedule page expects the week-one slide PDFs.
 const PDF_OUTPUT: &str = "public/lectures/01_introduction";
@@ -14,10 +19,11 @@ const PDF_OUTPUT: &str = "public/lectures/01_introduction";
 /// The rewrite file Slidev generates for its client-side routes, which Cloudflare rejects.
 const REDIRECTS: &str = "_redirects";
 
-/// Renders the Slidev week-one deck into `public/`, as both a browsable site and the slide PDFs.
+/// Renders the Slidev week-one deck, as both a browsable site and the slide PDFs.
 ///
 /// Slidev is still an experiment, so this stage owns the one deck that has been converted while
-/// [`crate::lectures`] renders the rest with marp.
+/// [`crate::lectures`] renders the rest with marp. The PDFs go straight into `public/`, since `dx`
+/// copies binary files through untouched; the deck itself cannot, as [`SITE_OUTPUT`] explains.
 pub fn build(manifest_dir: &Path) -> io::Result<()> {
     let slidev_root = manifest_dir.join("slidev");
     let output_dir = manifest_dir.join(SITE_OUTPUT);

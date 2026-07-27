@@ -50,3 +50,20 @@ dx serve
 ```
 
 The first time you run this, it will take longer since it needs to build the `public/` directory from `homeworks/`, `lectures/`, `slidev/`, and `src/syllabus.typ`.
+
+### The week one deck
+
+`dx` runs every JavaScript file under `public/` through its own asset pipeline, and re-bundling
+Slidev's chunks leaves the deck a blank page. The build therefore writes the deck to
+`target/slidev/week01/`, and the deploy workflow overlays that onto the bundle it uploads. To get the
+same thing locally, copy it into the served bundle once after your first build:
+
+```bash
+mkdir -p target/dx/stuco-rs/debug/web/public/slidev
+cp -r target/slidev/week01 target/dx/stuco-rs/debug/web/public/slidev/
+```
+
+The copy survives later rebuilds, since `dx` only syncs what is inside `public/`. The slide PDFs need
+none of this — `dx` copies binary files through untouched.
+
+When working on the deck itself, `cd slidev && npm run dev` is faster and reloads on save.

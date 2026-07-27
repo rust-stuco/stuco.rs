@@ -51,14 +51,22 @@ makes. Set `STUCO_SLIDEV_CHROME` to override the choice.
 
 ## Deployment
 
-`build.rs` runs `npm install`, `npm run build`, and both export commands here,
-pointing `STUCO_SLIDEV_SITE_OUTPUT` and `STUCO_SLIDEV_PDF_OUTPUT` into `public/`
-instead of `dist/`. Week one therefore ships three ways, in production and in
-every pull request preview:
+`build.rs` runs `npm ci`, `npm run build`, and both export commands here, setting
+`STUCO_SLIDEV_SITE_OUTPUT` and `STUCO_SLIDEV_PDF_OUTPUT` so the output lands in
+the tree rather than in `dist/`. Week one therefore ships two ways, in production
+and in every pull request preview:
 
 - the deck itself at `/slidev/week01/`, linked from the resources page
 - `introduction-light.pdf` and `introduction-dark.pdf` under
   `/lectures/01_introduction/`, which is where the schedule page links slides
+
+The PDFs go directly into `public/`, but the deck goes to `target/slidev/week01/`
+and is overlaid onto the bundle by the deploy workflow. It cannot live in
+`public/`: `dx` runs every JavaScript file there through its asset pipeline, and
+re-bundles each of Slidev's chunks into a standalone copy of the entire deck —
+every chunk came out at roughly 811 kB, module identity was lost, and only one
+slide ever mounted. Binary files like the PDFs are copied through untouched.
+`CONTRIBUTING.md` has the one-time copy that gives `dx serve` the same layout.
 
 Because Slidev owns those PDFs, `build/lectures.rs` no longer renders week one
 with marp. Marp would otherwise print the per-slide `layout:` and `class:` blocks

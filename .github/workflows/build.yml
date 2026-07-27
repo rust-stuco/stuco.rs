@@ -121,6 +121,15 @@ jobs:
           RAYON_NUM_THREADS: 2
         run: dx build --release
 
+      # The deck is a pre-built single-page app, so it is built outside `public/`: `dx` re-bundles
+      # every JavaScript file it finds there, which does not survive Slidev's module graph. Overlay
+      # it onto the bundle that `wrangler` uploads instead.
+      - name: Add the Slidev deck to the bundle
+        run: |
+          mkdir -p target/dx/stuco-rs/release/web/public/slidev
+          cp -r target/slidev/week01 target/dx/stuco-rs/release/web/public/slidev/
+          test -s target/dx/stuco-rs/release/web/public/slidev/week01/index.html
+
       - name: Upload syllabus artifact
         uses: actions/upload-artifact@v4
         with:
