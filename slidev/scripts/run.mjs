@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process'
-import { rmSync } from 'node:fs'
+import { accessSync, constants, rmSync } from 'node:fs'
 import { copyFile, mkdir, rm, symlink } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
@@ -15,10 +15,13 @@ const sourceDeck = path.join(
 const sourceImages = path.join(repositoryRoot, 'lectures', 'images')
 const runtimeRoot = path.join(slidevRoot, 'runtime')
 const outputRoot = path.join(slidevRoot, 'dist')
-// `build.rs` points this at `public/` so the deployed site serves the deck.
+// `build.rs` points these at `public/` so the deployed site serves the deck and its PDFs.
 const siteOutputRoot = process.env.STUCO_SLIDEV_SITE_OUTPUT
   ? path.resolve(process.env.STUCO_SLIDEV_SITE_OUTPUT)
   : path.join(outputRoot, 'site')
+const pdfOutputRoot = process.env.STUCO_SLIDEV_PDF_OUTPUT
+  ? path.resolve(process.env.STUCO_SLIDEV_PDF_OUTPUT)
+  : outputRoot
 const slidevCli = path.join(
   slidevRoot,
   'node_modules',
@@ -110,20 +113,22 @@ async function runTask(taskName, extraArgs) {
         'export',
         workspaceDeck,
         '--output',
-        path.join(outputRoot, 'introduction-light.pdf'),
+        path.join(pdfOutputRoot, 'introduction-light.pdf'),
         '--with-toc',
         '--timeout',
         '60000',
+        ...browserArgs(),
       ],
       'export:dark': [
         'export',
         workspaceDeck,
         '--output',
-        path.join(outputRoot, 'introduction-dark.pdf'),
+        path.join(pdfOutputRoot, 'introduction-dark.pdf'),
         '--dark',
         '--with-toc',
         '--timeout',
         '60000',
+        ...browserArgs(),
       ],
     }[taskName]
 
@@ -137,6 +142,37 @@ async function runTask(taskName, extraArgs) {
     process.removeListener('exit', cleanupWorkspace)
     await rm(workspaceRoot, { recursive: true, force: true })
   }
+}
+
+/// Slidev exports through Playwright, which otherwise wants its own browser download. The marp
+/// config already renders with whatever browser is installed, so match that and reuse it.
+function browserArgs() {
+  const browser = resolveSystemBrowser()
+  return browser ? ['--executable-path', browser] : []
+}
+
+function resolveSystemBrowser() {
+  if (process.env.STUCO_SLIDEV_CHROME) return process.env.STUCO_SLIDEV_CHROME
+
+  const directories = (process.env.PATH ?? '').split(path.delimiter).filter(Boolean)
+  for (const name of [
+    'google-chrome-stable',
+    'google-chrome',
+    'chromium',
+    'chromium-browser',
+  ]) {
+    for (const directory of directories) {
+      const candidate = path.join(directory, name)
+      try {
+        accessSync(candidate, constants.X_OK)
+        return candidate
+      } catch {
+        // Keep looking; falling through leaves Playwright to use its own browser.
+      }
+    }
+  }
+
+  return undefined
 }
 
 function runSlidev(args) {

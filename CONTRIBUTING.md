@@ -10,16 +10,20 @@ Download and install `typst` from the [official website](https://typst.app/open-
 
 ### Lecture slides
 
-The build renders every lecture deck to PDF with the `marp` CLI, so you need it installed even if you
-are only working on the website:
+The build renders the lecture decks from week two onwards to PDF with the `marp` CLI, so you need it
+installed even if you are only working on the website:
 
 ```bash
 npm install -g @marp-team/marp-cli
 ```
 
-Week one is also being rewritten in [Slidev](slidev/README.md) as an eventual replacement for marp.
-That deck is rendered into `public/slidev/week01/` by the build, so you need `node` and `npm`
-installed as well. The build installs the pinned Slidev toolchain into `slidev/node_modules/` itself.
+Week one is rendered by [Slidev](slidev/README.md) instead, as the eventual replacement for marp. The
+build writes both its slide PDFs and a browsable copy of the deck at `public/slidev/week01/`, so you
+also need `node` and `npm`; the pinned Slidev toolchain is installed into `slidev/node_modules/` by
+the build itself.
+
+Both renderers draw their PDFs in a browser, so you need Chrome or Chromium installed. Set
+`STUCO_SLIDEV_CHROME` if yours is not on `PATH` under a usual name.
 
 ### Website
 

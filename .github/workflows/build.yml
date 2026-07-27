@@ -78,6 +78,13 @@ jobs:
           path: ~/.npm
           key: ${{ runner.os }}-npm-slidev-${{ hashFiles('slidev/package.json') }}
 
+      # Exporting the week-one PDFs renders in a browser. Point Slidev at the one the runner already
+      # has, so the build does not download Playwright's copy as well.
+      - name: Locate the browser for slide export
+        run: |
+          echo "STUCO_SLIDEV_CHROME=$(command -v google-chrome || command -v chromium)" \
+            >> "$GITHUB_ENV"
+
       - name: Add wasm target
         run: rustup target add wasm32-unknown-unknown
 

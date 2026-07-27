@@ -136,6 +136,15 @@ html.dark {
   line-height: 1;
 }
 
+/* Anchor the image to the slide itself. Without a containing block here, PDF export resolves the
+   pseudo-element against an ancestor that the printed page fragments, splitting the image. */
+.slidev-layout.image-right-25,
+.slidev-layout.image-right-30,
+.slidev-layout.image-right-50 {
+  position: relative;
+  overflow: hidden;
+}
+
 .slidev-layout.image-right-25 {
   padding-right: 27%;
 }
@@ -153,15 +162,16 @@ html.dark {
 .slidev-layout.image-right-50::after {
   content: "";
   position: absolute;
-  top: 50%;
+  /* Centered with insets rather than a transform: a transformed layer is rasterized for print, and
+     Chrome tiles that layer into the PDF with seams through the image. */
+  top: 10%;
+  bottom: 10%;
   right: 1.5rem;
   z-index: 10;
-  height: 80%;
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
   pointer-events: none;
-  transform: translateY(-50%);
 }
 
 .slidev-layout.image-right-25::after {

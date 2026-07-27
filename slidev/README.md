@@ -36,21 +36,34 @@ controls in the lower-left corner.
 
 ```bash
 npm run build
-npx playwright install chromium
 npm run export:light
 npm run export:dark
 ```
 
 Generated files are written to `dist/`, which is intentionally ignored. The
 static site goes in `dist/site/` and uses `/slidev/week01/` as its deployment
-base. Chromium is only needed for PDF export.
+base.
+
+Export renders in a browser. Slidev drives it through Playwright, which would
+otherwise download its own copy, so the commands pass `--executable-path` for the
+first Chrome or Chromium found on `PATH` — the same assumption the marp config
+makes. Set `STUCO_SLIDEV_CHROME` to override the choice.
 
 ## Deployment
 
-`build.rs` runs `npm install` and `npm run build` here, setting
-`STUCO_SLIDEV_SITE_OUTPUT` so the site is written to `public/slidev/week01/`
-instead of `dist/site/`. Deployments therefore serve the deck at
-`/slidev/week01/`, and every pull request preview includes it.
+`build.rs` runs `npm install`, `npm run build`, and both export commands here,
+pointing `STUCO_SLIDEV_SITE_OUTPUT` and `STUCO_SLIDEV_PDF_OUTPUT` into `public/`
+instead of `dist/`. Week one therefore ships three ways, in production and in
+every pull request preview:
+
+- the deck itself at `/slidev/week01/`, linked from the resources page
+- `introduction-light.pdf` and `introduction-dark.pdf` under
+  `/lectures/01_introduction/`, which is where the schedule page links slides
+
+Because Slidev owns those PDFs, `build/lectures.rs` no longer renders week one
+with marp. Marp would otherwise print the per-slide `layout:` and `class:` blocks
+as slide text and lose the images, and it can no longer produce a dark variant
+now that the `class: invert` directive it keyed on is gone.
 
 Slidev routes slides client-side, so the deployed build uses `--router-mode hash`
 and slide links look like `/slidev/week01/#/12`. Hash routes never reach the
@@ -62,8 +75,7 @@ For the same reason the build deletes the `_redirects` file Slidev generates.
 That rule points its own wildcard back at `index.html`, which Cloudflare rejects
 as an infinite loop, and hash routing leaves nothing that needs it.
 
-The build still renders the marp PDFs for week one from the same source file.
-Since that source now only carries Slidev syntax, those PDFs are degraded — the
-per-slide `layout:` and `class:` blocks render as slide text, the images are
-gone, and light and dark mode are identical. That is expected while this is an
-experiment, and it is what replacing marp is meant to resolve.
+The image classes in `runtime/style.css` center their picture with `top` and
+`bottom` insets rather than a `transform`. A transformed element is rasterized for
+printing, and Chrome tiles that layer into the exported PDF, which cut the images
+into strips with seams through them.
