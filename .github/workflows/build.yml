@@ -76,7 +76,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-npm-slidev-${{ hashFiles('slidev/package.json') }}
+          key: ${{ runner.os }}-npm-slidev-${{ hashFiles('slidev/package-lock.json') }}
 
       # Exporting the week-one PDFs renders in a browser. Point Slidev at the one the runner already
       # has, so the build does not download Playwright's copy as well.

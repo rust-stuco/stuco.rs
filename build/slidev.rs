@@ -92,7 +92,10 @@ fn run_task(slidev_root: &Path, task: &str, environment: &[(&str, &PathBuf)]) ->
     utils::run_command(command)
 }
 
-/// Installs the pinned Slidev toolchain.
+/// Installs the Slidev toolchain exactly as `package-lock.json` records it.
+///
+/// Slidev depends on Vite and Rolldown through version ranges, and their chunking differs enough
+/// between releases to break the deck in a subdirectory, so resolving fresh is not safe here.
 ///
 /// Export renders through whatever browser is already installed, the way the marp config does, so
 /// skip Playwright's own download. Optional dependencies stay in, since Rolldown ships its
@@ -100,7 +103,7 @@ fn run_task(slidev_root: &Path, task: &str, environment: &[(&str, &PathBuf)]) ->
 fn install_toolchain(slidev_root: &Path) -> io::Result<()> {
     let mut command = Command::new("npm");
     command
-        .arg("install")
+        .arg("ci")
         .arg("--no-audit")
         .arg("--no-fund")
         .env("PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD", "1")
