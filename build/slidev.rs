@@ -1,8 +1,9 @@
 use crate::utils;
 use std::{
-    fs, io,
+    env, fs, io,
     path::{Path, PathBuf},
     process::Command,
+    slice,
 };
 
 /// Where the built deck lands, matching the `/slidev/week01/` base it is built for.
@@ -35,15 +36,23 @@ pub fn build(manifest_dir: &Path) -> io::Result<()> {
     utils::require_directory(&slidev_root)?;
     utils::require_nonempty_file(&slidev_root.join("package.json"))?;
 
-    // The deck and its images live outside `slidev/`, so watch them alongside the toolchain.
-    let mut dependencies = utils::files_in_tree(&slidev_root)?;
+    // Only what the render actually reads, so editing this directory's documentation does not cost a
+    // reinstall and two PDF exports. The deck and its images live outside `slidev/`.
+    let mut dependencies = vec![
+        slidev_root.join("package.json"),
+        slidev_root.join("package-lock.json"),
+    ];
+    for directory in ["runtime", "scripts"] {
+        dependencies.extend(utils::files_in_tree(&slidev_root.join(directory))?);
+    }
     for directory in ["lectures/01_introduction", "lectures/images"] {
         dependencies.extend(utils::files_in_tree(&manifest_dir.join(directory))?);
     }
 
     let generated_files = [index.as_path(), light_pdf.as_path(), dark_pdf.as_path()];
     if utils::generated_files_are_current(&dependencies, &generated_files) {
-        return Ok(());
+        // Still mirror: the render is current, but the bundle may have been cleaned since.
+        return mirror_into_bundle(manifest_dir, &output_dir);
     }
 
     install_toolchain(&slidev_root)?;
@@ -83,8 +92,30 @@ pub fn build(manifest_dir: &Path) -> io::Result<()> {
         }
     }
 
+    mirror_into_bundle(manifest_dir, &output_dir)?;
+
     println!("cargo:warning=Rendered the Slidev week-one deck");
     Ok(())
+}
+
+/// Copies the deck into the bundle `dx` serves, so `dx serve` offers the same paths a deployment does.
+///
+/// The layout below belongs to `dx` rather than to us, and it is written before `dx` has staged
+/// anything, so treat it as a convenience only: the deploy workflow overlays the deck explicitly,
+/// and that is what production depends on.
+fn mirror_into_bundle(manifest_dir: &Path, site: &Path) -> io::Result<()> {
+    let Some(profile) = env::var_os("PROFILE") else {
+        return Ok(());
+    };
+
+    let destination = manifest_dir
+        .join("target/dx")
+        .join(env!("CARGO_PKG_NAME"))
+        .join(profile)
+        .join("web/public/slidev/week01");
+
+    utils::recreate_directory(&destination)?;
+    utils::copy_directory(site, &destination)
 }
 
 /// Runs one of the `slidev/` npm scripts with the environment it needs to write into `public/`.
@@ -98,15 +129,24 @@ fn run_task(slidev_root: &Path, task: &str, environment: &[(&str, &PathBuf)]) ->
     utils::run_command(command)
 }
 
-/// Installs the Slidev toolchain exactly as `package-lock.json` records it.
+/// Installs the Slidev toolchain exactly as `package-lock.json` records it, if it is not already.
 ///
-/// Slidev depends on Vite and Rolldown through version ranges, and their chunking differs enough
-/// between releases to break the deck in a subdirectory, so resolving fresh is not safe here.
+/// `npm ci` replaces `node_modules` wholesale, so running it on every render is both slow and a way
+/// to lose the tree to an interrupted build. npm writes its own marker once an install completes, so
+/// comparing that against the lockfile skips the work and still repairs a half-finished install.
 ///
 /// Export renders through whatever browser is already installed, the way the marp config does, so
 /// skip Playwright's own download. Optional dependencies stay in, since Rolldown ships its
 /// platform-specific binding as one.
 fn install_toolchain(slidev_root: &Path) -> io::Result<()> {
+    let lockfile = slidev_root.join("package-lock.json");
+    let installed = slidev_root.join("node_modules/.package-lock.json");
+
+    utils::require_nonempty_file(&lockfile)?;
+    if utils::generated_files_are_current(slice::from_ref(&lockfile), &[installed.as_path()]) {
+        return Ok(());
+    }
+
     let mut command = Command::new("npm");
     command
         .arg("ci")

@@ -66,7 +66,11 @@ and is overlaid onto the bundle by the deploy workflow. It cannot live in
 re-bundles each of Slidev's chunks into a standalone copy of the entire deck —
 every chunk came out at roughly 811 kB, module identity was lost, and only one
 slide ever mounted. Binary files like the PDFs are copied through untouched.
-`CONTRIBUTING.md` has the one-time copy that gives `dx serve` the same layout.
+
+The build then copies the deck into the bundle `dx` serves, so `dx serve` offers
+the deployed paths without a manual step. That copy targets a layout `dx` owns,
+so it is best-effort; the deploy workflow overlays the deck explicitly, and that
+is what production relies on.
 
 Because Slidev owns those PDFs, `build/lectures.rs` no longer renders week one
 with marp. Marp would otherwise print the per-slide `layout:` and `class:` blocks
