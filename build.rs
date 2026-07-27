@@ -9,6 +9,8 @@ use std::{
 mod homeworks;
 #[path = "build/lectures.rs"]
 mod lectures;
+#[path = "build/slidev.rs"]
+mod slidev;
 #[path = "build/utils.rs"]
 mod utils;
 
@@ -22,12 +24,14 @@ fn main() -> io::Result<()> {
     // Watching individual files avoids rebuild loops from ignored homework artifacts.
     emit_rerun_directives(&manifest_dir.join("homeworks"))?;
     emit_rerun_directives(&manifest_dir.join("lectures"))?;
+    emit_rerun_directives(&manifest_dir.join("slidev"))?;
 
     utils::create_directory(&manifest_dir.join("public"))?;
 
     // Run stages sequentially so a failure prevents later work from starting.
     build_syllabus(&manifest_dir)?;
     lectures::build(&manifest_dir)?;
+    slidev::build(&manifest_dir)?;
     homeworks::build(&manifest_dir)
 }
 

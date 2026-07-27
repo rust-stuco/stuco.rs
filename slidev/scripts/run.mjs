@@ -15,7 +15,10 @@ const sourceDeck = path.join(
 const sourceImages = path.join(repositoryRoot, 'lectures', 'images')
 const runtimeRoot = path.join(slidevRoot, 'runtime')
 const outputRoot = path.join(slidevRoot, 'dist')
-const siteOutputRoot = path.join(outputRoot, 'site')
+// `build.rs` points this at `public/` so the deployed site serves the deck.
+const siteOutputRoot = process.env.STUCO_SLIDEV_SITE_OUTPUT
+  ? path.resolve(process.env.STUCO_SLIDEV_SITE_OUTPUT)
+  : path.join(outputRoot, 'site')
 const slidevCli = path.join(
   slidevRoot,
   'node_modules',
@@ -36,7 +39,12 @@ if (!task) {
 }
 
 async function runTask(taskName, extraArgs) {
-  const workspaceRoot = path.join(slidevRoot, '.slidev-work')
+  // Scoped per task so a `dx serve` build cannot delete the workspace that `npm run dev` is serving.
+  const workspaceRoot = path.join(
+    slidevRoot,
+    '.slidev-work',
+    taskName.replace(':', '-'),
+  )
   const lectureRoot = path.join(workspaceRoot, 'lectures', '01_introduction')
   const setupRoot = path.join(lectureRoot, 'setup')
   const workspaceImages = path.join(workspaceRoot, 'lectures', 'images')
@@ -75,7 +83,13 @@ async function runTask(taskName, extraArgs) {
       ),
     ])
 
-    await mkdir(outputRoot, { recursive: true })
+    // Only the tasks that write output need their destination, so serving the deck and building it
+    // into `public/` leave no empty `dist/` behind.
+    if (taskName === 'build') {
+      await mkdir(siteOutputRoot, { recursive: true })
+    } else if (taskName.startsWith('export')) {
+      await mkdir(outputRoot, { recursive: true })
+    }
 
     const taskArgs = {
       dev: [workspaceDeck],
@@ -87,6 +101,10 @@ async function runTask(taskName, extraArgs) {
         '--out',
         siteOutputRoot,
         '--without-notes',
+        // Deep links survive a reload without asking the host to rewrite unknown paths back to the
+        // deck. `dev` keeps history routing, which only has to satisfy Slidev's own server.
+        '--router-mode',
+        'hash',
       ],
       'export:light': [
         'export',

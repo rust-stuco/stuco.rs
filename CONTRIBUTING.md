@@ -17,6 +17,10 @@ are only working on the website:
 npm install -g @marp-team/marp-cli
 ```
 
+Week one is also being rewritten in [Slidev](slidev/README.md) as an eventual replacement for marp.
+That deck is rendered into `public/slidev/week01/` by the build, so you need `node` and `npm`
+installed as well. The build installs the pinned Slidev toolchain into `slidev/node_modules/` itself.
+
 ### Website
 
 You need to install `dioxus-cli` to build and run the website. Pin the same version CI uses, since a
@@ -41,4 +45,4 @@ Run the following command in the root of your project:
 dx serve
 ```
 
-The first time you run this, it will take longer since it needs to build the `public/` directory from `homeworks/`, `lectures/`, and `src/syllabus.typ`.
+The first time you run this, it will take longer since it needs to build the `public/` directory from `homeworks/`, `lectures/`, `slidev/`, and `src/syllabus.typ`.

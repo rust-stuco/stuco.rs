@@ -12,6 +12,10 @@ copies in the files from `runtime/`, and is refreshed on each run. It is
 normally removed when Slidev exits; if the process is forcibly killed, the
 ignored workspace still remains contained inside `slidev/`.
 
+Each command gets its own workspace under `.slidev-work/`, so a site build
+triggered by `dx serve` cannot delete the workspace that `npm run dev` is
+serving from.
+
 The runtime Markdown hook also wraps lists written with `*` in Slidev click
 groups. Lecture Markdown can therefore keep using ordinary bullet lists while
 retaining incremental reveals, including parent-then-child ordering for nested
@@ -39,5 +43,27 @@ npm run export:dark
 
 Generated files are written to `dist/`, which is intentionally ignored. The
 static site goes in `dist/site/` and uses `/slidev/week01/` as its deployment
-base. Chromium is only needed for PDF export. This experiment is not yet
-connected to the course website build pipeline.
+base. Chromium is only needed for PDF export.
+
+## Deployment
+
+`build.rs` runs `npm install` and `npm run build` here, setting
+`STUCO_SLIDEV_SITE_OUTPUT` so the site is written to `public/slidev/week01/`
+instead of `dist/site/`. Deployments therefore serve the deck at
+`/slidev/week01/`, and every pull request preview includes it.
+
+Slidev routes slides client-side, so the deployed build uses `--router-mode hash`
+and slide links look like `/slidev/week01/#/12`. Hash routes never reach the
+server, which means deep links survive a reload without the host having to
+rewrite unknown paths back to the deck. `npm run dev` keeps the default history
+routing, since only Slidev's own server has to satisfy it.
+
+For the same reason the build deletes the `_redirects` file Slidev generates.
+That rule points its own wildcard back at `index.html`, which Cloudflare rejects
+as an infinite loop, and hash routing leaves nothing that needs it.
+
+The build still renders the marp PDFs for week one from the same source file.
+Since that source now only carries Slidev syntax, those PDFs are degraded — the
+per-slide `layout:` and `class:` blocks render as slide text, the images are
+gone, and light and dark mode are identical. That is expected while this is an
+experiment, and it is what replacing marp is meant to resolve.
