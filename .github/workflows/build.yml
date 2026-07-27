@@ -37,6 +37,8 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.event_name == 'pull_request' && format('preview-pr-{0}', github.event.pull_request.number) || 'production' }}
+      # The production hostname is a Cloudflare custom domain rather than a Wrangler-managed target,
+      # so `wrangler deploy` reports no deployment URL to borrow here and the link would be empty.
       url: >-
         ${{
           github.event_name == 'pull_request' &&
@@ -44,7 +46,7 @@ jobs:
             'https://pr-{0}-stuco-rs.rust-stuco.workers.dev',
             github.event.pull_request.number
           ) ||
-          steps.production.outputs.deployment-url
+          'https://stuco.rs'
         }}
       deployment: >-
         ${{
