@@ -8,7 +8,36 @@ pub(super) fn Resources() -> Element {
             h1 { class: "text-3xl font-bold italic text-primary mb-6 text-center",
                 "Resources"
             }
-            p { "Under construction" }
+
+            h2 { class: "text-2xl font-bold mb-4 text-white", "Slide decks" }
+            p { class: "mb-4",
+                "The schedule links each week's slides as light and dark PDFs. Week one is also "
+                "published as the deck itself, so you can step through it with the animations, "
+                "presenter notes, and drawing tools:"
+            }
+            ul { class: "list-disc ml-8 mb-12 marker:text-foreground/50",
+                li {
+                    "Week 1: Introduction ("
+                    a {
+                        class: "text-secondary",
+                        href: "/slidev/week01/light/",
+                        target: "_blank",
+                        rel: "noopener noreferrer",
+                        "light"
+                    }
+                    " / "
+                    a {
+                        class: "text-secondary",
+                        href: "/slidev/week01/dark/",
+                        target: "_blank",
+                        rel: "noopener noreferrer",
+                        "dark"
+                    }
+                    ")"
+                }
+            }
+
+            p { "The rest of this page is under construction." }
         }
     }
 }

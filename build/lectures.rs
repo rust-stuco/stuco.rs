@@ -17,8 +17,9 @@ impl Lecture {
     }
 }
 
+/// Week one is rendered by [`crate::slidev`] instead, so its source only carries Slidev syntax and
+/// marp would render the per-slide directives as slide text.
 const LECTURES: &[Lecture] = &[
-    Lecture::new("01_introduction", "introduction"),
     Lecture::new("02_ownership_p1", "ownership_p1"),
     Lecture::new("03_structs_enums", "structs_enums"),
     Lecture::new("04_collections_generics", "collections_generics"),

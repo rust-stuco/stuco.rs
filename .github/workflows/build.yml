@@ -71,6 +71,20 @@ jobs:
       - name: Install marp-cli
         run: bun install -g @marp-team/marp-cli
 
+      # `build.rs` installs the pinned Slidev toolchain to render the week-one deck.
+      - name: Cache npm packages
+        uses: actions/cache@v5
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-slidev-${{ hashFiles('slidev/package-lock.json') }}
+
+      # Exporting the week-one PDFs renders in a browser. Point Slidev at the one the runner already
+      # has, so the build does not download Playwright's copy as well.
+      - name: Locate the browser for slide export
+        run: |
+          echo "STUCO_SLIDEV_CHROME=$(command -v google-chrome || command -v chromium)" \
+            >> "$GITHUB_ENV"
+
       - name: Add wasm target
         run: rustup target add wasm32-unknown-unknown
 
@@ -106,6 +120,15 @@ jobs:
           # Limit parallel rendering to avoid exhausting CI runner resources.
           RAYON_NUM_THREADS: 2
         run: dx build --release
+
+      # The deck is a pre-built single-page app, so it is built outside `public/`: `dx` re-bundles
+      # every JavaScript file it finds there, which does not survive Slidev's module graph. Overlay
+      # it onto the bundle that `wrangler` uploads instead.
+      - name: Add the Slidev deck to the bundle
+        run: |
+          mkdir -p target/dx/stuco-rs/release/web/public/slidev
+          cp -r target/slidev/week01 target/dx/stuco-rs/release/web/public/slidev/
+          test -s target/dx/stuco-rs/release/web/public/slidev/week01/index.html
 
       - name: Upload syllabus artifact
         uses: actions/upload-artifact@v4

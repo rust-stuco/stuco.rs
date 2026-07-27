@@ -10,12 +10,20 @@ Download and install `typst` from the [official website](https://typst.app/open-
 
 ### Lecture slides
 
-The build renders every lecture deck to PDF with the `marp` CLI, so you need it installed even if you
-are only working on the website:
+The build renders the lecture decks from week two onwards to PDF with the `marp` CLI, so you need it
+installed even if you are only working on the website:
 
 ```bash
 npm install -g @marp-team/marp-cli
 ```
+
+Week one is rendered by [Slidev](slidev/README.md) instead, as the eventual replacement for marp. The
+build writes both its slide PDFs and a browsable copy of the deck at `public/slidev/week01/`, so you
+also need `node` and `npm`; the pinned Slidev toolchain is installed into `slidev/node_modules/` by
+the build itself.
+
+Both renderers draw their PDFs in a browser, so you need Chrome or Chromium installed. Set
+`STUCO_SLIDEV_CHROME` if yours is not on `PATH` under a usual name.
 
 ### Website
 
@@ -41,4 +49,16 @@ Run the following command in the root of your project:
 dx serve
 ```
 
-The first time you run this, it will take longer since it needs to build the `public/` directory from `homeworks/`, `lectures/`, and `src/syllabus.typ`.
+The first time you run this, it will take longer since it needs to build the `public/` directory from `homeworks/`, `lectures/`, `slidev/`, and `src/syllabus.typ`.
+
+### The week one deck
+
+`dx serve` serves the deck at `/slidev/week01/light/` and `/slidev/week01/dark/`, the same paths
+deployments use, so the links on the resources page work locally too. Nothing extra to run.
+
+It takes a detour to get there. `dx` runs every JavaScript file under `public/` through its own asset
+pipeline, and re-bundling Slidev's chunks leaves the deck a blank page, so the build writes the deck
+to `target/slidev/week01/` and copies it into the bundle afterwards. The slide PDFs skip all of this,
+since `dx` copies binary files through untouched.
+
+When working on the deck itself, `cd slidev && npm run dev` is faster and reloads on save.

@@ -1,0 +1,235 @@
+import { spawn } from 'node:child_process'
+import { accessSync, constants, rmSync } from 'node:fs'
+import { copyFile, mkdir, readFile, rm, symlink, writeFile } from 'node:fs/promises'
+import { fileURLToPath } from 'node:url'
+import path from 'node:path'
+
+const slidevRoot = fileURLToPath(new URL('../', import.meta.url))
+const repositoryRoot = path.resolve(slidevRoot, '..')
+const sourceDeck = path.join(
+  repositoryRoot,
+  'lectures',
+  '01_introduction',
+  'introduction.md',
+)
+const sourceImages = path.join(repositoryRoot, 'lectures', 'images')
+const runtimeRoot = path.join(slidevRoot, 'runtime')
+const outputRoot = path.join(slidevRoot, 'dist')
+// `build.rs` points these at `public/` so the deployed site serves the deck and its PDFs.
+const siteOutputRoot = process.env.STUCO_SLIDEV_SITE_OUTPUT
+  ? path.resolve(process.env.STUCO_SLIDEV_SITE_OUTPUT)
+  : path.join(outputRoot, 'site')
+const pdfOutputRoot = process.env.STUCO_SLIDEV_PDF_OUTPUT
+  ? path.resolve(process.env.STUCO_SLIDEV_PDF_OUTPUT)
+  : outputRoot
+// Set to `light` or `dark` to pin the built deck's color scheme; unset follows the viewer's system
+// preference and leaves Slidev's own toggle working, which is what `dev` wants.
+const colorSchema = process.env.STUCO_SLIDEV_COLOR_SCHEMA
+const siteBase = colorSchema
+  ? `/slidev/week01/${colorSchema}/`
+  : '/slidev/week01/'
+const slidevCli = path.join(
+  slidevRoot,
+  'node_modules',
+  '@slidev',
+  'cli',
+  'bin',
+  'slidev.mjs',
+)
+
+const task = process.argv[2]
+const forwardedArgs = process.argv.slice(3)
+
+if (!task) {
+  console.error('Usage: node scripts/run.mjs <dev|build|export:light|export:dark>')
+  process.exitCode = 1
+} else {
+  await runTask(task, forwardedArgs)
+}
+
+async function runTask(taskName, extraArgs) {
+  // Scoped per task so a `dx serve` build cannot delete the workspace that `npm run dev` is serving.
+  const workspaceRoot = path.join(
+    slidevRoot,
+    '.slidev-work',
+    [taskName.replace(':', '-'), colorSchema].filter(Boolean).join('-'),
+  )
+  const lectureRoot = path.join(workspaceRoot, 'lectures', '01_introduction')
+  const setupRoot = path.join(lectureRoot, 'setup')
+  const workspaceImages = path.join(workspaceRoot, 'lectures', 'images')
+  const workspaceDeck = path.join(lectureRoot, 'introduction.md')
+  const cleanupWorkspace = () =>
+    rmSync(workspaceRoot, { recursive: true, force: true })
+
+  await rm(workspaceRoot, { recursive: true, force: true })
+  process.once('exit', cleanupWorkspace)
+  try {
+    await mkdir(lectureRoot, { recursive: true })
+    await mkdir(setupRoot, { recursive: true })
+    await materializeDeck(workspaceDeck)
+    await symlink(
+      sourceImages,
+      workspaceImages,
+      process.platform === 'win32' ? 'junction' : 'dir',
+    )
+
+    await Promise.all([
+      copyFile(
+        path.join(runtimeRoot, 'style.css'),
+        path.join(lectureRoot, 'style.css'),
+      ),
+      copyFile(
+        path.join(runtimeRoot, 'slide-bottom.vue'),
+        path.join(lectureRoot, 'slide-bottom.vue'),
+      ),
+      copyFile(
+        path.join(runtimeRoot, 'vite.config.ts'),
+        path.join(lectureRoot, 'vite.config.ts'),
+      ),
+      copyFile(
+        path.join(runtimeRoot, 'setup', 'shiki.ts'),
+        path.join(setupRoot, 'shiki.ts'),
+      ),
+    ])
+
+    // Only the tasks that write output need their destination, so serving the deck and building it
+    // into `public/` leave no empty `dist/` behind.
+    if (taskName === 'build') {
+      await mkdir(siteOutputRoot, { recursive: true })
+    } else if (taskName.startsWith('export')) {
+      await mkdir(outputRoot, { recursive: true })
+    }
+
+    const taskArgs = {
+      dev: [workspaceDeck],
+      build: [
+        'build',
+        workspaceDeck,
+        '--base',
+        siteBase,
+        '--out',
+        siteOutputRoot,
+        '--without-notes',
+        // Deep links survive a reload without asking the host to rewrite unknown paths back to the
+        // deck. `dev` keeps history routing, which only has to satisfy Slidev's own server.
+        '--router-mode',
+        'hash',
+      ],
+      'export:light': [
+        'export',
+        workspaceDeck,
+        '--output',
+        path.join(pdfOutputRoot, 'introduction-light.pdf'),
+        '--with-toc',
+        '--timeout',
+        '60000',
+        ...browserArgs(),
+      ],
+      'export:dark': [
+        'export',
+        workspaceDeck,
+        '--output',
+        path.join(pdfOutputRoot, 'introduction-dark.pdf'),
+        '--dark',
+        '--with-toc',
+        '--timeout',
+        '60000',
+        ...browserArgs(),
+      ],
+    }[taskName]
+
+    if (!taskArgs) {
+      throw new Error(`Unknown Slidev task: ${taskName}`)
+    }
+
+    const exitCode = await runSlidev([...taskArgs, ...extraArgs])
+    if (exitCode !== 0) process.exitCode = exitCode
+  } finally {
+    process.removeListener('exit', cleanupWorkspace)
+    await rm(workspaceRoot, { recursive: true, force: true })
+  }
+}
+
+/// Links the deck into the workspace, or writes a copy with the color scheme pinned.
+///
+/// Slidev reads `colorSchema` from the deck's headmatter and fixes it at build time, and the CLI has
+/// no flag to override it, so a pinned variant needs its own copy of the source.
+async function materializeDeck(destination) {
+  if (!colorSchema) {
+    await symlink(sourceDeck, destination, 'file')
+    return
+  }
+
+  const markdown = await readFile(sourceDeck, 'utf8')
+  const pinned = markdown.replace(
+    /^colorSchema:.*$/m,
+    `colorSchema: ${colorSchema}`,
+  )
+  if (pinned === markdown) {
+    throw new Error(
+      `${sourceDeck} has no \`colorSchema\` line to pin to ${colorSchema}`,
+    )
+  }
+
+  await writeFile(destination, pinned)
+}
+
+/// Slidev exports through Playwright, which otherwise wants its own browser download. The marp
+/// config already renders with whatever browser is installed, so match that and reuse it.
+function browserArgs() {
+  const browser = resolveSystemBrowser()
+  return browser ? ['--executable-path', browser] : []
+}
+
+function resolveSystemBrowser() {
+  if (process.env.STUCO_SLIDEV_CHROME) return process.env.STUCO_SLIDEV_CHROME
+
+  const directories = (process.env.PATH ?? '').split(path.delimiter).filter(Boolean)
+  for (const name of [
+    'google-chrome-stable',
+    'google-chrome',
+    'chromium',
+    'chromium-browser',
+  ]) {
+    for (const directory of directories) {
+      const candidate = path.join(directory, name)
+      try {
+        accessSync(candidate, constants.X_OK)
+        return candidate
+      } catch {
+        // Keep looking; falling through leaves Playwright to use its own browser.
+      }
+    }
+  }
+
+  return undefined
+}
+
+function runSlidev(args) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(process.execPath, [slidevCli, ...args], {
+      cwd: slidevRoot,
+      env: {
+        ...process.env,
+        STUCO_SLIDEV_REPOSITORY_ROOT: repositoryRoot,
+      },
+      stdio: 'inherit',
+    })
+
+    const forwardSignal = (signal) => child.kill(signal)
+    const onInterrupt = () => forwardSignal('SIGINT')
+    const onTerminate = () => forwardSignal('SIGTERM')
+    process.once('SIGINT', onInterrupt)
+    process.once('SIGTERM', onTerminate)
+
+    child.once('error', reject)
+    child.once('exit', (code, signal) => {
+      process.removeListener('SIGINT', onInterrupt)
+      process.removeListener('SIGTERM', onTerminate)
+
+      if (signal === 'SIGINT') resolve(130)
+      else if (signal === 'SIGTERM') resolve(143)
+      else resolve(code ?? 1)
+    })
+  })
+}
