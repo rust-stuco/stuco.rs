@@ -27,7 +27,7 @@ jobs:
           fallback: none
 
       - name: Validate TOML formatting
-        run: taplo fmt --check resources/*.toml schedule/*.toml Cargo.toml
+        run: taplo fmt --check resources/*.toml schedule/*.toml schedule/weeks/*.toml Cargo.toml
 
       - name: Validate TOML against schemas
         run: taplo check
@@ -100,6 +100,12 @@ jobs:
         uses: taiki-e/install-action@v2
         with:
           tool: dioxus-cli@0.7.2
+
+      # Catches schedule misconfiguration, which would otherwise only panic in the browser.
+      - name: Run tests
+        env:
+          RAYON_NUM_THREADS: 2
+        run: cargo test --locked
 
       - name: Build
         env:

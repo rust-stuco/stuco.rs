@@ -1,0 +1,77 @@
+# Current semester schedule, edited once per semester by that term's instructors.
+#
+# Each entry unlocks a week's slides and homework at `reveal_time` on its date, where `week` is the
+# file stem under `schedule/weeks/`. Visitors can preview later weeks with the "Show upcoming
+# content" toggle, which marks them subject to change.
+#
+# A `[[breaks]]` entry marks a class date with no content. Weeks and breaks are shown in date
+# order, so they can be listed wherever they read best.
+#
+# Dates follow the CMU academic calendar:
+# https://www.cmu.edu/hub/calendar/docs/2627-academic-calendar.pdf
+
+name = "Fall 2026"
+reveal_time = "20:00"         # local time each week unlocks (HH:MM, 24-hour)
+timezone = "America/New_York" # any IANA time zone name
+
+# Ownership (Part 2) is not taught this semester.
+
+[[weeks]]
+week = "introduction"
+date = 2026-08-27
+
+[[weeks]]
+week = "ownership_p1"
+date = 2026-09-03
+
+[[weeks]]
+week = "structs_enums"
+date = 2026-09-10
+
+[[weeks]]
+week = "collections_generics"
+date = 2026-09-17
+
+[[weeks]]
+week = "errors_traits"
+date = 2026-09-24
+
+[[weeks]]
+week = "modules_testing"
+date = 2026-10-01
+
+[[weeks]]
+week = "ecosystem"
+date = 2026-10-08
+
+[[breaks]]
+name = "Fall Break"
+date = 2026-10-15
+
+[[weeks]]
+week = "closures_iterators"
+date = 2026-10-22
+
+[[weeks]]
+week = "lifetimes"
+date = 2026-10-29
+
+[[weeks]]
+week = "smart_pointers"
+date = 2026-11-05
+
+[[weeks]]
+week = "unsafe"
+date = 2026-11-12
+
+[[weeks]]
+week = "parallelism"
+date = 2026-11-19
+
+[[breaks]]
+name = "Thanksgiving"
+date = 2026-11-26
+
+[[weeks]]
+week = "concurrency"
+date = 2026-12-03

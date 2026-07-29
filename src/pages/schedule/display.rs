@@ -48,3 +48,8 @@ pub(super) fn book_chapter_label(slug: &str) -> String {
 pub(super) fn slide_name(slides: &str) -> &str {
     slides.split_once('_').map_or(slides, |(_, name)| name)
 }
+
+/// Formats a schedule date for display, e.g. `"Aug 27"`.
+pub(super) fn date_label(date: jiff::civil::Date) -> String {
+    date.strftime("%b %-d").to_string()
+}
