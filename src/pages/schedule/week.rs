@@ -14,9 +14,7 @@ pub(super) struct Week {
     pub(super) assignments: Assignments,
 }
 
-/// The current semester's schedule: which content weeks run this term, in order, and when each
-/// unlocks. Weeks are selected from the content library by slug, so reordering or dropping a week
-/// is a config edit, never a code change.
+/// This semester's schedule: which content weeks run, in what order, and when each unlocks.
 #[derive(Debug, Deserialize)]
 #[cfg_attr(test, derive(JsonSchema))]
 pub(super) struct Semester {
@@ -33,7 +31,7 @@ pub(super) struct Semester {
 #[derive(Debug, Deserialize)]
 #[cfg_attr(test, derive(JsonSchema))]
 pub(super) struct ScheduledWeek {
-    /// Slug of the content week — the file stem under `schedule/weeks/` (e.g. `"ecosystem"`).
+    /// The week's slug: the file stem under `schedule/weeks/`.
     pub(super) week: String,
     /// Calendar date the week's slides and homework unlock.
     #[cfg_attr(test, schemars(with = "String"))]

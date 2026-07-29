@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Semester",
-  "description": "The current semester's schedule: which content weeks run this term, in order, and when each\nunlocks. Weeks are selected from the content library by slug, so reordering or dropping a week\nis a config edit, never a code change.",
+  "description": "This semester's schedule: which content weeks run, in what order, and when each unlocks.",
   "type": "object",
   "properties": {
     "name": {
@@ -39,7 +39,7 @@
           "type": "string"
         },
         "week": {
-          "description": "Slug of the content week — the file stem under `schedule/weeks/` (e.g. `\"ecosystem\"`).",
+          "description": "The week's slug: the file stem under `schedule/weeks/`.",
           "type": "string"
         }
       },

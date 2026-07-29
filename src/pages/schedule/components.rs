@@ -9,7 +9,7 @@ use super::week::{Extra, Homework, Materials, VideoGroup, Week};
 
 #[component]
 pub(crate) fn Schedule() -> Element {
-    // The browser clock decides what is revealed, so the schedule advances without a redeploy.
+    // Reveals follow the browser clock, so the schedule advances without a redeploy.
     let now_ms = jiff::Timestamp::now().as_millisecond();
     let mut show_upcoming = use_signal(|| false);
 
@@ -66,8 +66,7 @@ fn WeekRow(week_num: usize, week: &'static Week, revealed: bool, show_upcoming: 
     let mut open_upward = use_signal(|| false);
     let mut button_ref = use_signal(|| None::<std::rc::Rc<MountedData>>);
 
-    // Slides and homework always occupy the row so toggling never shifts layout; classes control
-    // visibility and dimming. Hidden until revealed; peeking shows future weeks dimmed.
+    // Slides and homework always occupy the row, so revealing them never shifts the layout.
     let visible = revealed || show_upcoming;
     let content_class = if !visible {
         "invisible"

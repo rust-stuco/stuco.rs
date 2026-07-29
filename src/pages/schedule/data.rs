@@ -2,8 +2,7 @@ use std::sync::LazyLock;
 
 use super::week::{Semester, Week};
 
-/// The content library: every `schedule/weeks/*.toml`, keyed by its file slug. `SEMESTER` selects
-/// and orders the subset shown this term.
+/// Every `schedule/weeks/*.toml`, in `WEEK_SOURCES` order. `SEMESTER` selects this term's subset.
 static LIBRARY: LazyLock<Vec<Week>> = LazyLock::new(load_library);
 
 /// The weeks shown this semester, in schedule order (a subset of `LIBRARY`).
@@ -84,7 +83,7 @@ static SEMESTER: LazyLock<Semester> = LazyLock::new(|| {
 static REVEAL_MS: LazyLock<Vec<i64>> = LazyLock::new(compute_reveal_ms);
 
 fn compute_reveal_ms() -> Vec<i64> {
-    let (hour, minute) = parse_reveal_time(&SEMESTER.reveal_time);
+    let reveal_time = parse_reveal_time(&SEMESTER.reveal_time);
 
     SEMESTER
         .weeks
@@ -99,29 +98,16 @@ fn compute_reveal_ms() -> Vec<i64> {
                 date.year as i16,
                 date.month as i8,
                 date.day as i8,
-                hour,
-                minute,
+                reveal_time,
             )
         })
         .collect()
 }
 
-/// Parses a `"HH:MM"` 24-hour reveal time into `(hour, minute)`, panicking on malformed input.
-fn parse_reveal_time(text: &str) -> (i8, i8) {
-    let (hours, minutes) = text
-        .split_once(':')
-        .unwrap_or_else(|| panic!("reveal_time {text:?} must be formatted as HH:MM"));
-    let hour = hours
-        .parse::<i8>()
-        .ok()
-        .filter(|hour| (0..24).contains(hour))
-        .unwrap_or_else(|| panic!("reveal_time {text:?} has an invalid hour"));
-    let minute = minutes
-        .parse::<i8>()
-        .ok()
-        .filter(|minute| (0..60).contains(minute))
-        .unwrap_or_else(|| panic!("reveal_time {text:?} has an invalid minute"));
-    (hour, minute)
+/// Parses a `"HH:MM"` 24-hour reveal time, panicking on malformed input.
+fn parse_reveal_time(text: &str) -> jiff::civil::Time {
+    jiff::civil::Time::strptime("%H:%M", text)
+        .unwrap_or_else(|error| panic!("reveal_time {text:?} must be formatted as HH:MM: {error}"))
 }
 
 /// Whether week `week_index` (zero-based) has been revealed at `now_ms` (epoch milliseconds).
@@ -136,11 +122,11 @@ pub(super) fn semester_name() -> &'static str {
     &SEMESTER.name
 }
 
-/// Resolves a wall-clock reveal in the given IANA time zone to an absolute instant, in epoch
-/// milliseconds. Time zone rules, including daylight saving time, come from `jiff`'s tz database.
-fn reveal_ms(timezone: &str, year: i16, month: i8, day: i8, hour: i8, minute: i8) -> i64 {
+/// Resolves a wall-clock reveal in an IANA time zone to epoch milliseconds, honoring daylight
+/// saving time via `jiff`'s tz database.
+fn reveal_ms(timezone: &str, year: i16, month: i8, day: i8, time: jiff::civil::Time) -> i64 {
     jiff::civil::date(year, month, day)
-        .at(hour, minute, 0, 0)
+        .to_datetime(time)
         .in_tz(timezone)
         .unwrap_or_else(|error| {
             panic!(
@@ -227,28 +213,32 @@ mod tests {
 
     #[test]
     fn reveal_resolves_edt_instants() {
+        let at_8pm = parse_reveal_time("20:00");
+
         // 2026-09-02 20:00 EDT (UTC-4) == 2026-09-03 00:00:00 UTC.
         assert_eq!(
-            reveal_ms("America/New_York", 2026, 9, 2, 20, 0),
+            reveal_ms("America/New_York", 2026, 9, 2, at_8pm),
             1_788_393_600_000
         );
         // 2026-10-31 20:00 EDT is the last reveal before the Nov 1 DST change.
         assert_eq!(
-            reveal_ms("America/New_York", 2026, 10, 31, 20, 0),
+            reveal_ms("America/New_York", 2026, 10, 31, at_8pm),
             1_793_491_200_000
         );
     }
 
     #[test]
     fn reveal_resolves_est_instants() {
+        let at_8pm = parse_reveal_time("20:00");
+
         // The first Sunday of November (2026-11-01) is already EST (UTC-5) at 20:00.
         assert_eq!(
-            reveal_ms("America/New_York", 2026, 11, 1, 20, 0),
+            reveal_ms("America/New_York", 2026, 11, 1, at_8pm),
             1_793_581_200_000
         );
         // 2026-11-04 20:00 EST == 2026-11-05 01:00:00 UTC.
         assert_eq!(
-            reveal_ms("America/New_York", 2026, 11, 4, 20, 0),
+            reveal_ms("America/New_York", 2026, 11, 4, at_8pm),
             1_793_840_400_000
         );
     }
