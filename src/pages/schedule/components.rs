@@ -3,7 +3,7 @@ use gloo_timers::future::TimeoutFuture;
 use jiff::Timestamp;
 use jiff::civil::Date;
 
-use super::data::{WEEKS, next_reveal_ms, rustling_url, semester_name, timeout_ms};
+use super::data::{Entry, SCHEDULE, next_reveal_ms, rustling_url, semester_name, timeout_ms};
 use super::display::{
     DEFAULT_VIEWPORT_HEIGHT, OPEN_UPWARD_THRESHOLD, VideoColors, book_chapter_label, date_label,
     slide_name, video_colors,
@@ -48,13 +48,20 @@ pub(crate) fn Schedule() -> Element {
                     }
                 }
                 tbody {
-                    for (i , scheduled) in WEEKS.iter().enumerate() {
-                        WeekRow {
-                            week_num: i + 1,
-                            week: scheduled.week,
-                            date: scheduled.date,
-                            revealed: scheduled.is_revealed(now_ms()),
-                            show_upcoming: show_upcoming(),
+                    for entry in SCHEDULE.iter() {
+                        match entry {
+                            Entry::Week(scheduled) => rsx! {
+                                WeekRow {
+                                    week_num: scheduled.number,
+                                    week: scheduled.week,
+                                    date: scheduled.date,
+                                    revealed: scheduled.is_revealed(now_ms()),
+                                    show_upcoming: show_upcoming(),
+                                }
+                            },
+                            Entry::Break { name, date } => rsx! {
+                                BreakRow { name, date: *date }
+                            },
                         }
                     }
                 }
@@ -182,6 +189,19 @@ fn WeekRow(
                     }
                 }
             }
+        }
+    }
+}
+
+#[component]
+fn BreakRow(name: &'static str, date: Date) -> Element {
+    rsx! {
+        tr { class: "border-b border-tertiary/50 text-secondary",
+            td { class: "p-2 align-top" }
+            td { class: "p-2 align-top whitespace-nowrap", "{date_label(date)}" }
+            td { class: "p-2 align-top italic", "{name}" }
+            td { class: "p-2 align-top" }
+            td { class: "p-2 align-top" }
         }
     }
 }

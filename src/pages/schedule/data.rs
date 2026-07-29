@@ -8,11 +8,28 @@ use super::week::{Semester, Week};
 /// Every `schedule/weeks/*.toml`, in `WEEK_SOURCES` order. `SEMESTER` selects this term's subset.
 static LIBRARY: LazyLock<Vec<Week>> = LazyLock::new(load_library);
 
-/// The weeks shown this semester, in schedule order (a subset of `LIBRARY`).
-pub(super) static WEEKS: LazyLock<Vec<Scheduled>> = LazyLock::new(load_schedule);
+/// This semester's weeks and breaks, in date order.
+pub(super) static SCHEDULE: LazyLock<Vec<Entry>> = LazyLock::new(load_schedule);
+
+/// One row of the schedule: a content week, or a class skipped for a break.
+pub(super) enum Entry {
+    Week(Scheduled),
+    Break { name: &'static str, date: Date },
+}
+
+impl Entry {
+    pub(super) fn date(&self) -> Date {
+        match self {
+            Self::Week(scheduled) => scheduled.date,
+            Self::Break { date, .. } => *date,
+        }
+    }
+}
 
 /// A week on this semester's schedule, paired with the date and instant it unlocks.
 pub(super) struct Scheduled {
+    /// Position among this term's content weeks, counting from one and skipping breaks.
+    pub(super) number: usize,
     pub(super) week: &'static Week,
     pub(super) date: Date,
     /// Absolute reveal instant, in epoch milliseconds.
@@ -24,6 +41,14 @@ impl Scheduled {
     pub(super) fn is_revealed(&self, now_ms: i64) -> bool {
         now_ms >= self.reveal_ms
     }
+}
+
+/// This term's content weeks, in schedule order, skipping breaks.
+fn scheduled_weeks() -> impl Iterator<Item = &'static Scheduled> {
+    SCHEDULE.iter().filter_map(|entry| match entry {
+        Entry::Week(scheduled) => Some(scheduled),
+        Entry::Break { .. } => None,
+    })
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -80,30 +105,34 @@ static SEMESTER: LazyLock<Semester> = LazyLock::new(|| {
         .unwrap_or_else(|error| panic!("schedule/semester.toml should be valid TOML: {error}"))
 });
 
-fn load_schedule() -> Vec<Scheduled> {
+fn load_schedule() -> Vec<Entry> {
     let reveal_time = parse_reveal_time(&SEMESTER.reveal_time);
 
-    SEMESTER
-        .weeks
-        .iter()
-        .map(|scheduled| {
-            let slug = scheduled.week.as_str();
-            let index = WEEK_SOURCES
-                .iter()
-                .position(|source| source.slug == slug)
-                .unwrap_or_else(|| {
-                    panic!("schedule/semester.toml references unknown week {slug:?}")
-                });
+    let weeks = SEMESTER.weeks.iter().enumerate().map(|(index, scheduled)| {
+        let slug = scheduled.week.as_str();
+        let source = WEEK_SOURCES
+            .iter()
+            .position(|source| source.slug == slug)
+            .unwrap_or_else(|| panic!("schedule/semester.toml references unknown week {slug:?}"));
 
-            let date = civil_date(slug, scheduled.date);
+        let date = civil_date(slug, scheduled.date);
 
-            Scheduled {
-                week: &LIBRARY[index],
-                date,
-                reveal_ms: reveal_ms(&SEMESTER.timezone, date, reveal_time),
-            }
+        Entry::Week(Scheduled {
+            number: index + 1,
+            week: &LIBRARY[source],
+            date,
+            reveal_ms: reveal_ms(&SEMESTER.timezone, date, reveal_time),
         })
-        .collect()
+    });
+
+    let breaks = SEMESTER.breaks.iter().map(|skipped| Entry::Break {
+        name: &skipped.name,
+        date: civil_date(&skipped.name, skipped.date),
+    });
+
+    let mut entries: Vec<Entry> = weeks.chain(breaks).collect();
+    entries.sort_unstable_by_key(Entry::date);
+    entries
 }
 
 /// Converts a TOML date, naming `entry` if it is anything but a plain calendar date. A date
@@ -135,8 +164,7 @@ pub(super) fn timeout_ms(wait_ms: i64) -> u32 {
 
 /// The next reveal instant strictly after `now_ms`, if any weeks are still hidden.
 pub(super) fn next_reveal_ms(now_ms: i64) -> Option<i64> {
-    WEEKS
-        .iter()
+    scheduled_weeks()
         .map(|scheduled| scheduled.reveal_ms)
         .find(|&reveal_ms| reveal_ms > now_ms)
 }
@@ -259,7 +287,7 @@ mod tests {
 
     #[test]
     fn reveal_is_reached_at_or_after_its_instant() {
-        let first = &WEEKS[0];
+        let first = scheduled_weeks().next().expect("a term should have weeks");
 
         assert!(!first.is_revealed(first.reveal_ms - 1));
         assert!(first.is_revealed(first.reveal_ms));
@@ -276,15 +304,21 @@ mod tests {
 
     #[test]
     fn next_reveal_follows_the_current_moment() {
-        let (first, second) = (WEEKS[0].reveal_ms, WEEKS[1].reveal_ms);
-        let last = WEEKS
-            .last()
-            .expect("a semester should schedule weeks")
-            .reveal_ms;
+        let reveals: Vec<i64> = scheduled_weeks().map(|week| week.reveal_ms).collect();
+        let (first, second, last) = (reveals[0], reveals[1], reveals[reveals.len() - 1]);
 
         assert_eq!(next_reveal_ms(first - 1), Some(first));
         assert_eq!(next_reveal_ms(first), Some(second));
         assert_eq!(next_reveal_ms(last), None);
+    }
+
+    #[test]
+    fn weeks_stay_numbered_in_order_around_breaks() {
+        let numbers: Vec<usize> = scheduled_weeks().map(|week| week.number).collect();
+
+        // Numbering follows the `weeks` list while rows follow dates, so a week listed out of
+        // date order would show up here as numbering that jumps around.
+        assert_eq!(numbers, Vec::from_iter(1..=numbers.len()));
     }
 
     #[test]
@@ -315,17 +349,18 @@ mod tests {
 
     #[test]
     fn semester_schedule_is_valid() {
-        // Forcing WEEKS panics if any scheduled week has no matching content file.
+        // Forcing SCHEDULE panics if any scheduled week has no matching content file.
         assert_eq!(
-            WEEKS.len(),
-            SEMESTER.weeks.len(),
+            SCHEDULE.len(),
+            SEMESTER.weeks.len() + SEMESTER.breaks.len(),
             "every scheduled week should resolve to a content file"
         );
+        // Strictly increasing, so a break may not land on a class date.
         assert!(
-            WEEKS
+            SCHEDULE
                 .windows(2)
-                .all(|pair| pair[0].reveal_ms < pair[1].reveal_ms),
-            "schedule/semester.toml reveal dates should be strictly increasing"
+                .all(|pair| pair[0].date() < pair[1].date()),
+            "schedule/semester.toml dates should be strictly increasing"
         );
 
         let mut slugs: Vec<&str> = SEMESTER

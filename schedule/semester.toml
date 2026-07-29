@@ -4,6 +4,9 @@
 # file stem under `schedule/weeks/`. Visitors can preview later weeks with the "Show upcoming
 # content" toggle, which marks them subject to change.
 #
+# A `[[breaks]]` entry marks a class date with no content. Weeks and breaks are shown in date
+# order, so they can be listed wherever they read best.
+#
 # Dates follow the CMU academic calendar:
 # https://www.cmu.edu/hub/calendar/docs/2627-academic-calendar.pdf
 
@@ -11,7 +14,7 @@ name = "Fall 2026"
 reveal_time = "20:00"         # local time each week unlocks (HH:MM, 24-hour)
 timezone = "America/New_York" # any IANA time zone name
 
-# Fall Break (Oct 15) and Thanksgiving (Nov 26) are skipped; Ownership (Part 2) is not taught.
+# Ownership (Part 2) is not taught this semester.
 
 [[weeks]]
 week = "introduction"
@@ -41,7 +44,9 @@ date = 2026-10-01
 week = "closures_iterators"
 date = 2026-10-08
 
-# Fall Break (Oct 15)
+[[breaks]]
+name = "Fall Break"
+date = 2026-10-15
 
 [[weeks]]
 week = "ecosystem"
@@ -63,7 +68,9 @@ date = 2026-11-12
 week = "parallelism"
 date = 2026-11-19
 
-# Thanksgiving (Nov 26)
+[[breaks]]
+name = "Thanksgiving"
+date = 2026-11-26
 
 [[weeks]]
 week = "concurrency"
