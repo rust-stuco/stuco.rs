@@ -41,7 +41,7 @@ week = "modules_testing"
 date = 2026-10-01
 
 [[weeks]]
-week = "closures_iterators"
+week = "ecosystem"
 date = 2026-10-08
 
 [[breaks]]
@@ -49,7 +49,7 @@ name = "Fall Break"
 date = 2026-10-15
 
 [[weeks]]
-week = "ecosystem"
+week = "closures_iterators"
 date = 2026-10-22
 
 [[weeks]]
