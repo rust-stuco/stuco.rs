@@ -1,11 +1,12 @@
 use dioxus::prelude::*;
 use gloo_timers::future::TimeoutFuture;
 use jiff::Timestamp;
+use jiff::civil::Date;
 
 use super::data::{WEEKS, next_reveal_ms, rustling_url, semester_name, timeout_ms};
 use super::display::{
-    DEFAULT_VIEWPORT_HEIGHT, OPEN_UPWARD_THRESHOLD, VideoColors, book_chapter_label, slide_name,
-    video_colors,
+    DEFAULT_VIEWPORT_HEIGHT, OPEN_UPWARD_THRESHOLD, VideoColors, book_chapter_label, date_label,
+    slide_name, video_colors,
 };
 use super::week::{Extra, Homework, Materials, VideoGroup, Week};
 
@@ -40,6 +41,7 @@ pub(crate) fn Schedule() -> Element {
                 thead {
                     tr { class: "border-b border-tertiary",
                         th { class: "text-left p-2", "Week" }
+                        th { class: "text-left p-2", "Date" }
                         th { class: "text-left p-2", "Topics" }
                         th { class: "text-left p-2", "Slides" }
                         th { class: "text-left p-2", "Homework" }
@@ -50,6 +52,7 @@ pub(crate) fn Schedule() -> Element {
                         WeekRow {
                             week_num: i + 1,
                             week: scheduled.week,
+                            date: scheduled.date,
                             revealed: scheduled.is_revealed(now_ms()),
                             show_upcoming: show_upcoming(),
                         }
@@ -79,7 +82,13 @@ pub(crate) fn Schedule() -> Element {
 }
 
 #[component]
-fn WeekRow(week_num: usize, week: &'static Week, revealed: bool, show_upcoming: bool) -> Element {
+fn WeekRow(
+    week_num: usize,
+    week: &'static Week,
+    date: Date,
+    revealed: bool,
+    show_upcoming: bool,
+) -> Element {
     let mut expanded = use_signal(|| false);
     let mut open_upward = use_signal(|| false);
     let mut button_ref = use_signal(|| None::<std::rc::Rc<MountedData>>);
@@ -119,6 +128,7 @@ fn WeekRow(week_num: usize, week: &'static Week, revealed: bool, show_upcoming: 
     rsx! {
         tr { class: "border-b border-tertiary/50",
             td { class: "p-2 align-top", "{week_num}" }
+            td { class: "p-2 align-top whitespace-nowrap text-secondary", "{date_label(date)}" }
             td { class: "p-2 align-top",
                 span { class: "font-semibold", "{week.title}" }
                 if week.materials.has_any() {

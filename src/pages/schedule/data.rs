@@ -1,5 +1,8 @@
 use std::sync::LazyLock;
 
+use jiff::civil::{Date, Time};
+use toml::value::Datetime;
+
 use super::week::{Semester, Week};
 
 /// Every `schedule/weeks/*.toml`, in `WEEK_SOURCES` order. `SEMESTER` selects this term's subset.
@@ -8,9 +11,10 @@ static LIBRARY: LazyLock<Vec<Week>> = LazyLock::new(load_library);
 /// The weeks shown this semester, in schedule order (a subset of `LIBRARY`).
 pub(super) static WEEKS: LazyLock<Vec<Scheduled>> = LazyLock::new(load_schedule);
 
-/// A week on this semester's schedule, paired with the instant it unlocks.
+/// A week on this semester's schedule, paired with the date and instant it unlocks.
 pub(super) struct Scheduled {
     pub(super) week: &'static Week,
+    pub(super) date: Date,
     /// Absolute reveal instant, in epoch milliseconds.
     reveal_ms: i64,
 }
@@ -91,29 +95,35 @@ fn load_schedule() -> Vec<Scheduled> {
                     panic!("schedule/semester.toml references unknown week {slug:?}")
                 });
 
-            // A `date` with a time component would silently ignore `reveal_time`.
-            let (date, time) = (scheduled.date.date, scheduled.date.time);
-            let date = date.filter(|_| time.is_none()).unwrap_or_else(|| {
-                panic!("schedule/semester.toml: week {slug:?} must be a plain calendar date")
-            });
+            let date = civil_date(slug, scheduled.date);
 
             Scheduled {
                 week: &LIBRARY[index],
-                reveal_ms: reveal_ms(
-                    &SEMESTER.timezone,
-                    date.year as i16,
-                    date.month as i8,
-                    date.day as i8,
-                    reveal_time,
-                ),
+                date,
+                reveal_ms: reveal_ms(&SEMESTER.timezone, date, reveal_time),
             }
         })
         .collect()
 }
 
+/// Converts a TOML date, naming `entry` if it is anything but a plain calendar date. A date
+/// carrying a time component would silently ignore `reveal_time`.
+fn civil_date(entry: &str, value: Datetime) -> Date {
+    let parsed = value
+        .date
+        .filter(|_| value.time.is_none())
+        .unwrap_or_else(|| {
+            panic!("schedule/semester.toml: {entry:?} must be a plain calendar date")
+        });
+
+    Date::new(parsed.year as i16, parsed.month as i8, parsed.day as i8).unwrap_or_else(|error| {
+        panic!("schedule/semester.toml: {entry:?} is not a valid date: {error}")
+    })
+}
+
 /// Parses a `"HH:MM"` 24-hour reveal time, panicking on malformed input.
-fn parse_reveal_time(text: &str) -> jiff::civil::Time {
-    jiff::civil::Time::strptime("%H:%M", text)
+fn parse_reveal_time(text: &str) -> Time {
+    Time::strptime("%H:%M", text)
         .unwrap_or_else(|error| panic!("reveal_time {text:?} must be formatted as HH:MM: {error}"))
 }
 
@@ -138,9 +148,8 @@ pub(super) fn semester_name() -> &'static str {
 
 /// Resolves a wall-clock reveal in an IANA time zone to epoch milliseconds, honoring daylight
 /// saving time via `jiff`'s tz database.
-fn reveal_ms(timezone: &str, year: i16, month: i8, day: i8, time: jiff::civil::Time) -> i64 {
-    jiff::civil::date(year, month, day)
-        .to_datetime(time)
+fn reveal_ms(timezone: &str, date: Date, time: Time) -> i64 {
+    date.to_datetime(time)
         .in_tz(timezone)
         .unwrap_or_else(|error| {
             panic!(
@@ -227,15 +236,12 @@ mod tests {
         let at_8pm = parse_reveal_time("20:00");
 
         // 2026-09-02 20:00 EDT (UTC-4) == 2026-09-03 00:00:00 UTC.
-        assert_eq!(
-            reveal_ms("America/New_York", 2026, 9, 2, at_8pm),
-            1_788_393_600_000
-        );
+        let instant = reveal_ms("America/New_York", Date::constant(2026, 9, 2), at_8pm);
+        assert_eq!(instant, 1_788_393_600_000);
+
         // 2026-10-31 20:00 EDT is the last reveal before the Nov 1 DST change.
-        assert_eq!(
-            reveal_ms("America/New_York", 2026, 10, 31, at_8pm),
-            1_793_491_200_000
-        );
+        let instant = reveal_ms("America/New_York", Date::constant(2026, 10, 31), at_8pm);
+        assert_eq!(instant, 1_793_491_200_000);
     }
 
     #[test]
@@ -243,15 +249,12 @@ mod tests {
         let at_8pm = parse_reveal_time("20:00");
 
         // The first Sunday of November (2026-11-01) is already EST (UTC-5) at 20:00.
-        assert_eq!(
-            reveal_ms("America/New_York", 2026, 11, 1, at_8pm),
-            1_793_581_200_000
-        );
+        let instant = reveal_ms("America/New_York", Date::constant(2026, 11, 1), at_8pm);
+        assert_eq!(instant, 1_793_581_200_000);
+
         // 2026-11-04 20:00 EST == 2026-11-05 01:00:00 UTC.
-        assert_eq!(
-            reveal_ms("America/New_York", 2026, 11, 4, at_8pm),
-            1_793_840_400_000
-        );
+        let instant = reveal_ms("America/New_York", Date::constant(2026, 11, 4), at_8pm);
+        assert_eq!(instant, 1_793_840_400_000);
     }
 
     #[test]
