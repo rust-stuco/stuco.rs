@@ -101,6 +101,12 @@ jobs:
         with:
           tool: dioxus-cli@0.7.2
 
+      # Catches schedule misconfiguration, which would otherwise only panic in the browser.
+      - name: Run tests
+        env:
+          RAYON_NUM_THREADS: 2
+        run: cargo test --locked
+
       - name: Build
         env:
           # Limit parallel rendering to avoid exhausting CI runner resources.

@@ -8,7 +8,8 @@ edition = "2024"
 
 [dependencies]
 dioxus = { version = "0.7.2", features = ["router"] }
-jiff = { version = "0.2", features = ["js"] }
+gloo-timers = { version = "0.3.0", features = ["futures"] }
+jiff = { version = "0.2.35", features = ["js"] }
 serde = { version = "1.0.228", features = ["derive"] }
 toml = "0.9.10"
 web-sys = { version = "0.3.83", features = ["Window"] }

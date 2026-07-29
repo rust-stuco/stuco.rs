@@ -1,6 +1,8 @@
 use dioxus::prelude::*;
+use gloo_timers::future::TimeoutFuture;
+use jiff::Timestamp;
 
-use super::data::{WEEKS, is_revealed, rustling_url, semester_name};
+use super::data::{WEEKS, next_reveal_ms, rustling_url, semester_name, timeout_ms};
 use super::display::{
     DEFAULT_VIEWPORT_HEIGHT, OPEN_UPWARD_THRESHOLD, VideoColors, book_chapter_label, slide_name,
     video_colors,
@@ -10,8 +12,22 @@ use super::week::{Extra, Homework, Materials, VideoGroup, Week};
 #[component]
 pub(crate) fn Schedule() -> Element {
     // Reveals follow the browser clock, so the schedule advances without a redeploy.
-    let now_ms = jiff::Timestamp::now().as_millisecond();
+    let mut now_ms = use_signal(|| Timestamp::now().as_millisecond());
     let mut show_upcoming = use_signal(|| false);
+
+    // Wake once per upcoming reveal so an open tab unlocks without a refresh, re-arming for
+    // reveals further out than one `setTimeout` can wait.
+    use_future(move || async move {
+        loop {
+            let now = *now_ms.peek();
+            let Some(next) = next_reveal_ms(now) else {
+                break;
+            };
+
+            TimeoutFuture::new(timeout_ms(next - now)).await;
+            now_ms.set(Timestamp::now().as_millisecond());
+        }
+    });
 
     rsx! {
         document::Title { "Schedule - Rust StuCo" }
@@ -30,20 +46,21 @@ pub(crate) fn Schedule() -> Element {
                     }
                 }
                 tbody {
-                    for (i , &week) in WEEKS.iter().enumerate() {
+                    for (i , scheduled) in WEEKS.iter().enumerate() {
                         WeekRow {
                             week_num: i + 1,
-                            week,
-                            revealed: is_revealed(i, now_ms),
+                            week: scheduled.week,
+                            revealed: scheduled.is_revealed(now_ms()),
                             show_upcoming: show_upcoming(),
                         }
                     }
                 }
             }
-            div { class: "group mt-8 mb-4 text-center",
+            div { class: "mt-8 mb-4 text-center",
                 button {
                     r#type: "button",
                     class: "text-sm text-foreground hover:text-secondary transition-colors",
+                    aria_pressed: show_upcoming(),
                     onclick: move |_| show_upcoming.set(!show_upcoming()),
                     if show_upcoming() {
                         "Hide upcoming content"
@@ -51,9 +68,10 @@ pub(crate) fn Schedule() -> Element {
                         "Show upcoming content"
                     }
                 }
-                p {
-                    class: "mt-1 text-xs text-tertiary italic opacity-0 group-hover:opacity-100 transition-opacity",
-                    "Upcoming content is subject to change"
+                if show_upcoming() {
+                    p { class: "mt-1 text-xs text-tertiary italic",
+                        "Upcoming content is subject to change"
+                    }
                 }
             }
         }

@@ -6,24 +6,21 @@ use super::week::{Semester, Week};
 static LIBRARY: LazyLock<Vec<Week>> = LazyLock::new(load_library);
 
 /// The weeks shown this semester, in schedule order (a subset of `LIBRARY`).
-pub(super) static WEEKS: LazyLock<Vec<&'static Week>> = LazyLock::new(|| {
-    SEMESTER
-        .weeks
-        .iter()
-        .map(|scheduled| {
-            let index = WEEK_SOURCES
-                .iter()
-                .position(|source| source.slug == scheduled.week)
-                .unwrap_or_else(|| {
-                    panic!(
-                        "schedule/semester.toml references unknown week {:?}",
-                        scheduled.week
-                    )
-                });
-            &LIBRARY[index]
-        })
-        .collect()
-});
+pub(super) static WEEKS: LazyLock<Vec<Scheduled>> = LazyLock::new(load_schedule);
+
+/// A week on this semester's schedule, paired with the instant it unlocks.
+pub(super) struct Scheduled {
+    pub(super) week: &'static Week,
+    /// Absolute reveal instant, in epoch milliseconds.
+    reveal_ms: i64,
+}
+
+impl Scheduled {
+    /// Whether this week has unlocked at `now_ms` (epoch milliseconds).
+    pub(super) fn is_revealed(&self, now_ms: i64) -> bool {
+        now_ms >= self.reveal_ms
+    }
+}
 
 #[derive(Debug, Clone, Copy)]
 struct WeekSource {
@@ -79,27 +76,37 @@ static SEMESTER: LazyLock<Semester> = LazyLock::new(|| {
         .unwrap_or_else(|error| panic!("schedule/semester.toml should be valid TOML: {error}"))
 });
 
-/// Absolute reveal instant (epoch milliseconds) for each curriculum week, in order.
-static REVEAL_MS: LazyLock<Vec<i64>> = LazyLock::new(compute_reveal_ms);
-
-fn compute_reveal_ms() -> Vec<i64> {
+fn load_schedule() -> Vec<Scheduled> {
     let reveal_time = parse_reveal_time(&SEMESTER.reveal_time);
 
     SEMESTER
         .weeks
         .iter()
         .map(|scheduled| {
-            let date = scheduled
-                .date
-                .date
-                .unwrap_or_else(|| panic!("schedule/semester.toml entries must be calendar dates"));
-            reveal_ms(
-                &SEMESTER.timezone,
-                date.year as i16,
-                date.month as i8,
-                date.day as i8,
-                reveal_time,
-            )
+            let slug = scheduled.week.as_str();
+            let index = WEEK_SOURCES
+                .iter()
+                .position(|source| source.slug == slug)
+                .unwrap_or_else(|| {
+                    panic!("schedule/semester.toml references unknown week {slug:?}")
+                });
+
+            // A `date` with a time component would silently ignore `reveal_time`.
+            let (date, time) = (scheduled.date.date, scheduled.date.time);
+            let date = date.filter(|_| time.is_none()).unwrap_or_else(|| {
+                panic!("schedule/semester.toml: week {slug:?} must be a plain calendar date")
+            });
+
+            Scheduled {
+                week: &LIBRARY[index],
+                reveal_ms: reveal_ms(
+                    &SEMESTER.timezone,
+                    date.year as i16,
+                    date.month as i8,
+                    date.day as i8,
+                    reveal_time,
+                ),
+            }
         })
         .collect()
 }
@@ -110,11 +117,18 @@ fn parse_reveal_time(text: &str) -> jiff::civil::Time {
         .unwrap_or_else(|error| panic!("reveal_time {text:?} must be formatted as HH:MM: {error}"))
 }
 
-/// Whether week `week_index` (zero-based) has been revealed at `now_ms` (epoch milliseconds).
-pub(super) fn is_revealed(week_index: usize, now_ms: i64) -> bool {
-    REVEAL_MS
-        .get(week_index)
-        .is_some_and(|&reveal_ms| revealed_at(reveal_ms, now_ms))
+/// Clamps a wait to what `setTimeout` accepts. `gloo-timers` casts its `u32` to `i32`, so a longer
+/// wait would turn negative and fire immediately; callers re-arm until the instant arrives.
+pub(super) fn timeout_ms(wait_ms: i64) -> u32 {
+    wait_ms.clamp(0, i32::MAX.into()) as u32
+}
+
+/// The next reveal instant strictly after `now_ms`, if any weeks are still hidden.
+pub(super) fn next_reveal_ms(now_ms: i64) -> Option<i64> {
+    WEEKS
+        .iter()
+        .map(|scheduled| scheduled.reveal_ms)
+        .find(|&reveal_ms| reveal_ms > now_ms)
 }
 
 /// Display name of the current semester, e.g. `"Fall 2026"`.
@@ -135,11 +149,6 @@ fn reveal_ms(timezone: &str, year: i16, month: i8, day: i8, time: jiff::civil::T
         })
         .timestamp()
         .as_millisecond()
-}
-
-/// Whether a reveal instant has been reached at the given moment (both epoch milliseconds).
-fn revealed_at(reveal_ms: i64, now_ms: i64) -> bool {
-    now_ms >= reveal_ms
 }
 
 fn rustling_order(name: &str) -> Option<u8> {
@@ -183,6 +192,8 @@ pub(super) fn rustling_url(name: &str) -> String {
 
 #[cfg(test)]
 mod tests {
+    use std::path::Path;
+
     use super::*;
     use crate::pages::assert_schema_is_current;
 
@@ -245,9 +256,58 @@ mod tests {
 
     #[test]
     fn reveal_is_reached_at_or_after_its_instant() {
-        assert!(!revealed_at(1_000, 999));
-        assert!(revealed_at(1_000, 1_000));
-        assert!(revealed_at(1_000, 1_001));
+        let first = &WEEKS[0];
+
+        assert!(!first.is_revealed(first.reveal_ms - 1));
+        assert!(first.is_revealed(first.reveal_ms));
+        assert!(first.is_revealed(first.reveal_ms + 1));
+    }
+
+    #[test]
+    fn timeout_clamps_to_the_browser_limit() {
+        assert_eq!(timeout_ms(-1), 0);
+        assert_eq!(timeout_ms(5_000), 5_000);
+        // A 30-day wait, as the first reveal of a semester is: must not overflow `setTimeout`.
+        assert_eq!(timeout_ms(30 * 24 * 60 * 60 * 1_000), i32::MAX as u32);
+    }
+
+    #[test]
+    fn next_reveal_follows_the_current_moment() {
+        let (first, second) = (WEEKS[0].reveal_ms, WEEKS[1].reveal_ms);
+        let last = WEEKS
+            .last()
+            .expect("a semester should schedule weeks")
+            .reveal_ms;
+
+        assert_eq!(next_reveal_ms(first - 1), Some(first));
+        assert_eq!(next_reveal_ms(first), Some(second));
+        assert_eq!(next_reveal_ms(last), None);
+    }
+
+    #[test]
+    fn week_sources_cover_the_content_directory() {
+        let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("schedule/weeks");
+        let entries = std::fs::read_dir(directory).expect("schedule/weeks should be readable");
+
+        let mut found: Vec<String> = entries
+            .filter_map(|entry| {
+                let name = entry
+                    .expect("schedule/weeks should be readable")
+                    .file_name();
+                name.to_string_lossy()
+                    .strip_suffix(".toml")
+                    .map(str::to_owned)
+            })
+            .collect();
+        found.sort_unstable();
+
+        let mut registered: Vec<&str> = WEEK_SOURCES.iter().map(|source| source.slug).collect();
+        registered.sort_unstable();
+
+        assert_eq!(
+            found, registered,
+            "every schedule/weeks/*.toml should be listed in WEEK_SOURCES"
+        );
     }
 
     #[test]
@@ -259,7 +319,9 @@ mod tests {
             "every scheduled week should resolve to a content file"
         );
         assert!(
-            REVEAL_MS.windows(2).all(|pair| pair[0] < pair[1]),
+            WEEKS
+                .windows(2)
+                .all(|pair| pair[0].reveal_ms < pair[1].reveal_ms),
             "schedule/semester.toml reveal dates should be strictly increasing"
         );
 
