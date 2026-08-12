@@ -212,7 +212,7 @@ We recommend turning off any AI code assistants or agentic editors for this cour
 
 == Late work <flexibility>
 
-Students have 7 late days to be used for any assignment. *However, if you let us know before an assignment's deadline, you can request additional late days.*
+Students have *4 late submissions*. You will automatically use a late submission if you submit an assignment _after_ its regular deadline but _before_ its late deadline, as indicated on Gradescope. If you run out of late submissions, you can request more by asking us!
 
 = Time Commitment
 
