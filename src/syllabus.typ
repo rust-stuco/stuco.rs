@@ -173,9 +173,9 @@ If you need to miss a lecture, we will determine an appropriate alternative so y
 
 = Grading
 
-Grading is determined solely by homework assignments. Most of these assignments are autograded on Gradescope, but there may be a few manually graded assignments that are worth more in the second half of the semester.
+Grading is determined solely by homework assignments submitted on Gradescope. Most of these assignments are autograded, but some are manually graded.
 
-In order to pass this course (grade letter P or S), you must accumulate 1000 points. By default, homework assignments are worth 100 points each. However, many of the homework assignments have up to 50 extra credit points. Manually graded assignments can be worth double a normal assignment, but will be graded much more harshly. There will also be many opportunities for extra credit through submission of feedback forms to us.
+In order to pass this course (grade letter P or S), you must accumulate 1000 points. Homework assignments are usually worth 100-150 points each. However, many of the homework assignments have extra credit points. There will also be extra credit opportunities through submissions of feedback forms to us.
 
 #align(center)[
   #table(
@@ -190,33 +190,27 @@ In order to pass this course (grade letter P or S), you must accumulate 1000 poi
   )
 ]
 
-_By reading this syllabus and completing the Gradescope Syllabus Quiz, you will receive 50 points immediately!_
-
-#pagebreak()
-
 == Homework
 
-There will be weekly homework assignments where you will write Rust code applying topics we have discussed in lecture. Homework assignments are designed to take on average around an hour per week. *If they take significantly longer than an hour, please let us know!*
+There will be weekly homework assignments where you will write Rust code applying topics discussed in lecture. They are designed to take on average an hour per week, so if they take significantly longer than this, please let us know!
 
-*All homework assignments are due the week after they are released, right before class starts*. Homework assignments will be submitted and auto-graded on Gradescope.
+Homework deadlines are indicated on Gradescope. Usually, these are due the week after they are released, but we offer some #unstyled-link(<flexibility>)[flexibility with late submissions].
 
 == Solutions
 
-We expect you to turn in a submission for every homework, as we believe that the best way to learn a programming language is to _actually write code_. You can only learn so much from watching someone else use a language, and this is especially true for Rust.
+We believe that the best way to learn a programming language is to _actually write code_. You can only learn so much from watching someone else use a language, and this is especially true for Rust.
 
-However, we understand that you are all busy students and we do not want this course to be a burden. *Therefore, we publish all homework solutions on our course #unstyled-link("https://github.com/rust-stuco", "GitHub page").*
+However, we understand that you are all busy students and we do not want this course to be a burden. *Therefore, we publish most homework solutions on our #unstyled-link("https://github.com/rust-stuco", "GitHub repository").*
 
-There are a few consequences of this decision. The most obvious is that you will have access to a correct solution before you even start. We *strongly encourage* students to avoid looking at these solutions before a good-faith attempt at finishing the homework assignments themselves. You will not learn much by copying and pasting our solutions as your own (and we will be able to detect if you do this).
+The most obvious consequence of this decision is that you will have access to a correct solution before you even start. We strongly encourage students to avoid looking at these solutions before making a good-faith attempt. You will not learn much by copying and pasting our solutions as your own (and we will be able to detect if you do this).
 
-*Referencing these solutions should be a _last resort_ for when you either do not have time to finish the homework assignments, or if you are somehow unable to get in contact with us to ask for help.* After you complete an assignment, we _encourage_ you to look at the reference solution to observe a different way of approaching the problem!
+*Referencing these solutions should be a _last resort_ if you run out of time or cannot reach us for help.* After completing an assignment, we encourage you to look at the reference solution to see our approach!
 
 == AI
 
-We recommend turning off any AI code assistants or agentic editors for this course, especially in the first few weeks. Learning Rust may require you to rewire parts of your thought process, and that rewiring is hindered when something else does your work for you.
+We recommend turning off any AI code assistants or agentic editors for this course. Learning Rust may require you to rewire parts of your thought process, and that rewiring is hindered when something else does your work for you. Remember that the goal here is not to pass the autograder, it is to learn a new programming language!
 
-Our assignments are designed to be short, and so they are trivially easy for many of the LLMs you have access to. Remember that the goal here is not to pass the autograder, it is to learn a new programming language!
-
-== Late work
+== Late work <flexibility>
 
 Students have 7 late days to be used for any assignment. *However, if you let us know before an assignment's deadline, you can request additional late days.*
 
