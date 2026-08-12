@@ -153,25 +153,21 @@ You can follow the steps from the official Rust #unstyled-link("https://www.rust
 
 = Attendance Policy
 
-*Please read this entire section, as not reading it may cause you to fail this course.*
-
 #text(fill: red, weight: "bold")[
-  Attendance is mandatory.
-
-  According to StuCo guidelines, if you have 3 unexcused absences, you will automatically fail this course.
-
-  In other words, if you miss 3 lectures without getting an excuse from us, the StuCo board _requires_ us to fail you.
-
-  This means that you can miss _up to_ 2 lectures at most.
+  Please read this entire section, as not reading it may cause you to fail this course!
 ]
 
-Please let us know if you are going to miss a lecture in advance (at least 2 hours before)! All it takes is a private post on Piazza.
+Attendance is required. According to StuCo guidelines, *if you have more than 2 unexcused absences, then you will automatically fail the course.*
 
-Note that you should *not* email us for an excusal, as emails can be lost / forgotten quite easily. Simply ask us on Piazza.
+== Excused Absences
+
+If you are going to miss a lecture, please fill out the form on our #unstyled-link("https://stuco.rs", "course website") at least 2 hours in advance, and we can grant you an excused absence. Please do not email us for excusals.
+
+Every 3 excused absences convert into 1 unexcused absence. Therefore, if you have 0 unexcused absences, you are allowed a maximum of 8 excused absences.
 
 == Participation
 
-We will take attendance at the _end_ of each lecture. However, if we notice that many people are arriving more than 10 minutes late, we reserve the right to take attendance at the beginning of the lecture instead.
+Attendance will be taken via a survey or activity in lecture.
 
 If you need to miss a lecture, we will determine an appropriate alternative so you don't miss out on that week's content. Most of the time, this is simply reading over the lecture and finishing the weekly programming assignment.
 
