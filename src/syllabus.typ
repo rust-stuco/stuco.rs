@@ -151,46 +151,25 @@ You can follow the steps from the official Rust #unstyled-link("https://www.rust
   ]
 ]
 
-= Attendance Policy
+= Attendance <attendance>
 
 #text(fill: red, weight: "bold")[
   Please read this entire section, as not reading it may cause you to fail this course!
 ]
 
-Attendance is required. According to StuCo guidelines, *if you have more than 2 unexcused absences, then you will automatically fail the course.*
+Attendance is required and will be taken via a survey or activity in lecture.
+
+*If you have more than 2 unexcused absences, then you will automatically fail the course.* This is a strict policy enforced by StuCo guidelines.
 
 == Excused Absences
 
-If you are going to miss a lecture, please fill out the form on our #unstyled-link("https://stuco.rs", "course website") at least 2 hours in advance, and we can grant you an excused absence. Please do not email us for excusals.
+If you need to miss a lecture, please request an excused absence by filling out the form on our #unstyled-link("https://stuco.rs", "course website") at least 2 hours in advance. Please do not email us for excusals.
 
-Every 3 excused absences convert into 1 unexcused absence. Therefore, if you have 0 unexcused absences, you are allowed a maximum of 8 excused absences.
+*Every 3 excused absences convert into 1 unexcused absence.* Therefore, if you have 0 unexcused absences, you are allowed a maximum of 8 excused absences.
 
-== Participation
+#pagebreak()
 
-Attendance will be taken via a survey or activity in lecture.
-
-If you need to miss a lecture, we will determine an appropriate alternative so you don't miss out on that week's content. Most of the time, this is simply reading over the lecture and finishing the weekly programming assignment.
-
-= Grading
-
-Grading is determined solely by homework assignments submitted on Gradescope. Most of these assignments are autograded, but some are manually graded.
-
-In order to pass this course (grade letter P or S), you must accumulate 1000 points. Homework assignments are usually worth 100-150 points each. However, many of the homework assignments have extra credit points. There will also be extra credit opportunities through submissions of feedback forms to us.
-
-#align(center)[
-  #table(
-    columns: 2,
-    align: (left, left),
-    stroke: none,
-    table.header([Grade], [Points]),
-    table.hline(stroke: 1pt),
-    [NP], [0-999],
-    [P (or S)], [1000+],
-    table.hline(stroke: 1pt),
-  )
-]
-
-== Homework
+= Homework
 
 There will be weekly homework assignments where you will write Rust code applying topics discussed in lecture. They are designed to take on average an hour per week, so if they take significantly longer than this, please let us know!
 
@@ -216,17 +195,33 @@ Students have *4 late submissions*. You will automatically use a late submission
 
 = Time Commitment
 
-This is a 3-unit StuCo course, which means that this course should require around 3 hours of your time a week, including the 50-minute lecture.
+We anticipate that this course will require around 2-3 hours of your time a week, including the 50-minute lecture. If you find yourself spending more than this, please let us know immediately so that we can either help you or adjust something in the course itself.
 
-If you find yourself spending more than 3 hours, please let us know immediately so that we can either help you or adjust something in the course itself.
+#pagebreak()
 
-= Passing
+= Grading
 
-In the case that a student is unable to reach the passing boundary for any reason, they can reach out to us and we will make sure to work with them and provide alternate paths towards passing (usually a student-defined final project in Rust).
+To pass this course, students must:
 
-In other words, there are only two ways to fail this course. The first is accumulating three unexcused absences, which is due to StuCo guidelines. The second is the combination of not completing homework assignments _and_ not reaching out to us (you will have to reach out to us if you want to do a final project).
++ Attend lecture with *at most 2 unexcused absences*, where every 3 excused absences counts as 1 unexcused absence. Please carefully review the #unstyled-link(<attendance>)[attendance policy].
 
-_Please_ always make sure to reach out to us on Piazza if you have _any_ concerns!
++ Attain *at least 1000 points* through homework submissions, which are usually worth 100-150 points each. There will also be extra credit opportunities through bonus problems and feedback forms.
+
+#align(center)[
+  #table(
+    columns: 2,
+    align: (left, left),
+    stroke: none,
+    table.header([Grade], [Points]),
+    table.hline(stroke: 1pt),
+    [NP], [0-999],
+    [P (or S)], [1000+],
+    table.hline(stroke: 1pt),
+  )
+]
+
+
+Please reach out to us if you have _any_ concerns! We are usually able to provide alternate ways to pass if necessary, such as completing a final project or exam.
 
 #pagebreak()
 
