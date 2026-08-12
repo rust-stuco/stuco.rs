@@ -1,18 +1,17 @@
 // Course details
-#let course-location = "POS-153"
-#let meeting-time = "Wednesday 7:00-7:50pm"
+#let course-location = "GHC-4307"
+#let meeting-time = "Thursdays 7:00-7:50pm"
 
-#let long-semester = "Spring 2026"
-#let short-semester = "S26"
+#let long-semester = "Fall 2026"
+#let short-semester = "F26"
 
 #let instructors = (
-  ("Stephen Mao", "stmao@andrew.cmu.edu"),
-  ("Hugo Latendresse", "hlatendr@andrew.cmu.edu"),
   ("Anish Pallati", "apallati@andrew.cmu.edu"),
+  ("Max Wen", "maxwen@andrew.cmu.edu"),
 )
 
 #let tas = (
-  ("Max Wen", "maxwen@andrew.cmu.edu"),
+  ("Bright Zheng", "brightz@andrew.cmu.edu"),
 )
 
 // Document setup
@@ -135,19 +134,18 @@ You can follow the steps from the official Rust #unstyled-link("https://www.rust
       table.header([Week], [Topics #text(style: "italic")[(subject to change)]]),
       table.hline(stroke: 1pt),
       [Week 1], [Introduction],
-      [Week 2], [Ownership (Part 1)],
+      [Week 2], [Ownership],
       [Week 3], [Structs & Enums],
       [Week 4], [Collections and Generics],
       [Week 5], [Error Handling and Traits],
       [Week 6], [Modules and Testing],
       [Week 7], [The Rust Ecosystem],
       [Week 8], [Closures and Iterators],
-      [Week 9], [Ownership (Part 2)],
-      [Week 10], [Lifetimes],
-      [Week 11], [Smart Pointers & Trait Objects],
-      [Week 12], [Unsafe],
-      [Week 13], [Parallelism],
-      [Week 14], [Concurrency],
+      [Week 9], [Lifetimes],
+      [Week 10], [Smart Pointers & Trait Objects],
+      [Week 11], [Unsafe],
+      [Week 12], [Parallelism],
+      [Week 13], [Concurrency],
       table.hline(stroke: 1pt),
     )
   ]
