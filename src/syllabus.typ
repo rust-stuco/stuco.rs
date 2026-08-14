@@ -1,18 +1,17 @@
 // Course details
-#let course-location = "POS-153"
-#let meeting-time = "Wednesday 7:00-7:50pm"
+#let course-location = "GHC-4307"
+#let meeting-time = "Thursdays 7:00-7:50pm"
 
-#let long-semester = "Spring 2026"
-#let short-semester = "S26"
+#let long-semester = "Fall 2026"
+#let short-semester = "F26"
 
 #let instructors = (
-  ("Stephen Mao", "stmao@andrew.cmu.edu"),
-  ("Hugo Latendresse", "hlatendr@andrew.cmu.edu"),
   ("Anish Pallati", "apallati@andrew.cmu.edu"),
+  ("Max Wen", "maxwen@andrew.cmu.edu"),
 )
 
 #let tas = (
-  ("Max Wen", "maxwen@andrew.cmu.edu"),
+  ("Bright Zheng", "brightz@andrew.cmu.edu"),
 )
 
 // Document setup
@@ -135,53 +134,78 @@ You can follow the steps from the official Rust #unstyled-link("https://www.rust
       table.header([Week], [Topics #text(style: "italic")[(subject to change)]]),
       table.hline(stroke: 1pt),
       [Week 1], [Introduction],
-      [Week 2], [Ownership (Part 1)],
+      [Week 2], [Ownership],
       [Week 3], [Structs & Enums],
       [Week 4], [Collections and Generics],
       [Week 5], [Error Handling and Traits],
       [Week 6], [Modules and Testing],
       [Week 7], [The Rust Ecosystem],
       [Week 8], [Closures and Iterators],
-      [Week 9], [Ownership (Part 2)],
-      [Week 10], [Lifetimes],
-      [Week 11], [Smart Pointers & Trait Objects],
-      [Week 12], [Unsafe],
-      [Week 13], [Parallelism],
-      [Week 14], [Concurrency],
+      [Week 9], [Lifetimes],
+      [Week 10], [Smart Pointers & Trait Objects],
+      [Week 11], [Unsafe],
+      [Week 12], [Parallelism],
+      [Week 13], [Concurrency],
       table.hline(stroke: 1pt),
     )
   ]
 ]
 
-= Attendance Policy
-
-*Please read this entire section, as not reading it may cause you to fail this course.*
+= Attendance <attendance>
 
 #text(fill: red, weight: "bold")[
-  Attendance is mandatory.
-
-  According to StuCo guidelines, if you have 3 unexcused absences, you will automatically fail this course.
-
-  In other words, if you miss 3 lectures without getting an excuse from us, the StuCo board _requires_ us to fail you.
-
-  This means that you can miss _up to_ 2 lectures at most.
+  Please read this entire section, as not reading it may cause you to fail this course!
 ]
 
-Please let us know if you are going to miss a lecture in advance (at least 2 hours before)! All it takes is a private post on Piazza.
+Attendance is required and will be taken via a survey or activity in lecture.
 
-Note that you should *not* email us for an excusal, as emails can be lost / forgotten quite easily. Simply ask us on Piazza.
+*If you have more than 2 unexcused absences, then you will automatically fail the course.* This is a strict policy enforced by StuCo guidelines.
 
-== Participation
+== Excused Absences
 
-We will take attendance at the _end_ of each lecture. However, if we notice that many people are arriving more than 10 minutes late, we reserve the right to take attendance at the beginning of the lecture instead.
+If you need to miss a lecture, please request an excused absence by filling out the form on our #unstyled-link("https://stuco.rs", "course website") at least 2 hours in advance. Please do not email us for excusals.
 
-If you need to miss a lecture, we will determine an appropriate alternative so you don't miss out on that week's content. Most of the time, this is simply reading over the lecture and finishing the weekly programming assignment.
+*Every 3 excused absences convert into 1 unexcused absence.* Therefore, if you have 0 unexcused absences, you are allowed a maximum of 8 excused absences.
+
+#pagebreak()
+
+= Homework
+
+There will be weekly homework assignments where you will write Rust code applying topics discussed in lecture. They are designed to take on average an hour per week, so if they take significantly longer than this, please let us know!
+
+Homework deadlines are indicated on Gradescope. Usually, these are due the week after they are released, but we offer some #unstyled-link(<flexibility>)[flexibility with late submissions].
+
+== Solutions
+
+We believe that the best way to learn a programming language is to _actually write code_. You can only learn so much from watching someone else use a language, and this is especially true for Rust.
+
+However, we understand that you are all busy students and we do not want this course to be a burden. *Therefore, we publish most homework solutions on our #unstyled-link("https://github.com/rust-stuco", "GitHub repository").*
+
+The most obvious consequence of this decision is that you will have access to a correct solution before you even start. We strongly encourage students to avoid looking at these solutions before making a good-faith attempt. You will not learn much by copying and pasting our solutions as your own (and we will be able to detect if you do this).
+
+*Referencing these solutions should be a _last resort_ if you run out of time or cannot reach us for help.* After completing an assignment, we encourage you to look at the reference solution to see our approach!
+
+== AI
+
+We recommend turning off any AI code assistants or agentic editors for this course. Learning Rust may require you to rewire parts of your thought process, and that rewiring is hindered when something else does your work for you. Remember that the goal here is not to pass the autograder, it is to learn a new programming language!
+
+== Late work <flexibility>
+
+Students have *4 late submissions*. You will automatically use a late submission if you submit an assignment _after_ its regular deadline but _before_ its late deadline, as indicated on Gradescope. If you run out of late submissions, you can request more by asking us!
+
+= Time Commitment
+
+We anticipate that this course will require around 2-3 hours of your time a week, including the 50-minute lecture. If you find yourself spending more than this, please let us know immediately so that we can either help you or adjust something in the course itself.
+
+#pagebreak()
 
 = Grading
 
-Grading is determined solely by homework assignments. Most of these assignments are autograded on Gradescope, but there may be a few manually graded assignments that are worth more in the second half of the semester.
+To pass this course, students must:
 
-In order to pass this course (grade letter P or S), you must accumulate 1000 points. By default, homework assignments are worth 100 points each. However, many of the homework assignments have up to 50 extra credit points. Manually graded assignments can be worth double a normal assignment, but will be graded much more harshly. There will also be many opportunities for extra credit through submission of feedback forms to us.
++ Attend lecture with *at most 2 unexcused absences*, where every 3 excused absences counts as 1 unexcused absence. Please carefully review the #unstyled-link(<attendance>)[attendance policy].
+
++ Attain *at least 1000 points* through homework submissions, which are usually worth 100-150 points each. There will also be extra credit opportunities through bonus problems and feedback forms.
 
 #align(center)[
   #table(
@@ -196,49 +220,8 @@ In order to pass this course (grade letter P or S), you must accumulate 1000 poi
   )
 ]
 
-_By reading this syllabus and completing the Gradescope Syllabus Quiz, you will receive 50 points immediately!_
 
-#pagebreak()
-
-== Homework
-
-There will be weekly homework assignments where you will write Rust code applying topics we have discussed in lecture. Homework assignments are designed to take on average around an hour per week. *If they take significantly longer than an hour, please let us know!*
-
-*All homework assignments are due the week after they are released, right before class starts*. Homework assignments will be submitted and auto-graded on Gradescope.
-
-== Solutions
-
-We expect you to turn in a submission for every homework, as we believe that the best way to learn a programming language is to _actually write code_. You can only learn so much from watching someone else use a language, and this is especially true for Rust.
-
-However, we understand that you are all busy students and we do not want this course to be a burden. *Therefore, we publish all homework solutions on our course #unstyled-link("https://github.com/rust-stuco", "GitHub page").*
-
-There are a few consequences of this decision. The most obvious is that you will have access to a correct solution before you even start. We *strongly encourage* students to avoid looking at these solutions before a good-faith attempt at finishing the homework assignments themselves. You will not learn much by copying and pasting our solutions as your own (and we will be able to detect if you do this).
-
-*Referencing these solutions should be a _last resort_ for when you either do not have time to finish the homework assignments, or if you are somehow unable to get in contact with us to ask for help.* After you complete an assignment, we _encourage_ you to look at the reference solution to observe a different way of approaching the problem!
-
-== AI
-
-We recommend turning off any AI code assistants or agentic editors for this course, especially in the first few weeks. Learning Rust may require you to rewire parts of your thought process, and that rewiring is hindered when something else does your work for you.
-
-Our assignments are designed to be short, and so they are trivially easy for many of the LLMs you have access to. Remember that the goal here is not to pass the autograder, it is to learn a new programming language!
-
-== Late work
-
-Students have 7 late days to be used for any assignment. *However, if you let us know before an assignment's deadline, you can request additional late days.*
-
-= Time Commitment
-
-This is a 3-unit StuCo course, which means that this course should require around 3 hours of your time a week, including the 50-minute lecture.
-
-If you find yourself spending more than 3 hours, please let us know immediately so that we can either help you or adjust something in the course itself.
-
-= Passing
-
-In the case that a student is unable to reach the passing boundary for any reason, they can reach out to us and we will make sure to work with them and provide alternate paths towards passing (usually a student-defined final project in Rust).
-
-In other words, there are only two ways to fail this course. The first is accumulating three unexcused absences, which is due to StuCo guidelines. The second is the combination of not completing homework assignments _and_ not reaching out to us (you will have to reach out to us if you want to do a final project).
-
-_Please_ always make sure to reach out to us on Piazza if you have _any_ concerns!
+Please reach out to us if you have _any_ concerns! We are usually able to provide alternate ways to pass if necessary, such as completing a final project or exam.
 
 #pagebreak()
 
