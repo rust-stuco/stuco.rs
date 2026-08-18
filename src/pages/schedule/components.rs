@@ -11,7 +11,7 @@ use super::week::{Extra, Homework, Materials, VideoGroup, Week};
 pub(crate) fn Schedule() -> Element {
     rsx! {
         document::Title { "Schedule - Rust StuCo" }
-        div { class: "max-w-4xl mx-auto px-8 pt-16",
+        div { class: "max-w-4xl mx-auto px-8",
             h1 { class: "text-3xl font-bold italic text-primary mb-6 text-center",
                 "Schedule"
             }
