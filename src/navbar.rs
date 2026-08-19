@@ -50,7 +50,7 @@ pub(crate) fn Navbar() -> Element {
                 }
             }
             div { class: "pt-16", Outlet::<Route> {} }
-            footer { class: "text-xs text-tertiary text-center py-8", "© 2023-2026 Rust StuCo" }
+            footer { class: "text-xs text-tertiary text-center py-8", "© 2022-2026 Rust StuCo" }
         }
     }
 }
