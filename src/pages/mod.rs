@@ -1,14 +1,12 @@
 use crate::navbar::Navbar;
 use dioxus::prelude::*;
 
-mod about;
 mod faq;
 mod home;
 mod resources;
 mod schedule;
 mod semesters;
 
-use about::About;
 use faq::Faq;
 use home::Home;
 use resources::Resources;
@@ -20,8 +18,6 @@ pub(crate) enum Route {
     #[layout(Navbar)]
         #[route("/")]
         Home {},
-        #[route("/about")]
-        About {},
         #[route("/faq")]
         Faq {},
         #[route("/resources")]

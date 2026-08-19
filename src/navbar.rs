@@ -34,11 +34,6 @@ pub(crate) fn Navbar() -> Element {
                     class: if menu_open() { "flex" } else { "hidden" },
 
                     Link {
-                        to: Route::About {},
-                        onclick: move |_| menu_open.set(false),
-                        "About"
-                    }
-                    Link {
                         to: Route::Faq {},
                         onclick: move |_| menu_open.set(false),
                         "FAQ"
