@@ -39,6 +39,11 @@ pub(crate) fn Navbar() -> Element {
                         "About"
                     }
                     Link {
+                        to: Route::Faq {},
+                        onclick: move |_| menu_open.set(false),
+                        "FAQ"
+                    }
+                    Link {
                         to: Route::Resources {},
                         onclick: move |_| menu_open.set(false),
                         "Resources"
