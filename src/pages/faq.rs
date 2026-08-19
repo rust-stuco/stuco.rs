@@ -79,7 +79,7 @@ pub(super) fn Faq() -> Element {
 
     rsx! {
         document::Title { "FAQ - Rust StuCo" }
-        div { class: "max-w-4xl mx-auto px-8 py-12",
+        div { class: "max-w-4xl mx-auto px-8",
             h1 { class: "text-6xl font-bold text-primary mb-12 text-center", "FAQ" }
 
             div { class: "space-y-8",
