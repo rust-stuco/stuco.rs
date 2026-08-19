@@ -11,8 +11,8 @@ pub(crate) fn Navbar() -> Element {
         div { class: "min-h-svh",
             div {
                 id: "navbar",
-                class: "top-0 left-0 right-0 flex flex-wrap items-center gap-x-12 gap-y-4 px-8 py-4 text-primary",
-                style: "background-color: color-mix(in oklab, var(--color-background) 80%, transparent);",
+                class: "sticky top-0 z-50 flex flex-wrap items-center gap-x-12 gap-y-4 px-8 py-4 text-primary",
+                style: "background-color: var(--color-background);",
                 Link { to: Route::Home {},
                     img {
                         src: FERRIS,
