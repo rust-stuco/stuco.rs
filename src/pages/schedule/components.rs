@@ -32,11 +32,9 @@ pub(crate) fn Schedule() -> Element {
 
     rsx! {
         document::Title { "Schedule - Rust StuCo" }
-        div { class: "max-w-4xl mx-auto px-8 pt-16",
-            h1 { class: "text-3xl font-bold italic text-primary mb-2 text-center",
-                "Schedule"
-            }
-            p { class: "text-center text-secondary mb-6", "{semester_name()}" }
+        div { class: "max-w-4xl mx-auto px-8",
+            h1 { class: "text-6xl font-bold text-primary mb-12 text-center", "Schedule" }
+            p { class: "text-center mb-6", "{semester_name()}" }
             table { class: "w-full border-collapse",
                 thead {
                     tr { class: "border-b border-tertiary",
