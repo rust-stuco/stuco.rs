@@ -1,30 +1,84 @@
 use dioxus::prelude::*;
+use gloo_timers::future::TimeoutFuture;
+use jiff::Timestamp;
+use jiff::civil::Date;
 
-use super::data::{WEEKS, rustling_url, week_is_published};
+use super::data::{Entry, SCHEDULE, next_reveal_ms, rustling_url, semester_name, timeout_ms};
 use super::display::{
-    DEFAULT_VIEWPORT_HEIGHT, OPEN_UPWARD_THRESHOLD, VideoColors, book_chapter_label, slide_name,
-    video_colors,
+    DEFAULT_VIEWPORT_HEIGHT, OPEN_UPWARD_THRESHOLD, VideoColors, book_chapter_label, date_label,
+    slide_name, video_colors,
 };
 use super::week::{Extra, Homework, Materials, VideoGroup, Week};
 
 #[component]
 pub(crate) fn Schedule() -> Element {
+    // Reveals follow the browser clock, so the schedule advances without a redeploy.
+    let mut now_ms = use_signal(|| Timestamp::now().as_millisecond());
+    let mut show_upcoming = use_signal(|| false);
+
+    // Wake once per upcoming reveal so an open tab unlocks without a refresh, re-arming for
+    // reveals further out than one `setTimeout` can wait.
+    use_future(move || async move {
+        loop {
+            let now = *now_ms.peek();
+            let Some(next) = next_reveal_ms(now) else {
+                break;
+            };
+
+            TimeoutFuture::new(timeout_ms(next - now)).await;
+            now_ms.set(Timestamp::now().as_millisecond());
+        }
+    });
+
     rsx! {
         document::Title { "Schedule - Rust StuCo" }
         div { class: "max-w-4xl mx-auto px-8",
             h1 { class: "text-6xl font-bold text-primary mb-12 text-center", "Schedule" }
+            p { class: "text-center mb-6", "{semester_name()}" }
             table { class: "w-full border-collapse",
                 thead {
                     tr { class: "border-b border-tertiary",
                         th { class: "text-left p-2", "Week" }
+                        th { class: "text-left p-2", "Date" }
                         th { class: "text-left p-2", "Topics" }
                         th { class: "text-left p-2", "Slides" }
                         th { class: "text-left p-2", "Homework" }
                     }
                 }
                 tbody {
-                    for (i , week) in WEEKS.iter().enumerate() {
-                        WeekRow { week_num: i + 1, week }
+                    for entry in SCHEDULE.iter() {
+                        match entry {
+                            Entry::Week(scheduled) => rsx! {
+                                WeekRow {
+                                    week_num: scheduled.number,
+                                    week: scheduled.week,
+                                    date: scheduled.date,
+                                    revealed: scheduled.is_revealed(now_ms()),
+                                    show_upcoming: show_upcoming(),
+                                }
+                            },
+                            Entry::Break { name, date } => rsx! {
+                                BreakRow { name, date: *date }
+                            },
+                        }
+                    }
+                }
+            }
+            div { class: "mt-8 mb-4 text-center",
+                button {
+                    r#type: "button",
+                    class: "text-sm text-foreground hover:text-secondary transition-colors",
+                    aria_pressed: show_upcoming(),
+                    onclick: move |_| show_upcoming.set(!show_upcoming()),
+                    if show_upcoming() {
+                        "Hide upcoming content"
+                    } else {
+                        "Show upcoming content"
+                    }
+                }
+                if show_upcoming() {
+                    p { class: "mt-1 text-xs text-tertiary italic",
+                        "Upcoming content is subject to change"
                     }
                 }
             }
@@ -33,12 +87,26 @@ pub(crate) fn Schedule() -> Element {
 }
 
 #[component]
-fn WeekRow(week_num: usize, week: &'static Week) -> Element {
+fn WeekRow(
+    week_num: usize,
+    week: &'static Week,
+    date: Date,
+    revealed: bool,
+    show_upcoming: bool,
+) -> Element {
     let mut expanded = use_signal(|| false);
     let mut open_upward = use_signal(|| false);
     let mut button_ref = use_signal(|| None::<std::rc::Rc<MountedData>>);
 
-    let published = week_is_published(week_num);
+    // Slides and homework always occupy the row, so revealing them never shifts the layout.
+    let visible = revealed || show_upcoming;
+    let content_class = if !visible {
+        "invisible"
+    } else if !revealed {
+        "opacity-60"
+    } else {
+        ""
+    };
     let assignments = &week.assignments;
 
     let handle_click = move |_| {
@@ -65,6 +133,7 @@ fn WeekRow(week_num: usize, week: &'static Week) -> Element {
     rsx! {
         tr { class: "border-b border-tertiary/50",
             td { class: "p-2 align-top", "{week_num}" }
+            td { class: "p-2 align-top whitespace-nowrap text-secondary", "{date_label(date)}" }
             td { class: "p-2 align-top",
                 span { class: "font-semibold", "{week.title}" }
                 if week.materials.has_any() {
@@ -96,30 +165,41 @@ fn WeekRow(week_num: usize, week: &'static Week) -> Element {
                     }
                 }
             }
-            td { class: "p-2 align-top",
-                if published {
-                    SlideLinks { slides: &week.slides }
-                }
+            td {
+                class: "p-2 align-top {content_class}",
+                SlideLinks { slides: &week.slides }
             }
-            td { class: "p-2 align-top",
-                if published {
-                    if let Some(homework) = &assignments.primary {
+            td {
+                class: "p-2 align-top {content_class}",
+                if let Some(homework) = &assignments.primary {
+                    HomeworkLinks { homework }
+                }
+                if let Some(homework) = &assignments.extra_credit {
+                    div { class: "mt-1",
+                        span { class: "text-secondary text-sm", "EC: " }
                         HomeworkLinks { homework }
                     }
-                    if let Some(homework) = &assignments.extra_credit {
-                        div { class: "mt-1",
-                            span { class: "text-secondary text-sm", "EC: " }
-                            HomeworkLinks { homework }
-                        }
-                    }
-                    if let Some(homework) = &assignments.alternative {
-                        div { class: "mt-1",
-                            span { class: "text-secondary text-sm", "OR " }
-                            HomeworkLinks { homework }
-                        }
+                }
+                if let Some(homework) = &assignments.alternative {
+                    div { class: "mt-1",
+                        span { class: "text-secondary text-sm", "OR " }
+                        HomeworkLinks { homework }
                     }
                 }
             }
+        }
+    }
+}
+
+#[component]
+fn BreakRow(name: &'static str, date: Date) -> Element {
+    rsx! {
+        tr { class: "border-b border-tertiary/50 text-secondary",
+            td { class: "p-2 align-top" }
+            td { class: "p-2 align-top whitespace-nowrap", "{date_label(date)}" }
+            td { class: "p-2 align-top italic", "{name}" }
+            td { class: "p-2 align-top" }
+            td { class: "p-2 align-top" }
         }
     }
 }

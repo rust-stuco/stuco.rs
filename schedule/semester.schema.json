@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Semester",
+  "description": "This semester's schedule: which content weeks run, in what order, and when each unlocks.",
+  "type": "object",
+  "properties": {
+    "breaks": {
+      "description": "Class dates with no content, such as university breaks.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Break"
+      }
+    },
+    "name": {
+      "type": "string"
+    },
+    "reveal_time": {
+      "description": "Local time each week unlocks, as `\"HH:MM\"` (24-hour).",
+      "type": "string"
+    },
+    "timezone": {
+      "description": "IANA time zone the reveal time is expressed in, e.g. `\"America/New_York\"`.",
+      "type": "string"
+    },
+    "weeks": {
+      "description": "The weeks shown this term, in schedule order.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ScheduledWeek"
+      }
+    }
+  },
+  "required": [
+    "name",
+    "reveal_time",
+    "timezone",
+    "weeks"
+  ],
+  "definitions": {
+    "Break": {
+      "description": "A skipped class, shown in schedule order with no slides or homework.",
+      "type": "object",
+      "properties": {
+        "date": {
+          "description": "Calendar date of the skipped class.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name shown in place of a week's topics, e.g. `\"Fall Break\"`.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "date"
+      ]
+    },
+    "ScheduledWeek": {
+      "description": "One entry in a semester schedule: which content week to show, and when it unlocks.",
+      "type": "object",
+      "properties": {
+        "date": {
+          "description": "Calendar date the week's slides and homework unlock.",
+          "type": "string"
+        },
+        "week": {
+          "description": "The week's slug: the file stem under `schedule/weeks/`.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "week",
+        "date"
+      ]
+    }
+  }
+}
