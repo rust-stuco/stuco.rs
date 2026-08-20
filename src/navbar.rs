@@ -11,51 +11,63 @@ pub(crate) fn Navbar() -> Element {
         div { class: "min-h-svh",
             div {
                 id: "navbar",
-                class: "absolute top-0 left-0 right-0 flex flex-wrap items-center gap-x-12 gap-y-4 px-8 py-4 text-primary",
-                style: "background-color: color-mix(in oklab, var(--color-background) 80%, transparent);",
-                Link { to: Route::Home {},
-                    img {
-                        src: FERRIS,
-                        alt: "Home",
-                        class: "size-8 rounded-sm transition-transform hover:scale-110 active:scale-95",
+                class: "sticky top-0 z-50 flex flex-col lg:flex-row lg:items-center justify-between px-6 py-4 text-primary",
+                style: "background-color: var(--color-background);",
+
+                div { class: "flex items-center justify-between w-full lg:w-auto shrink-0",
+                    Link {
+                        to: Route::Home {},
+                        class: "flex items-center gap-3 text-lg font-black tracking-wider whitespace-nowrap",
+                        img {
+                            src: FERRIS,
+                            alt: "Home",
+                            class: "size-8 shrink-0 rounded-sm transition-transform hover:scale-110 active:scale-95",
+                        }
+                        span { "Intro to Rust Lang" }
+                    }
+
+                    button {
+                        class: "lg:hidden text-2xl cursor-pointer",
+                        onclick: move |_| menu_open.toggle(),
+                        if menu_open() {
+                            "✕"
+                        } else {
+                            "☰"
+                        }
                     }
                 }
-                button {
-                    class: "sm:hidden ml-auto text-2xl",
-                    onclick: move |_| menu_open.toggle(),
-                    if menu_open() {
-                        "✕"
-                    } else {
-                        "☰"
-                    }
-                }
+
                 div {
-                    class: "w-full text-sm font-bold flex-col gap-4 sm:w-auto sm:flex sm:flex-row sm:gap-12 sm:ml-0",
+                    class: "w-full text-sm tracking-wider whitespace-nowrap flex-col gap-4 pt-4 lg:pt-0 lg:w-auto lg:flex lg:flex-row lg:gap-6 lg:ml-auto",
                     class: if menu_open() { "flex" } else { "hidden" },
 
                     Link {
-                        to: Route::About {},
+                        to: Route::Faq {},
                         onclick: move |_| menu_open.set(false),
-                        "About"
-                    }
-                    Link {
-                        to: Route::Resources {},
-                        onclick: move |_| menu_open.set(false),
-                        "Resources"
+                        "FAQ"
                     }
                     Link {
                         to: Route::Schedule {},
                         onclick: move |_| menu_open.set(false),
                         "Schedule"
                     }
-
                     Link { to: "/syllabus.pdf", new_tab: true, "Syllabus" }
+                    Link {
+                        to: "https://forms.gle/NCiDQsUsPuoDHcJ18",
+                        new_tab: true,
+                        "Excusals"
+                    }
+                    Link {
+                        to: "https://www.gradescope.com/courses/1326421",
+                        new_tab: true,
+                        "Gradescope"
+                    }
                     Link { to: "https://github.com/rust-stuco", new_tab: true, "GitHub" }
                     Link { to: "https://discord.gg/styjqeEdBG", new_tab: true, "Discord" }
                 }
             }
             div { class: "pt-16", Outlet::<Route> {} }
-            footer { class: "text-xs text-tertiary text-center py-8", "© 2023-2026 Rust StuCo" }
+            footer { class: "text-xs text-tertiary text-center py-8", "© 2022-2026 Rust StuCo" }
         }
     }
 }
