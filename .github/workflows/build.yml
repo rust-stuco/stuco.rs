@@ -32,8 +32,54 @@ jobs:
       - name: Validate TOML against schemas
         run: taplo check
 
+  slidev-windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: slidev
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: slidev/package-lock.json
+
+      - name: Install Slidev
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+        run: npm ci --no-audit --no-fund
+
+      # This catches regressions that require privileged file symlinks on Windows.
+      - name: Build every lecture deck
+        run: |
+          $lectures = @(
+            Get-ChildItem ../lectures -Directory |
+              Where-Object { $_.Name -match '^\d{2}_[a-z0-9_]+$' } |
+              Sort-Object Name
+          )
+
+          if ($lectures.Count -ne 14) {
+            throw "Expected 14 lecture directories, found $($lectures.Count)"
+          }
+
+          foreach ($lecture in $lectures) {
+            npm run build -- $lecture.Name
+            if ($LASTEXITCODE -ne 0) {
+              throw "Slidev failed to build $($lecture.Name)"
+            }
+
+            $index = "dist/$($lecture.Name)/deck/index.html"
+            if (-not (Test-Path $index -PathType Leaf)) {
+              throw "Slidev did not create $index"
+            }
+          }
+
   build:
-    needs: validate
+    needs: [validate, slidev-windows]
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.event_name == 'pull_request' && format('preview-pr-{0}', github.event.pull_request.number) || 'production' }}
@@ -58,18 +104,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-
-      - name: Cache bun packages
-        uses: actions/cache@v5
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          path: ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-marp-cli
+          node-version: 22
+          cache: npm
+          cache-dependency-path: slidev/package-lock.json
 
-      # Needed to build the lecture slides
-      - name: Install marp-cli
-        run: bun install -g @marp-team/marp-cli
+      # Point Slidev at the runner's browser so it does not download another copy for PDF export.
+      - name: Locate the browser for slide export
+        run: |
+          echo "STUCO_SLIDEV_CHROME=$(command -v google-chrome || command -v chromium)" \
+            >> "$GITHUB_ENV"
 
       - name: Add wasm target
         run: rustup target add wasm32-unknown-unknown
@@ -112,6 +158,18 @@ jobs:
           # Limit parallel rendering to avoid exhausting CI runner resources.
           RAYON_NUM_THREADS: 2
         run: dx build --release
+
+      # The decks are pre-built single-page apps, so they are built outside `public/`: `dx` re-bundles
+      # every JavaScript file it finds there, which does not survive Slidev's module graph. Overlay
+      # them onto the bundle that `wrangler` uploads instead.
+      - name: Validate and add the Slidev decks to the bundle
+        run: |
+          test "$(find target/slidev/lectures -path '*/deck/index.html' -type f -size +0c | wc -l)" -eq 14
+          test "$(find public/lectures -type f \( -name '*-light.pdf' -o -name '*-dark.pdf' \) -size +0c | wc -l)" -eq 28
+          mkdir -p target/dx/stuco-rs/release/web/public/lectures
+          cp -r target/slidev/lectures/. target/dx/stuco-rs/release/web/public/lectures/
+          test "$(find target/dx/stuco-rs/release/web/public/lectures -path '*/deck/index.html' -type f -size +0c | wc -l)" -eq 14
+          test "$(find target/dx/stuco-rs/release/web/public/lectures -type f \( -name '*-light.pdf' -o -name '*-dark.pdf' \) -size +0c | wc -l)" -eq 28
 
       - name: Upload syllabus artifact
         uses: actions/upload-artifact@v4

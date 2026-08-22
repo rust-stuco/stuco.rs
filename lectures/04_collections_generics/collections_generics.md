@@ -1,22 +1,29 @@
 ---
-marp: true
-paginate: true
-theme: rust
-class: invert
+theme: default
+title: Standard Collections and Generics
+author: Rust StuCo
+info: |
+  Week 4 of Rust StuCo: Standard Collections and Generics.
+colorSchema: auto
+aspectRatio: 16/9
+canvasWidth: 1280
+fonts:
+  sans: Noto Sans Variable
+  mono: Noto Sans Mono Variable
+  provider: none
+lineNumbers: false
+monaco: false
+drawings:
+  enabled: true
+  persist: false
+  presenterOnly: true
+exportFilename: collections_generics
+export:
+  timeout: 60000
+  withToc: true
+layout: default
+class: communism
 ---
-
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-section {
-    font-family: "Noto Sans";
-}
-code {
-    font-family: "Noto Sans Mono";
-}
-</style>
-
-<!-- _class: communism invert  -->
 
 ## Intro to Rust Lang
 
@@ -54,7 +61,8 @@ There might be small string optimizations or small vector optimizations
 
 
 ---
-
+layout: section
+---
 
 # **Vectors**
 
@@ -152,11 +160,12 @@ match third {
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # `Vec` and References
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 Recall the rules for immutable and mutable references.
 
@@ -194,11 +203,12 @@ error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immuta
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # `Vec` and References
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 What about this new code snippet?
 
@@ -325,11 +335,12 @@ Note: This doesn't allow us to remove elements from the vector, since we'd need 
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # `Vec` and Mutation
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 Say that you wanted to mutate the vector by appending a new element while you were iterating over it.
 
@@ -491,7 +502,8 @@ Like any other struct, a vector is dropped when it goes out of scope.
 
 
 ---
-
+layout: section
+---
 
 # **String**
 
@@ -679,11 +691,12 @@ When we first created this lecture, the last example was very new. Now, it is co
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Indexing into Strings
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 This code might seem reasonable from any other programming language like Python or C.
 
@@ -754,11 +767,12 @@ let hello = String::from("Привет");
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Internal Representation: UTF-8
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 Let's revisit some invalid Rust code again.
 
@@ -890,7 +904,8 @@ for b in "Пр".bytes() {
 
 
 ---
-
+layout: section
+---
 
 # **HashMap**
 
@@ -1119,7 +1134,8 @@ If the data might not exist, we would use a...OPTION TYPE
 
 
 ---
-
+layout: section
+---
 
 # **Generics**
 
@@ -1285,13 +1301,14 @@ There are always exceptions to the rule, especially if you have multiple generic
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Generic Functions
 
 Let's try to modify our old function directly:
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 ```rust
 fn largest<T>(list: &[T]) -> &T {
@@ -1421,11 +1438,12 @@ fn main() {
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Generic Structs
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 Observe that this declaration defines both the `x` field and the `y` field to be of the same type.
 
@@ -1756,11 +1774,13 @@ let float = Option_f64::Some(5.0);
 
 
 ---
-
+layout: end
+class: image-right image-width-30
+---
 
 # **Next Lecture: Errors and Traits**
 
-![bg right:30% 80%](../images/ferris_happy.svg)
+<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 

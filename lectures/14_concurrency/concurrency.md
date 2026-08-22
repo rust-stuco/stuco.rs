@@ -1,22 +1,29 @@
 ---
-marp: true
-paginate: true
-theme: rust
-class: invert
+theme: default
+title: Concurrency
+author: Rust StuCo
+info: |
+  Week 14 of Rust StuCo: Concurrency.
+colorSchema: auto
+aspectRatio: 16/9
+canvasWidth: 1280
+fonts:
+  sans: Noto Sans Variable
+  mono: Noto Sans Mono Variable
+  provider: none
+lineNumbers: false
+monaco: false
+drawings:
+  enabled: true
+  persist: false
+  presenterOnly: true
+exportFilename: concurrency
+export:
+  timeout: 60000
+  withToc: true
+layout: default
+class: communism
 ---
-
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-section {
-    font-family: "Noto Sans";
-}
-code {
-    font-family: "Noto Sans Mono";
-}
-</style>
-
-<!-- _class: communism invert  -->
 
 ## Intro to Rust Lang
 
@@ -36,9 +43,10 @@ code {
 
 
 ---
+class: image-full
+---
 
-
-![bg 100%](../images/week12/conc-vs-par.jpg)
+<img class="slide-image-full" style="--image-size: 100%;" src="../images/week12/conc-vs-par.jpg">
 
 
 ---
@@ -106,7 +114,8 @@ There's a lot more still if you want more! Reach out to us for more recommendati
 
 
 ---
-
+layout: section
+---
 
 # **Tokio**
 
@@ -299,11 +308,12 @@ got value from the server; result=Some(b"world")
 
 
 ---
-
+class: image-right image-width-30
+---
 
 # Lecture Done!
 
-![bg right:30% 80%](../images/ferris_panics.svg)
+<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_panics.svg">
 
 Thanks for coming!
 
@@ -396,11 +406,12 @@ In synchronous programming, the thread that executes this blocks / waits for it 
 * _Note that something will need to "remember" the task's state after pausing so it can resume later_
 
 ---
-
+class: image-right image-width-50
+---
 
 # Sync vs Async
 
-![bg right:50% 100%](../images/sync-vs-async.avif)
+<img class="slide-image" style="--image-size: 100%;" src="../images/sync-vs-async.avif">
 
 * In synchronous programming, we **wait/block** on the response
 * In asynchronous programming, we can do other stuff _while_ we are waiting
@@ -414,9 +425,10 @@ For example, imagine while you are watching a youtube video you can't do anythin
 
 
 ---
+class: image-full
+---
 
-
-![bg 80%](../images/client-server.jpg)
+<img class="slide-image-full" style="--image-size: 80%;" src="../images/client-server.jpg">
 
 <!--
 This is an illustration of network latency
@@ -849,11 +861,12 @@ More on the implications of this later in the lecture...
 
 
 ---
-
+class: image-right image-width-30
+---
 
 # `std::thread::spawn`
 
-![bg right:30% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 Recall that we usually had to `move` variables and values into closures for `std::thread::spawn`.
 
@@ -890,11 +903,12 @@ More precisely:
 
 
 ---
-
+class: image-right image-width-30
+---
 
 # `'static` Bound
 
-![bg right:30% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 ```rust
 #[tokio::main]
@@ -1169,11 +1183,12 @@ This is a more detailed repeat of the slide earlier in the lecture.
 
 
 ---
-
+class: image-right image-width-50
+---
 
 # The End!
 
-![bg right:50% 90%](../images/ferris_happy.svg)
+<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_happy.svg">
 
 We've reached the end of our prepared content!
 
@@ -1279,12 +1294,14 @@ Also note that the linux project has adopted Rust (the first language other than
 -->
 
 ---
+class: image-right image-width-50
+---
 
 # Fish 4.0
 
 * Completely rewritten in Rust by [Feb 27, 2025](https://fishshell.com/blog/new-in-40/)
 
-![bg right](<fish-rewrite-in-rust.png>)
+<img class="slide-image" style="--image-size: 100%;" src="./fish-rewrite-in-rust.png">
 
 
 <!--
@@ -1297,12 +1314,14 @@ The reason that the team decide to port to Rust. (excerpted from https://github.
 -->
 
 ---
+class: image-right image-width-50
+---
 
 # Zed
 
 * A code editor built from scratch in Rust. (not a ... Vscode fork ...)
 
-![bg right](zed-homepage.png)
+<img class="slide-image" style="--image-size: 100%;" src="./zed-homepage.png">
 
 ---
 
@@ -1332,11 +1351,12 @@ We hope that you all can answer this question now!
 
 
 ---
-
+class: image-right image-width-35
+---
 
 # **Thanks for taking Rust StuCo!**
 
-![bg right:35% 90%](../images/ferris_happy.svg)
+<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_happy.svg">
 
 <br>
 
@@ -1350,7 +1370,8 @@ Max Wen
 
 <!--
 ---
-
+layout: end
+---
 
 # Looking for Instructors and TAs!
 

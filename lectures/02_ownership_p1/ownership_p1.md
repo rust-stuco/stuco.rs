@@ -1,22 +1,29 @@
 ---
-marp: true
-paginate: true
-theme: rust
-class: invert
+theme: default
+title: Ownership (Part 1)
+author: Rust StuCo
+info: |
+  Week 2 of Rust StuCo: Ownership (Part 1).
+colorSchema: auto
+aspectRatio: 16/9
+canvasWidth: 1280
+fonts:
+  sans: Noto Sans Variable
+  mono: Noto Sans Mono Variable
+  provider: none
+lineNumbers: false
+monaco: false
+drawings:
+  enabled: true
+  persist: false
+  presenterOnly: true
+exportFilename: ownership_p1
+export:
+  timeout: 60000
+  withToc: true
+layout: default
+class: communism
 ---
-
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-section {
-    font-family: "Noto Sans";
-}
-code {
-    font-family: "Noto Sans Mono";
-}
-</style>
-
-<!-- _class: communism invert  -->
 
 ## Intro to Rust Lang
 
@@ -44,7 +51,8 @@ code {
 
 
 ---
-
+layout: section
+---
 
 # **Ownership**
 
@@ -374,11 +382,12 @@ Before we make this decision, we should understand what the String looks like in
 
 
 ---
-
+class: image-right image-width-50
+---
 
 # `String` Data Layout
 
-![bg right:50% 90%](../images/String_layout.svg)
+<img class="slide-image" style="--image-size: 90%;" src="../images/String_layout.svg">
 
 ```rust
 let s1 = String::from("hello");
@@ -393,11 +402,12 @@ let s1 = String::from("hello");
 
 
 ---
-
+class: image-right image-width-50
+---
 
 # Pointer Aliasing 😨
 
-![bg right:50% 85%](../images/String_alias.svg)
+<img class="slide-image" style="--image-size: 85%;" src="../images/String_alias.svg">
 
 ```rust
 let s1 = String::from("hello");
@@ -416,11 +426,12 @@ Shallow copy gets away from the problem of having to recreate the entire string
 
 
 ---
-
+class: image-right image-width-50
+---
 
 # Pointer Aliasing ☠️
 
-![bg right:50% 85%](../images/String_alias.svg)
+<img class="slide-image" style="--image-size: 85%;" src="../images/String_alias.svg">
 
 ```rust
 let s1 = String::from("hello");
@@ -434,11 +445,12 @@ Suppose Rust handled this case with a shallow copy.
 
 
 ---
-
+class: image-right image-width-50
+---
 
 # Enforcing Single Ownership
 
-![bg right:50% 85%](../images/String_move.svg)
+<img class="slide-image" style="--image-size: 85%;" src="../images/String_move.svg">
 
 To ensure memory safety, after the second line, `s1` is no longer valid.
 
@@ -769,7 +781,8 @@ fn calculate_length(s: String) -> (String, usize) {
 
 
 ---
-
+layout: section
+---
 
 # **References and Borrowing**
 
@@ -831,11 +844,12 @@ fn calculate_length(borrowed: &String) -> usize {
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Mutating a Reference
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 What if we want to modify the value of something we've borrowed through a reference?
 
@@ -897,11 +911,12 @@ fn change(some_string: &mut String) {
 
 
 ---
-
+class: image-right image-width-55
+---
 
 # Reference Data Layout
 
-![bg right:55% 85%](../images/String_reference.svg)
+<img class="slide-image" style="--image-size: 85%;" src="../images/String_reference.svg">
 
 * In memory, references are just like pointers
 * In practice, they have a couple of constraints that make them safer
@@ -922,10 +937,12 @@ Outline for the next few slides
 
 
 ---
+class: image-right image-width-25
+---
 
 # Constraint: Mutable References are Exclusive
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 If you have a mutable reference to a value, you can have no other references to that value.
 
@@ -995,11 +1012,12 @@ reallocated, meaning any other references to it would be invalidated
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Multiple Mutable References
 
-![bg right:25% 80%](../images/ferris_happy.svg)
+<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
 
 We are allowed to hold multiple mutable references, just not _simultaneously_.
 
@@ -1018,11 +1036,12 @@ let r2 = &mut s;
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Mutable and Immutable References
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 We cannot have both an immutable and mutable reference to the same value.
 
@@ -1098,11 +1117,12 @@ println!("{}", r3);
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Constraint: No Dangling References
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 The Rust compiler guarantees that references will never be invalid, which means it will not allow dangling references.
 
@@ -1178,7 +1198,8 @@ The _Borrow Checker_ enforces the ownership and borrowing rules by checking:
 
 
 ---
-
+layout: section
+---
 
 # **Slices**
 
@@ -1233,11 +1254,12 @@ let world = &s[6..11];
 
 
 ---
-
+class: image-right image-width-50
+---
 
 # String Slices
 
-![bg right:50% 80%](../images/str_slice.svg)
+<img class="slide-image" style="--image-size: 80%;" src="../images/str_slice.svg">
 
 ```rust
 let s = String::from("hello world");
@@ -1415,11 +1437,13 @@ We will talk more about `String` and `Vec<T>` in week 4!
 
 
 ---
-
+layout: end
+class: image-right image-width-30
+---
 
 # Next Lecture: Structs and Enums
 
-![bg right:30% 80%](../images/ferris_happy.svg)
+<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 
