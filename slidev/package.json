@@ -1,0 +1,19 @@
+{
+  "name": "stuco-rs-slidev",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/run.mjs dev",
+    "build": "node scripts/run.mjs build",
+    "export:light": "node scripts/run.mjs export:light",
+    "export:dark": "node scripts/run.mjs export:dark"
+  },
+  "devDependencies": {
+    "@fontsource-variable/noto-sans": "5.3.0",
+    "@fontsource-variable/noto-sans-mono": "5.3.0",
+    "@fontsource/zilla-slab": "5.3.0",
+    "@slidev/cli": "52.18.0",
+    "@slidev/theme-default": "0.25.0",
+    "playwright-chromium": "1.61.1",
+    "vue": "3.5.40"
+  }
+}
