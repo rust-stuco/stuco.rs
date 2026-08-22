@@ -329,6 +329,14 @@ fn SlideLinks(slides: &'static str) -> Element {
         div { class: "flex gap-2 text-sm",
             a {
                 class: "text-primary hover:underline",
+                href: "/lectures/{slides}/deck/",
+                target: "_blank",
+                rel: "noopener noreferrer",
+                "deck"
+            }
+            span { class: "text-secondary", "/" }
+            a {
+                class: "text-primary hover:underline",
                 href: "/lectures/{slides}/{name}-light.pdf",
                 target: "_blank",
                 rel: "noopener noreferrer",
