@@ -1,22 +1,29 @@
 ---
-marp: true
-paginate: true
-theme: rust
-class: invert
+theme: default
+title: Closures and Iterators
+author: Rust StuCo
+info: |
+  Week 8 of Rust StuCo: Closures and Iterators.
+colorSchema: auto
+aspectRatio: 16/9
+canvasWidth: 1280
+fonts:
+  sans: Noto Sans Variable
+  mono: Noto Sans Mono Variable
+  provider: none
+lineNumbers: false
+monaco: false
+drawings:
+  enabled: true
+  persist: false
+  presenterOnly: true
+exportFilename: closures_iterators
+export:
+  timeout: 60000
+  withToc: true
+layout: default
+class: communism
 ---
-
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-section {
-    font-family: "Noto Sans";
-}
-code {
-    font-family: "Noto Sans Mono";
-}
-</style>
-
-<!-- _class: communism invert  -->
 
 ## Intro to Rust Lang
 
@@ -34,7 +41,8 @@ code {
 
 
 ---
-
+layout: section
+---
 
 # **Closures**
 
@@ -91,11 +99,12 @@ Bad formatting on purpose to show similarities
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # How about this?
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 ```rust
 let example_closure = |x| x;
@@ -219,11 +228,12 @@ that's why it doesn't move the list
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Mutable Borrowing in Closures
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 What happens if we mutate captured variables from inside the closure?
 
@@ -326,11 +336,12 @@ The lecturer should spell this out:
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Giving Closures Ownership
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 ```rust
 let mystery = {
@@ -449,7 +460,8 @@ It is super easy to make this mistake in other languages!
 
 
 ---
-
+layout: section
+---
 
 # **The `Fn` traits**
 
@@ -492,10 +504,12 @@ The `Fn` trait indicates ... everything else!
   * Closures that don't capture any values at all
 
 ---
+class: image-right image-width-45
+---
 
 # The `Fn` traits: Visualized
 
-![bg right:45% 100%](../images/closure_traits.svg)
+<img class="slide-image" style="--image-size: 100%;" src="../images/closure_traits.svg">
 
 Trait behavior is inherited by hierarcy
 
@@ -1139,11 +1153,13 @@ assert_eq!(total, 6);
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Producing Iterators
 
-![bg right:25% 75%](../images/ferris_not_desired_behavior.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_not_desired_behavior.svg">
+
 ```rust
 let v1: Vec<i32> = vec![1, 2, 3];
 
@@ -1162,7 +1178,7 @@ Mention that ferris is not confused but is trying to point out something to us..
 
 # Producing Iterators
 
-```
+```text
 warning: unused `Map` that must be used
  --> src/main.rs:4:5
   |
@@ -1200,11 +1216,12 @@ println!("{:?}", v2);
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Filter
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 ```rust
 fn filter_by(list: Vec<i32>, val: i32) -> Vec<i32> {
@@ -1225,11 +1242,12 @@ fn filter_by(list: Vec<i32>, val: i32) -> Vec<i32> {
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Filter
 
-![bg right:25% 75%](../images/ferris_happy.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_happy.svg">
 ```rust
 list.into_iter().filter(|&x| x == val).collect()
 ```
@@ -1298,11 +1316,13 @@ Filter { iter: Skip { iter: Map { iter: 0..100 }, n: 1 } }
 
 
 ---
-
+layout: end
+class: image-right image-width-30
+---
 
 # Next Lecture: Ownership Revisited
 
-![bg right:30% 80%](../images/ferris_happy.svg)
+<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 

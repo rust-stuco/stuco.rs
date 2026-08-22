@@ -1,22 +1,29 @@
 ---
-marp: true
-paginate: true
-theme: rust
-class: invert
+theme: default
+title: Error Handling and Traits
+author: Rust StuCo
+info: |
+  Week 5 of Rust StuCo: Error Handling and Traits.
+colorSchema: auto
+aspectRatio: 16/9
+canvasWidth: 1280
+fonts:
+  sans: Noto Sans Variable
+  mono: Noto Sans Mono Variable
+  provider: none
+lineNumbers: false
+monaco: false
+drawings:
+  enabled: true
+  persist: false
+  presenterOnly: true
+exportFilename: errors_traits
+export:
+  timeout: 60000
+  withToc: true
+layout: default
+class: communism
 ---
-
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-section {
-    font-family: "Noto Sans";
-}
-code {
-    font-family: "Noto Sans Mono";
-}
-</style>
-
-<!-- _class: communism invert  -->
 
 ## Intro to Rust Lang
 
@@ -38,7 +45,8 @@ code {
 
 
 ---
-
+layout: section
+---
 
 # **Type Aliases**
 
@@ -87,7 +95,8 @@ fn main() {
 
 
 ---
-
+layout: section
+---
 
 # **Const Generics**
 
@@ -264,17 +273,19 @@ fn main() {
 
 
 ---
-
+layout: section
+---
 
 # **Error Handling**
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # What `type_of` Error?
 
-![bg right:25% 75%](../images/ferris_panics.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_panics.svg">
 
 In Rust there are **two** main types of errors we care about: _recoverable_ and _unrecoverable_ errors (panics).
 
@@ -568,7 +579,8 @@ fn read_username_from_file() -> Result<String, io::Error> {
 
 
 ---
-
+layout: section
+---
 
 # **The Never Type**
 
@@ -637,7 +649,8 @@ let guess: u32 = match guess.trim().parse() {
 
 
 ---
-
+layout: section
+---
 
 # **Traits**
 
@@ -732,11 +745,12 @@ Make sure to be clear that this is NOT inheritance.
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Traits in Action
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 What happens when we try and construct a `Shape`?
 
@@ -780,11 +794,12 @@ help: use the fully-qualified path to the only available implementation
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Traits in Action
 
-![bg right:25% 80%](../images/ferris_happy.svg)
+<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
 
 To use the `Shape` trait, Rust must know the type that is implementing it.
 
@@ -858,7 +873,8 @@ trait CompSciStudent: Programmer + Student {
 
 
 ---
-
+layout: section
+---
 
 # **Derivable Traits**
 
@@ -1105,11 +1121,12 @@ So at that point you might as well just use #[derive(Clone, Copy)]
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # When `#[derive]` Fails
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 What happens if a field is not `Copy`?
 
@@ -1169,11 +1186,12 @@ pub struct Stuff<T> {
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # When `#[derive(Default)]` Fails
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 `Default` is only successfully derived if every generic type used is also `Default`.
 
@@ -1257,7 +1275,8 @@ impl Default for SomeOptions {
 
 
 ---
-
+layout: section
+---
 
 # **Advanced Types**
 
@@ -1538,11 +1557,13 @@ This was the previous homework 5... now extra credit!
 
 
 ---
-
+layout: end
+class: image-right image-width-30
+---
 
 # **Next Lecture: Modules and Testing**
 
-![bg right:30% 80%](../images/ferris_happy.svg)
+<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 

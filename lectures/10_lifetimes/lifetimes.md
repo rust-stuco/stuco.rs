@@ -1,22 +1,29 @@
 ---
-marp: true
-paginate: true
-theme: rust
-class: invert
+theme: default
+title: Lifetimes
+author: Rust StuCo
+info: |
+  Week 10 of Rust StuCo: Lifetimes.
+colorSchema: auto
+aspectRatio: 16/9
+canvasWidth: 1280
+fonts:
+  sans: Noto Sans Variable
+  mono: Noto Sans Mono Variable
+  provider: none
+lineNumbers: false
+monaco: false
+drawings:
+  enabled: true
+  persist: false
+  presenterOnly: true
+exportFilename: lifetimes
+export:
+  timeout: 60000
+  withToc: true
+layout: default
+class: communism
 ---
-
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-section {
-    font-family: "Noto Sans";
-}
-code {
-    font-family: "Noto Sans Mono";
-}
-</style>
-
-<!-- _class: communism invert  -->
 
 ## Intro to Rust Lang
 
@@ -58,10 +65,12 @@ Lifetimes are similar to trait bounds on generic types.
 * Lifetimes ensure that references are valid for as long as we need them to be
 
 ---
+class: image-right image-width-25
+---
 
 # Validating References
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 The main goal of lifetimes is to prevent _dangling references_.
 
@@ -101,10 +110,12 @@ error[E0597]: `x` does not live long enough
 * The scope of `r` is "larger" than the scope of `x`
 
 ---
+class: image-right image-width-25
+---
 
 # The Borrow Checker
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 The Rust compiler's borrow checker will compare scopes to determine whether all borrows are valid.
 
@@ -124,10 +135,12 @@ fn main() {
 ```
 
 ---
+class: image-right image-width-20
+---
 
 # The Borrow Checker
 
-![bg right:20% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 The borrow checker will compare the "size" of the two lifetimes
 
@@ -147,10 +160,12 @@ fn main() {
 * Rejects because `'b` is shorter than `'a`
 
 ---
+class: image-right image-width-25
+---
 
 # Placating the Borrow Checker
 
-![bg right:25% 75%](../images/ferris_happy.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_happy.svg">
 
 We can fix this code by removing the scope.
 
@@ -193,10 +208,12 @@ The longest string is abcd
 * Let's implement `longest`!
 
 ---
+class: image-right image-width-25
+---
 
 # `longest`
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 Here is a first attempt:
 
@@ -248,10 +265,12 @@ The help text from the compiler error reveals some useful information:
 * In fact, neither do we!
 
 ---
+class: image-right image-width-20
+---
 
 # `longest` Error
 
-![bg right:20% 90%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_does_not_compile.svg">
 
 ```rust
 fn longest(x: &str, y: &str) -> &str {
@@ -289,10 +308,12 @@ We can annotate lifetimes with generic parameters that start with a `'`, like `'
   * Borrow checker identifies if references share a lower bound
 
 ---
+class: image-right image-width-20
+---
 
 # `longest` Lifetimes
 
-![bg right:20% 90%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_does_not_compile.svg">
 
 Let's return back to our `longest` function.
 
@@ -332,10 +353,12 @@ In other words, we do not want the thing we return to outlive `x` or `y`
 -->
 
 ---
+class: image-right image-width-25
+---
 
 # `longest` Lifetimes
 
-![bg right:25% 75%](../images/ferris_happy.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_happy.svg">
 
 Since lifetimes are a kind of generic parameter, we must declare them like normal generic type parameters.
 
@@ -414,10 +437,12 @@ let string1 = String::from("long string is long");
   * Since `println!` is in the smaller (inner) scope, this works!
 
 ---
+class: image-right image-width-20
+---
 
 # Borrow Checker Example 2
 
-![bg right:20% 90%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_does_not_compile.svg">
 
 Let's reorder some things around.
 
@@ -462,10 +487,12 @@ error[E0597]: `string2` does not live long enough
 ```
 
 ---
+class: image-right image-width-20
+---
 
 # Borrow Checker Example 3
 
-![bg right:20% 90%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_does_not_compile.svg">
 
 What if we knew (as the programmer) that `string1` is always longer than `string2`?
 
@@ -484,10 +511,12 @@ println!("The longest string is {}", result);
 ```
 
 ---
+class: image-right image-width-20
+---
 
 # Borrow Checker Example 3
 
-![bg right:20% 90%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_does_not_compile.svg">
 
 ```rust
 let result;
@@ -522,10 +551,12 @@ fn first<'a>(x: &'a str, y: &str) -> &'a str {
 * We don't need to annotate `y` with `'a`, because the return value doesn't care about `y`'s lifetime
 
 ---
+class: image-right image-width-20
+---
 
 # Lifetimes of Return Values
 
-![bg right:20% 90%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_does_not_compile.svg">
 
 The lifetime of a return value _must_ match the lifetime of one of the inputs.
 
@@ -1009,10 +1040,12 @@ Does not imply contrapositive
 -->
 
 ---
+class: image-right image-width-20
+---
 
 # `'static` Bound Example 1
 
-![bg right:20% 90%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_does_not_compile.svg">
 
 Here's an example of using a `'static` bound.
 
@@ -1054,10 +1087,12 @@ error[E0597]: `i` does not live long enough
 
 
 ---
+class: image-right image-width-20
+---
 
 # `'static` Bound Example 2
 
-![bg right:20% 90%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_does_not_compile.svg">
 
 ```rust
 fn print_with_static_lifetime(v: &'static Vec<i32>) {
@@ -1088,10 +1123,12 @@ fn main() {
 ```
 
 ---
+class: image-right image-width-20
+---
 
 # `'static` Bound Example 2
 
-![bg right:20% 90%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_does_not_compile.svg">
 
 ```rust
 fn print_with_static_bound(v: impl Debug + 'static) {
@@ -1147,10 +1184,13 @@ Some quick points:
 * Both interpretations are valid!
 
 ---
+layout: end
+class: image-right image-width-30
+---
 
 # Next Lecture: Smart Pointers and Trait Objects
 
-![bg right:30% 80%](../images/ferris_happy.svg)
+<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 

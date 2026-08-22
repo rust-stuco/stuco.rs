@@ -1,22 +1,29 @@
 ---
-marp: true
-paginate: true
-theme: rust
-class: invert
+theme: default
+title: Introduction
+author: Rust StuCo
+info: |
+  Week 1 of Rust StuCo: why Rust, Cargo, language fundamentals, and course logistics.
+colorSchema: auto
+aspectRatio: 16/9
+canvasWidth: 1280
+fonts:
+  sans: Noto Sans Variable
+  mono: Noto Sans Mono Variable
+  provider: none
+lineNumbers: false
+monaco: false
+drawings:
+  enabled: true
+  persist: false
+  presenterOnly: true
+exportFilename: introduction
+export:
+  timeout: 60000
+  withToc: true
+layout: default
+class: communism
 ---
-
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-section {
-    font-family: "Noto Sans";
-}
-code {
-    font-family: "Noto Sans Mono";
-}
-</style>
-
-<!-- _class: communism invert  -->
 
 ## Intro to Rust Lang
 
@@ -24,17 +31,19 @@ code {
 
 
 ---
-
+layout: section
+---
 
 # **Welcome!**
 
 
 ---
+class: image-right image-width-50
+---
 
+<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
 
 # Meet Ferris!
-
-![bg right:50% 80%](../images/ferris_happy.svg)
 
 * Ferris is Rust's mascot,
 and ours too!
@@ -45,7 +54,8 @@ Ferris will be our friend this semester, and hopefully much longer!
 
 
 ---
-
+layout: section
+---
 
 # **Why Rust?**
 
@@ -311,7 +321,8 @@ By the end of the semester, we want you all to:
 
 
 ---
-
+layout: section
+---
 
 # **Cargo Basics**
 
@@ -340,12 +351,12 @@ $ rustc main.rs
 
 
 ---
+class: image-right image-width-50
+---
 
+<img class="slide-image" style="--image-size: 80%;" src="../images/cargo-ship.avif">
 
 # Cargo
-
-![bg right:50% 80%](../images/cargo-ship.avif)
-
 
 Rust has a built-in build system and package manager called **Cargo**.
 
@@ -447,7 +458,8 @@ $ cargo check
 
 
 ---
-
+layout: section
+---
 
 # **Variables and Mutability**
 
@@ -468,7 +480,10 @@ fn main() {
 
 
 ---
+class: image-right image-width-25
+---
 
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 # Immutability
 
@@ -482,8 +497,6 @@ fn main() {
     println!("The value of x is: {}", x);
 }
 ```
-
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
 
 * What happens when we try to compile this?
 
@@ -515,11 +528,12 @@ error[E0384]: cannot assign twice to immutable variable `x`
 
 
 ---
+class: image-right image-width-25
+---
 
+<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
 
 # Mutability
-
-![bg right:25% 80%](../images/ferris_happy.svg)
 
 To declare a variable as mutable, we use the `mut` keyword.
 
@@ -631,11 +645,12 @@ The value of x is: 6
 
 
 ---
+class: image-right image-width-25
+---
 
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 # Aside: Shadowing vs Mutability
-
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
 
 Mutability:
 
@@ -658,11 +673,12 @@ spaces = spaces.len();
 
 
 ---
+class: image-right image-width-25
+---
 
+<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
 
 # Aside: Shadowing vs Mutability
-
-![bg right:25% 80%](../images/ferris_happy.svg)
 
 Shadowing:
 
@@ -690,7 +706,8 @@ So what are types then?
 
 
 ---
-
+layout: section
+---
 
 # **Types**
 
@@ -951,7 +968,8 @@ The reason why that is important is no buffer overflows!
 
 
 ---
-
+layout: section
+---
 
 # **Functions, Statements, and Expressions**
 
@@ -1172,7 +1190,8 @@ error[E0308]: mismatched types
 
 
 ---
-
+layout: section
+---
 
 # **Control Flow**
 
@@ -1200,11 +1219,12 @@ fn main() {
 
 
 ---
+class: image-right image-width-25
+---
 
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 # `if` Expressions
-
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
 
 `if` expressions must condition on a boolean expression.
 
@@ -1461,7 +1481,8 @@ certain nuances that we will talk about in future weeks.
 
 
 ---
-
+layout: section
+---
 
 # **Course Logistics**
 
@@ -1551,11 +1572,13 @@ extenuating circumstance)
 
 
 ---
+layout: end
+class: image-right image-width-30
+---
 
+<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
 
 # **Next Lecture: Ownership (Part 1)**
-
-![bg right:30% 80%](../images/ferris_happy.svg)
 
 Thanks for coming!
 

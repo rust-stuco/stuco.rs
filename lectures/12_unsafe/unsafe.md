@@ -1,22 +1,29 @@
 ---
-marp: true
-paginate: true
-theme: rust
-class: invert
+theme: default
+title: Unsafe
+author: Rust StuCo
+info: |
+  Week 12 of Rust StuCo: Unsafe.
+colorSchema: auto
+aspectRatio: 16/9
+canvasWidth: 1280
+fonts:
+  sans: Noto Sans Variable
+  mono: Noto Sans Mono Variable
+  provider: none
+lineNumbers: false
+monaco: false
+drawings:
+  enabled: true
+  persist: false
+  presenterOnly: true
+exportFilename: unsafe
+export:
+  timeout: 60000
+  withToc: true
+layout: default
+class: communism
 ---
-
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-section {
-    font-family: "Noto Sans";
-}
-code {
-    font-family: "Noto Sans Mono";
-}
-</style>
-
-<!-- _class: communism invert  -->
 
 ## Intro to Rust Lang
 
@@ -41,6 +48,8 @@ However...
 * The goal was to teach you the _core ideas_ of Rust and how to think about it.
 * We hope that you will take the knowledge from this class and use it to explore more about this programming language _yourself_.
 
+---
+layout: section
 ---
 
 # **Unsafe Rust**
@@ -825,10 +834,13 @@ It is tempting to reason about unsafety _locally_.
 * `unsafe` is a way to _promise_ to the compiler that the indicated code is safe
 
 ---
+layout: end
+class: image-right image-width-30
+---
 
 # Next Lecture: Parallelism
 
-![bg right:30% 80%](../images/ferris_happy.svg)
+<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 

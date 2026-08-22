@@ -1,22 +1,29 @@
 ---
-marp: true
-paginate: true
-theme: rust
-class: invert
+theme: default
+title: Ownership Revisited
+author: Rust StuCo
+info: |
+  Week 9 of Rust StuCo: Ownership Revisited.
+colorSchema: auto
+aspectRatio: 16/9
+canvasWidth: 1280
+fonts:
+  sans: Noto Sans Variable
+  mono: Noto Sans Mono Variable
+  provider: none
+lineNumbers: false
+monaco: false
+drawings:
+  enabled: true
+  persist: false
+  presenterOnly: true
+exportFilename: ownership_p2
+export:
+  timeout: 60000
+  withToc: true
+layout: default
+class: communism
 ---
-
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-section {
-    font-family: "Noto Sans";
-}
-code {
-    font-family: "Noto Sans Mono";
-}
-</style>
-
-<!-- _class: communism invert  -->
 
 ## Intro to Rust Lang
 
@@ -197,11 +204,12 @@ The stack frame:
 
 
 ---
-
+class: image-right image-width-50
+---
 
 # The Stack: Local Variables
 
-![bg right 50%](../images/week8/frames/0.png)
+<img class="slide-image" style="--image-size: 50%;" src="../images/week8/frames/0.png">
 
 Here is a representation of `main`'s stack frame.
 
@@ -213,11 +221,12 @@ fn main() {
 
 
 ---
-
+class: image-right image-width-50
+---
 
 # The Stack: Local Variables
 
-![bg right 50%](../images/week8/frames/1.png)
+<img class="slide-image" style="--image-size: 50%;" src="../images/week8/frames/1.png">
 
 Now we call `my_function`, constructing its stack frame.
 
@@ -241,17 +250,19 @@ Emphasize the copying of `x`
 
 
 ---
-
+layout: section
+---
 
 # **The Heap**
 
 
 ---
-
+class: image-right image-width-50
+---
 
 # Big Data
 
-![bg right 50%](../images/week8/frames/0.png)
+<img class="slide-image" style="--image-size: 50%;" src="../images/week8/frames/0.png">
 
 What if instead of an integer on the stack (`x = 1`)...
 
@@ -263,11 +274,12 @@ fn main() {
 ```
 
 ---
-
+class: image-right image-width-50
+---
 
 # Big Data
 
-![bg right 100%](../images/week8/frames/2.png)
+<img class="slide-image" style="--image-size: 100%;" src="../images/week8/frames/2.png">
 
 We have a 15 GB array?
 
@@ -289,11 +301,12 @@ this gets the point across.
 
 
 ---
-
+class: image-right image-width-45
+---
 
 # Big Data
 
-![bg right:45% 100%](../images/week8/frames/3.png)
+<img class="slide-image" style="--image-size: 100%;" src="../images/week8/frames/3.png">
 
 ```rust
 fn my_function(arg: [u32; HUGE_NUMBER]) {
@@ -358,21 +371,23 @@ We probably want to keep our `beef` array around for longer than a single functi
 
 
 ---
-
+class: image-right image-width-50
+---
 
 # The Stack?
 
-![bg right 100%](../images/week8/frames/2.png)
+<img class="slide-image" style="--image-size: 100%;" src="../images/week8/frames/2.png">
 
 Instead of storing our array buffer on the stack...
 
 
 ---
-
+class: image-right image-width-50
+---
 
 # The Heap
 
-![bg right 100%](../images/week8/frames/4.png)
+<img class="slide-image" style="--image-size: 100%;" src="../images/week8/frames/4.png">
 
 Instead of storing our array buffer on the stack...
 
@@ -380,11 +395,12 @@ Let's put it on the **heap**!
 
 
 ---
-
+class: image-right image-width-50
+---
 
 # The Heap
 
-![bg right 100%](../images/week8/frames/4.png)
+<img class="slide-image" style="--image-size: 100%;" src="../images/week8/frames/4.png">
 
 * If the data lives in the heap...
 * The **pointer** lives on the stack
@@ -438,11 +454,12 @@ If students ask when we'd use `Box`, seeing as this is not recommended:
 
 
 ---
-
+class: image-right image-width-40
+---
 
 # The Heap
 
-![bg right:40% 100%](../images/week8/frames/5.png)
+<img class="slide-image" style="--image-size: 100%;" src="../images/week8/frames/5.png">
 
 When we call `my_function`, we can copy the _pointer_ into `arg`!
 
@@ -455,11 +472,12 @@ my_function(beef);
 
 
 ---
-
+class: image-right image-width-40
+---
 
 # The Heap
 
-![bg right:40% 100%](../images/week8/frames/5.png)
+<img class="slide-image" style="--image-size: 100%;" src="../images/week8/frames/5.png">
 
 **Before:** 15 GB per array
 
@@ -484,11 +502,12 @@ my_function(beef);
 
 ---
 
-
 # Recap: Stack vs. Heap
 
-![bg vertical 30%](../images/week8/frames/0.png)
-![bg right 100%](../images/week8/frames/4.png)
+<div class="stack-heap-images" style="height: 180px;">
+<img style="height: 180px;" src="../images/week8/frames/0.png">
+<img style="height: 180px;" src="../images/week8/frames/4.png">
+</div>
 
 
 Variable placement:
@@ -539,11 +558,12 @@ Let's put that question on hold for a few slides...
 
 
 ---
-
+class: image-right image-width-50
+---
 
 # Motivating Ownership
 
-![bg right 50%](../images/week8/frames/0.png)
+<img class="slide-image" style="--image-size: 50%;" src="../images/week8/frames/0.png">
 
 Recall the behavior of local variables on the stack:
 
@@ -554,11 +574,12 @@ Recall the behavior of local variables on the stack:
 
 
 ---
-
+class: image-right image-width-50
+---
 
 # Motivating Ownership
 
-![bg right 50%](../images/week8/frames/0.png)
+<img class="slide-image" style="--image-size: 50%;" src="../images/week8/frames/0.png">
 
 What if we say that data is **"owned"** by the stack frame?
 
@@ -711,11 +732,12 @@ let my_returned_str: String = take_and_give_back.call();
 
 
 ---
-
+class: image-right image-width-50
+---
 
 # Closure Example
 
-![bg right 100%](../images/week8/closures/closure0.png)
+<img class="slide-image" style="--image-size: 100%;" src="../images/week8/closures/closure0.png">
 
 First, `my_str` is moved into our `Closure`.
 
@@ -727,11 +749,12 @@ let take_and_give_back =
 ```
 
 ---
-
+class: image-right image-width-50
+---
 
 # Closure Example
 
-![bg right 100%](../images/week8/closures/closure1.png)
+<img class="slide-image" style="--image-size: 100%;" src="../images/week8/closures/closure1.png">
 
 Next, we call our closure, which gives ownership of `my_str` to `Closure::call`'s stack frame.
 
@@ -747,11 +770,12 @@ let my_returned_str =
 
 
 ---
-
+class: image-right image-width-50
+---
 
 # Closure Example
 
-![bg right 100%](../images/week8/closures/closure2.png)
+<img class="slide-image" style="--image-size: 100%;" src="../images/week8/closures/closure2.png">
 
 `Closure::call` gives ownership back to `main`'s stack frame...
 
@@ -764,11 +788,12 @@ pub fn call(self) -> String {
 
 
 ---
-
+class: image-right image-width-50
+---
 
 # Closure Example
 
-![bg right 100%](../images/week8/closures/closure3.png)
+<img class="slide-image" style="--image-size: 100%;" src="../images/week8/closures/closure3.png">
 
 * `Closure`'s `my_str` is invalidated
 * `my_str` is moved out of `Closure`'s "body"
@@ -802,11 +827,12 @@ Is there another way to think about borrowing rules?
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Vector Pop
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 Suppose we want to write this code.
 
@@ -855,11 +881,12 @@ error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immuta
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Vector Push
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 What if instead of removing the last element, we _add_ an element to the end?
 
@@ -901,11 +928,12 @@ error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immuta
 
 
 ---
-
+class: image-right image-width-50
+---
 
 # Vector Layout
 
-![bg right:50% 90%](../images/String_layout.svg)
+<img class="slide-image" style="--image-size: 90%;" src="../images/String_layout.svg">
 
 Recall that vectors are _dynamic arrays_.
 
@@ -913,11 +941,12 @@ Recall that vectors are _dynamic arrays_.
 
 
 ---
-
+class: image-right image-width-35
+---
 
 # Mutating Vectors
 
-![bg right:35% 95%](../images/String_layout.svg)
+<img class="slide-image" style="--image-size: 95%;" src="../images/String_layout.svg">
 
 * What if pushing `5` onto `v` triggers a resize?
 * Resizing means:
@@ -1847,7 +1876,8 @@ A mutable reference `x` to `v`:
 
 
 ---
-
+layout: section
+---
 
 # **Fixing Programs**
 
@@ -1897,11 +1927,12 @@ Speaker note:
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Arrays and Slices
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 Here is a seemingly reasonable solution:
 
@@ -2169,11 +2200,13 @@ Usually you can be pretty sure when you need it vs. when you don't.
 
 
 ---
-
+layout: end
+class: image-right image-width-30
+---
 
 # Next Lecture: Lifetimes
 
-![bg right:30% 80%](../images/ferris_happy.svg)
+<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 

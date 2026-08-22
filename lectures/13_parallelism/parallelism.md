@@ -1,22 +1,29 @@
 ---
-marp: true
-paginate: true
-theme: rust
-class: invert
+theme: default
+title: Parallelism
+author: Rust StuCo
+info: |
+  Week 13 of Rust StuCo: Parallelism.
+colorSchema: auto
+aspectRatio: 16/9
+canvasWidth: 1280
+fonts:
+  sans: Noto Sans Variable
+  mono: Noto Sans Mono Variable
+  provider: none
+lineNumbers: false
+monaco: false
+drawings:
+  enabled: true
+  persist: false
+  presenterOnly: true
+exportFilename: parallelism
+export:
+  timeout: 60000
+  withToc: true
+layout: default
+class: communism
 ---
-
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-section {
-    font-family: "Noto Sans";
-}
-code {
-    font-family: "Noto Sans Mono";
-}
-</style>
-
-<!-- _class: communism invert  -->
 
 ## Intro to Rust Lang
 
@@ -82,9 +89,10 @@ invisible to the programmer
 
 
 ---
+class: image-full
+---
 
-
-![bg 100%](../images/week12/conc-vs-par.jpg)
+<img class="slide-image-full" style="--image-size: 100%;" src="../images/week12/conc-vs-par.jpg">
 
 
 ---
@@ -376,13 +384,15 @@ Each thread retires to their cave
 
 
 ---
-
+class: image-right image-width-45
+class: image-right image-width-45
+---
 
 # Example: Multithreaded Drawing
 
-![bg right:45% 100%](../images/week12/circle-order-A-then-B.png)
+<img class="slide-image" style="--image-size: 100%;" src="../images/week12/circle-order-A-then-B.png">
 
-![bg right:45% 100%](../images/week12/circle-order-B-then-A.png)
+<img class="slide-image" style="--image-size: 100%;" src="../images/week12/circle-order-B-then-A.png">
 
 What if our image is more complex?
 
@@ -641,7 +651,8 @@ We must eliminate one of the following:
 
 
 ---
-
+layout: section
+---
 
 # **Mutual Exclusion**
 
@@ -802,7 +813,8 @@ Go watch this livestream for more info: https://www.youtube.com/watch?v=8O0Nt9qY
 
 
 ---
-
+layout: section
+---
 
 # **Atomics**
 
@@ -960,7 +972,8 @@ fn main() {
 
 
 ---
-
+layout: section
+---
 
 # **Message Passing**
 
@@ -1114,7 +1127,8 @@ we will receive first.
 
 
 ---
-
+layout: section
+---
 
 # **Parallelism in Rust**
 
@@ -1180,11 +1194,12 @@ See the nomicon for more information, or watch this livestream: https://www.yout
 
 
 ---
-
+class: image-right image-width-20
+---
 
 # Capturing Values in Threads
 
-![bg right:20% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 What if we want to use a value from outside the closure?
 
@@ -1250,11 +1265,12 @@ let handle = thread::spawn(move || {
 
 
 ---
-
+class: image-right image-width-20
+---
 
 # Access from Different Threads
 
-![bg right:20% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 What if we want `v` to remain accessible in the main thread?
 
@@ -1387,11 +1403,12 @@ fn compute_squares(numbers: &mut [i32]) {
 
 
 ---
-
+class: image-right image-width-20
+---
 
 # Multiple Thread Access
 
-![bg right:20% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 Let's say we want two threads to access a mutex-protected vector.
 
@@ -1623,11 +1640,13 @@ For simplicity’s sake, concurrent means concurrent and/or parallel. Please men
 * Have fun 😁
 
 ---
-
+layout: end
+class: image-right image-width-30
+---
 
 # Next Lecture: Concurrency
 
-![bg right:30% 80%](../images/ferris_happy.svg)
+<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 

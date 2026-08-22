@@ -1,3 +1,8 @@
+//! Builds the generated course artifacts before compiling the site.
+//!
+//! The build runs the syllabus, lecture, and homework stages in order so a failed prerequisite
+//! prevents later artifacts from being published.
+
 use std::{
     env, io,
     path::{Path, PathBuf},
@@ -22,6 +27,7 @@ fn main() -> io::Result<()> {
     // Watching individual files avoids rebuild loops from ignored homework artifacts.
     emit_rerun_directives(&manifest_dir.join("homeworks"))?;
     emit_rerun_directives(&manifest_dir.join("lectures"))?;
+    emit_rerun_directives(&manifest_dir.join("slidev"))?;
 
     utils::create_directory(&manifest_dir.join("public"))?;
 

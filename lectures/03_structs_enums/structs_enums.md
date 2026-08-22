@@ -1,22 +1,29 @@
 ---
-marp: true
-paginate: true
-theme: rust
-class: invert
+theme: default
+title: Structs and Enums
+author: Rust StuCo
+info: |
+  Week 3 of Rust StuCo: Structs and Enums.
+colorSchema: auto
+aspectRatio: 16/9
+canvasWidth: 1280
+fonts:
+  sans: Noto Sans Variable
+  mono: Noto Sans Mono Variable
+  provider: none
+lineNumbers: false
+monaco: false
+drawings:
+  enabled: true
+  persist: false
+  presenterOnly: true
+exportFilename: structs_enums
+export:
+  timeout: 60000
+  withToc: true
+layout: default
+class: communism
 ---
-
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-section {
-    font-family: "Noto Sans";
-}
-code {
-    font-family: "Noto Sans Mono";
-}
-</style>
-
-<!-- _class: communism invert  -->
 
 ## Intro to Rust Lang
 
@@ -57,11 +64,12 @@ code {
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Review Question 1
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 Why doesn't this compile?
 
@@ -155,11 +163,12 @@ help: consider cloning the value if the performance cost is acceptable
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Review Question 2
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 Why doesn't this compile?
 
@@ -326,7 +335,8 @@ Mutable references are NOT Copy. However, they are _reborrowed_.
 * `modify(r)` gets silently replaced by `modify(&mut *r)`.
 
 ---
-
+layout: section
+---
 
 
 # **Structs**
@@ -496,11 +506,12 @@ Useful when you want to implement a trait, but don't need to store any data with
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # References in Structs
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 Can we store references inside structs?
 
@@ -565,11 +576,12 @@ fn draw_rectangle(rect: Rectangle) {}
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Printing Structs
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 What if we wanted to print these structs for debugging?
 
@@ -703,7 +715,8 @@ Student { andrew_id: "cjtsui", attendance: [true, false], grade: 80, stress_leve
 
 
 ---
-
+layout: section
+---
 
 # **Methods**
 
@@ -893,7 +906,8 @@ p1.distance(&p2);
 
 
 ---
-
+layout: section
+---
 
 # **Enums**
 
@@ -1179,7 +1193,8 @@ m.call();
 
 
 ---
-
+layout: section
+---
 
 # **The `Option` Type**
 
@@ -1255,11 +1270,12 @@ let absent_number: Option<i32> = None;
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # `Option<T>` vs `NULL`
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 So why is `Option<T>` better than `NULL`? Consider this:
 
@@ -1326,7 +1342,8 @@ if y.is_none() {
 
 
 ---
-
+layout: section
+---
 
 # **Pattern Matching**
 
@@ -1493,11 +1510,12 @@ println!("{:?}", sum); // Prints "Some(10)"
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Matches Are Exhaustive
 
-![bg right:25% 75%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
 
 The `match` patterns must cover all possible values that the matched expression may take.
 
@@ -1658,11 +1676,13 @@ Pattern Matching is an incredibly powerful tool.
 
 
 ---
-
+layout: end
+class: image-right image-width-30
+---
 
 # Next Lecture: Standard Collections and Generics
 
-![bg right:30% 80%](../images/ferris_happy.svg)
+<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 
