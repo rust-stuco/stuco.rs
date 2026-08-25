@@ -13,8 +13,7 @@ homework, as we consider the book the "textbook" of this course. It's generally 
 with, and would make handy reference material for the homeworks in this course.
 
 We've tried to calibrate this homework to take around an hour, so if you are spending much more than
-that, please let us know! This time bound does _not_ include setting up Rust on your machine, so if
-you have trouble with installing Rust, make sure to ask for help!
+that, please let us know!
 
 # Setup
 
@@ -22,9 +21,9 @@ Make sure you have Rust installed. You should have installed Rust through `rustu
 
 ```sh
 $ rustup --version
-rustup 1.28.2 (e4f3ad6f8 2025-04-28)
+rustup 1.29.0 (28d1352db 2026-03-05)
 $ cargo --version
-cargo 1.92.0 (344c4567c 2025-10-21)
+cargo 1.97.1 (c980f4866 2026-06-30)
 ```
 
 Make sure that both of those commands execute successfully, and that they have relatively recent
@@ -65,12 +64,9 @@ At this point, you'll see some other tests failing. You'll fix those in the next
 
 # Part 2: Function implementations
 
-You will now need to implement 4 relatively simple functions in Rust.
 In `src/functions.rs`, you will find 4 functions with a `todo!()` inside of them.
 Replace that `todo!()` with your implementation, according to the comment specification.
-
-_One of the functions requires you to implement it in a certain way,_
-_so make sure to read those comments carefully._
+We've implemented `is_prime` for you, which you may find helpful to call in your functions.
 
 To test all of your functions, run:
 
@@ -85,10 +81,8 @@ If you find that a test is running slowly, run `cargo test --release`,
 which runs the tests in release mode. This runs the tests with
 compiler optimizations (like the `-O2` flag for C) and without debug symbols.
 
-Also, if you want to run a specific test like `fn it_works()`, run `cargo test -- it_works`
-with the name of the test instead of `it_works`.
-
-If you find yourself struggling, make sure to read the comments! They contain useful hints...
+Also, if you want to run a specific test like `fn is_prime()`, run `cargo test -- is_prime`
+with the name of the test instead of `is_prime`.
 
 # Submission
 
@@ -135,11 +129,6 @@ Note that you don't _need_ to name it `handin.zip`, you can name it whatever you
 
 In general, feel free to discuss homeworks with other students! As long as you do not copy someone
 else's work, any communication is fair game.
-
-All formal questions should be asked on Piazza. Try to discuss on Piazza so that other students can
-see your questions and answers as well!
-
-You can also discuss on Discord, but try to keep any technical questions on Piazza.
 
 # Feedback
 
