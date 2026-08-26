@@ -1,7 +1,8 @@
 //! Builds the generated course artifacts before compiling the site.
 //!
-//! The build runs the syllabus, lecture, and homework stages in order so a failed prerequisite
-//! prevents later artifacts from being published.
+//! The build normally runs the syllabus, lecture, and homework stages in order so a failed
+//! prerequisite prevents later artifacts from being published. CI can omit the expensive lecture
+//! stage while running Rust tests, then restore it for the release build.
 
 use std::{
     env, io,
@@ -17,12 +18,15 @@ mod lectures;
 #[path = "build/utils.rs"]
 mod utils;
 
+const SKIP_LECTURES: &str = "STUCO_SKIP_LECTURES";
+
 fn main() -> io::Result<()> {
     let manifest_dir = env::var_os("CARGO_MANIFEST_DIR")
         .map(PathBuf::from)
         .ok_or_else(|| io::Error::other("CARGO_MANIFEST_DIR is not set"))?;
 
     println!("cargo:rerun-if-changed=src/syllabus.typ");
+    println!("cargo:rerun-if-env-changed={SKIP_LECTURES}");
 
     // Watching individual files avoids rebuild loops from ignored homework artifacts.
     emit_rerun_directives(&manifest_dir.join("homeworks"))?;
@@ -33,7 +37,9 @@ fn main() -> io::Result<()> {
 
     // Run stages sequentially so a failure prevents later work from starting.
     build_syllabus(&manifest_dir)?;
-    lectures::build(&manifest_dir)?;
+    if env::var_os(SKIP_LECTURES).is_none() {
+        lectures::build(&manifest_dir)?;
+    }
     homeworks::build(&manifest_dir)
 }
 

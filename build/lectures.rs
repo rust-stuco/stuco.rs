@@ -31,8 +31,9 @@ const PDF_OUTPUT: &str = "public/lectures";
 /// The rewrite file Slidev generates for client-side routes, which Cloudflare rejects.
 const REDIRECTS: &str = "_redirects";
 
-/// Each lecture render can start Chrome, so bound concurrency independently of the host CPU count.
-const MAX_PARALLEL_LECTURES: usize = 2;
+/// Slidev's exporter starts Chrome and is unreliable when two lecture pipelines compete for the
+/// CI runner, so render one lecture at a time.
+const MAX_PARALLEL_LECTURES: usize = 1;
 
 #[derive(Clone, Copy)]
 struct Lecture {
@@ -193,8 +194,8 @@ fn render_lecture(lecture: Lecture, manifest_dir: &Path, slidev_root: &Path) -> 
     utils::require_nonempty_file(&site.join("index.html"))?;
     remove_generated_redirects(&site)?;
 
-    // Run each lecture's browser exports sequentially. The render pool bounds concurrency across
-    // lectures, so at most two browser processes run at once.
+    // Run each lecture's browser exports sequentially. The render pool also serializes lectures, so
+    // only one browser process runs at once.
     for task in ["export:light", "export:dark"] {
         let environment = [("STUCO_SLIDEV_PDF_OUTPUT", pdf_directory.as_os_str())];
         if let Err(first_error) = run_task(slidev_root, lecture, task, &environment) {

@@ -53,29 +53,17 @@ jobs:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: npm ci --no-audit --no-fund
 
-      # This catches regressions that require privileged file symlinks on Windows.
-      - name: Build every lecture deck
+      # This deck uses shared and lecture-local images, exercising both Windows workspace links.
+      - name: Build a representative lecture deck
         run: |
-          $lectures = @(
-            Get-ChildItem ../lectures -Directory |
-              Where-Object { $_.Name -match '^\d{2}_[a-z0-9_]+$' } |
-              Sort-Object Name
-          )
-
-          if ($lectures.Count -ne 14) {
-            throw "Expected 14 lecture directories, found $($lectures.Count)"
+          npm run build -- 14_concurrency
+          if ($LASTEXITCODE -ne 0) {
+            throw "Slidev failed to build 14_concurrency"
           }
 
-          foreach ($lecture in $lectures) {
-            npm run build -- $lecture.Name
-            if ($LASTEXITCODE -ne 0) {
-              throw "Slidev failed to build $($lecture.Name)"
-            }
-
-            $index = "dist/$($lecture.Name)/deck/index.html"
-            if (-not (Test-Path $index -PathType Leaf)) {
-              throw "Slidev did not create $index"
-            }
+          $index = "dist/14_concurrency/deck/index.html"
+          if (-not (Test-Path $index -PathType Leaf)) {
+            throw "Slidev did not create $index"
           }
 
   build:
@@ -150,13 +138,10 @@ jobs:
       # Catches schedule misconfiguration, which would otherwise only panic in the browser.
       - name: Run tests
         env:
-          RAYON_NUM_THREADS: 2
+          STUCO_SKIP_LECTURES: 1
         run: cargo test --locked
 
       - name: Build
-        env:
-          # Limit parallel rendering to avoid exhausting CI runner resources.
-          RAYON_NUM_THREADS: 2
         run: dx build --release
 
       # The decks are pre-built single-page apps, so they are built outside `public/`: `dx` re-bundles
