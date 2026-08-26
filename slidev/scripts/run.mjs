@@ -173,7 +173,11 @@ async function runTask(taskName, lectureDirectory, extraArgs) {
         : () => {}
     try {
       const exitCode = await runSlidev([...taskArgs, ...extraArgs])
-      if (exitCode !== 0) process.exitCode = exitCode
+      if (exitCode !== 0) {
+        process.exitCode = exitCode
+      } else if (taskName === 'build') {
+        await removeImagePreloads(siteOutputRoot)
+      }
     } finally {
       stopSourceSync()
     }
@@ -185,9 +189,15 @@ async function runTask(taskName, lectureDirectory, extraArgs) {
 
 async function inlineMarkdownImages(source, destination) {
   let markdown = await readFile(source, 'utf8')
+  const htmlImagePattern = /<img\b[^>]*\bsrc=(["'])([^"']+)\1[^>]*>/g
+  const markdownImagePattern =
+    /!\[([^\]\n]*)\]\(\s*(?:<([^>\n]+)>|([^\s)\n]+))(?:\s+(?:"([^"\n]*)"|'([^'\n]*)'|\(([^)\n]*)\)))?\s*\)/g
   const imageSources = [
-    ...markdown.matchAll(/<img\b[^>]*\bsrc="([^"]+)"[^>]*>/g),
-  ].map((match) => match[1])
+    ...[...markdown.matchAll(htmlImagePattern)].map((match) => match[2]),
+    ...[...markdown.matchAll(markdownImagePattern)].map(
+      (match) => match[2] ?? match[3],
+    ),
+  ]
   const localSources = [
     ...new Set(
       imageSources.filter(
@@ -208,10 +218,64 @@ async function inlineMarkdownImages(source, destination) {
     }),
   )
 
-  for (const [imageSource, dataUrl] of inlineImages) {
-    markdown = markdown.replaceAll(`src="${imageSource}"`, `src="${dataUrl}"`)
-  }
+  const dataUrls = new Map(inlineImages)
+  markdown = markdown.replace(
+    htmlImagePattern,
+    (image, quote, imageSource) => {
+      const dataUrl = dataUrls.get(imageSource)
+      return dataUrl
+        ? image.replace(
+            `src=${quote}${imageSource}${quote}`,
+            `src=${quote}${dataUrl}${quote}`,
+          )
+        : image
+    },
+  )
+  markdown = markdown.replace(
+    markdownImagePattern,
+    (
+      image,
+      altText,
+      enclosedSource,
+      bareSource,
+      doubleQuotedTitle,
+      singleQuotedTitle,
+      parenthesizedTitle,
+    ) => {
+      const imageSource = enclosedSource ?? bareSource
+      const dataUrl = dataUrls.get(imageSource)
+      if (!dataUrl) return image
+
+      const title =
+        doubleQuotedTitle ?? singleQuotedTitle ?? parenthesizedTitle
+      const titleAttribute =
+        title === undefined ? '' : ` title="${escapeHtmlAttribute(title)}"`
+      return `<img style="min-height: 0; object-fit: contain;" src="${dataUrl}" alt="${escapeHtmlAttribute(altText)}"${titleAttribute}>`
+    },
+  )
   await writeFile(destination, markdown)
+}
+
+function escapeHtmlAttribute(value) {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('"', '&quot;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+}
+
+async function removeImagePreloads(siteOutputRoot) {
+  await Promise.all(
+    ['index.html', '404.html'].map(async (fileName) => {
+      const file = path.join(siteOutputRoot, fileName)
+      const html = await readFile(file, 'utf8')
+      const withoutImagePreloads = html.replace(
+        /^\s*<link rel="preload" as="image"[^>]*>\r?\n/gm,
+        '',
+      )
+      await writeFile(file, withoutImagePreloads)
+    }),
+  )
 }
 
 function imageMimeType(imagePath) {
