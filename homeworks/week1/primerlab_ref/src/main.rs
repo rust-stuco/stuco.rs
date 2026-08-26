@@ -16,7 +16,7 @@ fn main() {
             .read_line(&mut input)
             .expect("Failed to read line");
 
-        let input: usize = match input.trim().parse() {
+        let input: u32 = match input.trim().parse() {
             Ok(num) => num,
             Err(_) => continue,
         };

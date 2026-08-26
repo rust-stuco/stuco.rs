@@ -1,141 +1,132 @@
-#![allow(unused_variables)]
-
-/// Solutions and some test cases adapted from [15-112](
-/// https://www.kosbie.net/cmu/spring-22/15-112/notes/notes-loops.html#nthPrime).
+/// Returns `true` if `n` is a prime number, and `false` otherwise.
 ///
-/// Test cases are located in tests.rs!
-/// Make sure this works!
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
-
-/// Given a number n, return true if it is a prime number, and false otherwise.
-///
-/// # Example
+/// # Examples
 ///
 /// ```
 /// use primerlab_ref::functions::is_prime;
 ///
-/// let test_prime = 2;
-/// assert!(is_prime(test_prime));
-///
-/// let test_not_prime = 42;
-/// assert!(!is_prime(test_not_prime));
+/// assert!(is_prime(2));
+/// assert!(is_prime(5));
+/// assert!(!is_prime(42));
+/// assert!(is_prime(113));
+/// assert!(!is_prime(98_008));
 /// ```
-///
-/// # Note
-///
-/// `isPrime` must be efficient. Refer to `fasterIsPrime` from [15-112](
-/// https://www.kosbie.net/cmu/spring-22/15-112/notes/notes-loops.html#:~:text=fasterIsPrime).
-pub fn is_prime(n: usize) -> bool {
-    if n == 0 || n == 1 {
+pub fn is_prime(n: u32) -> bool {
+    if n <= 1 {
         return false;
     }
-    if n == 2 {
+    if n <= 3 {
         return true;
     }
-    if n.is_multiple_of(2) {
+    if n.is_multiple_of(2) || n.is_multiple_of(3) {
         return false;
     }
     let max_factor = n.isqrt();
-    for i in (3..=max_factor).step_by(2) {
-        if n.is_multiple_of(i) {
+    for i in (5..=max_factor).step_by(6) {
+        if n.is_multiple_of(i) || n.is_multiple_of(i + 2) {
             return false;
         }
     }
     true
 }
 
-/// Given a number n, return the nth prime. Refer to the test cases below for more details.
+/// Returns the next prime after `n`.
 ///
-/// For example, the 0th prime is 2, and the 1st prime is 3, then the 2nd prime is 5, etc.
+/// # Examples
 ///
-/// # Example
+/// ```
+/// use primerlab_ref::functions::next_prime;
+///
+/// assert_eq!(next_prime(2), 3);
+/// assert_eq!(next_prime(42), 43);
+/// assert_eq!(next_prime(113), 127);
+/// ```
+pub fn next_prime(n: u32) -> u32 {
+    let mut result = n + 1;
+    while !is_prime(result) {
+        result += 1;
+    }
+    result
+}
+
+/// Returns the `n`th prime, where `n` is zero-indexed.
+///
+/// The 0th prime is 2, the 1st prime is 3, the 2nd prime is 5, etc.
+///
+/// # Examples
 ///
 /// ```
 /// use primerlab_ref::functions::nth_prime;
 ///
-/// let n = 4;
-/// assert_eq!(nth_prime(n), 11);
-///
-/// let n = 20;
-/// assert_eq!(nth_prime(n), 73);
+/// assert_eq!(nth_prime(0), 2);
+/// assert_eq!(nth_prime(4), 11);
+/// assert_eq!(nth_prime(20), 73);
 /// ```
-///
-/// ### Suggestions
-///
-/// You can look [here](https://en.wikipedia.org/wiki/List_of_prime_numbers) for more primes,
-/// but note that Wikipedia 1-indexes them.
-pub fn nth_prime(n: usize) -> usize {
-    let mut found = 0;
-    let mut guess = 0;
-    while found <= n {
-        guess += 1;
-        if is_prime(guess) {
-            found += 1
-        }
+pub fn nth_prime(n: u32) -> u32 {
+    let mut result = 2;
+    for _ in 0..n {
+        result = next_prime(result);
     }
-    guess
+    result
 }
 
-/// Returns the Greatest Common Divisor (gcd) of two numbers x and y.
+/// Returns the closest prime to a given `n`. If both a lower and higher prime are equally close, then this returns the lower prime.
 ///
-/// # Example
+/// # Examples
 ///
 /// ```
-/// use primerlab_ref::functions::gcd;
+/// use primerlab_ref::functions::closest_prime;
 ///
-/// let first_num = 60;
-/// let second_num = 24;
-///
-/// assert_eq!(gcd(first_num, second_num), 12);
+/// assert_eq!(closest_prime(0), 2);
+/// assert_eq!(closest_prime(7), 7);
+/// assert_eq!(closest_prime(25), 23);
 /// ```
-///
-/// # Note
-///
-/// You must use Euclid's algorithm to solve this problem. Please feel free to
-/// use the World Wide Web to learn more (this applies for the entire course).
-///
-/// # **Restrictions**
-///
-/// **Please do not use the "return" keyword.**
-/// **Please write this function using recursion.**
-pub fn gcd(x: usize, y: usize) -> usize {
-    if y == 0 { x } else { gcd(y, x % y) }
+pub fn closest_prime(n: u32) -> u32 {
+    if n == 0 {
+        return 2;
+    }
+    let mut low = n;
+    let mut high = n;
+    loop {
+        if is_prime(low) {
+            return low;
+        }
+        if is_prime(high) {
+            return high;
+        }
+        low -= 1;
+        high += 1;
+    }
 }
 
-/// Returns the nth fibonacci number.
+/// Returns the number of ways an even integer `n` can be expressed as the sum of two prime numbers.
 ///
-/// We consider the 0th fibonacci number to be 0, and the first to be 1.
+/// The Goldbach Conjecture states that this function always returns a number >= 1 :D
 ///
-/// # Example
+/// # Panics
+///
+/// Panics if `n <= 2` or `n` is odd.
+///
+/// # Examples
 ///
 /// ```
-/// use primerlab_ref::functions::fib;
+/// use primerlab_ref::functions::goldbach;
 ///
-/// assert_eq!(fib(2), 1);
-/// assert_eq!(fib(4), 3);
-/// assert_eq!(fib(7), 13);
+/// assert_eq!(goldbach(4), 1); // 2+2
+/// assert_eq!(goldbach(10), 2); // 3+7, 2+5
+/// assert_eq!(goldbach(36), 4); // 3+31, 5+29, 11+23, 17+17
 /// ```
-///
-/// # Note
-///
-/// There are a few ways to implement this. However, one obvious way might time out on Gradescope...
-///
-/// The easiest way to do this is to either use iteration instead of recursion, or to use some sort
-/// of helper function (which you can define somewhere else in this file).
-///
-/// Feel free to look this up online if you're having trouble!
-pub fn fib(n: usize) -> usize {
-    let init = (0, 1);
+pub fn goldbach(n: u32) -> u32 {
+    assert!(
+        n > 2 && n.is_multiple_of(2),
+        "n must be an even number greater than 2"
+    );
 
-    fn fib_helper(from: (usize, usize), n: usize) -> usize {
-        if n == 0 {
-            from.0
-        } else {
-            fib_helper((from.1, from.0 + from.1), n - 1)
+    let mut count = 0;
+    for i in 2..=(n / 2) {
+        if is_prime(i) && is_prime(n - i) {
+            count += 1;
         }
     }
-
-    fib_helper(init, n)
+    count
 }

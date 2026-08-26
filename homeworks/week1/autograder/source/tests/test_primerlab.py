@@ -82,32 +82,32 @@ class PrimerLabTest(unittest.TestCase):
                 "Hint: run `cargo fmt` if you see a 'diff' warning, and `cargo clippy` otherwise!\n"
             )
 
-    @cargo_test(1.0, 48)
+    @cargo_test(1.0, 50)
     def test_charmander_doc(self):
         """Testing compilation of exercises"""
         return "cargo test exercises::"
 
-    @cargo_test(1.1, 2)
-    def test_it_works(self):
-        """Testing compilation of functions"""
-        return "cargo test it_works"
-
-    @cargo_test(2.0, 12)
+    @cargo_test(1.1, 0)
     def test_is_prime(self):
-        """Testing is_prime"""
-        return "cargo test is_prime && cargo test random_primes"
+        """Testing compilation of functions"""
+        return "cargo test is_prime"
 
-    @cargo_test(2.1, 16)
+    @cargo_test(2.0, 10)
+    def test_next_prime(self):
+        """Testing next_prime"""
+        return "cargo test next_prime"
+
+    @cargo_test(2.1, 10)
     def test_nth_prime(self):
         """Testing nth_prime"""
         return "cargo test --release nth_prime"
 
-    @cargo_test(2.2, 11)
-    def test_gcd(self):
-        """Testing gcd"""
-        return "cargo test gcd"
+    @cargo_test(2.2, 15)
+    def test_closest_prime(self):
+        """Testing closest_prime"""
+        return "cargo test closest_prime"
 
-    @cargo_test(2.3, 11)
-    def test_fib(self):
-        """Testing fib"""
-        return "cargo test fib"
+    @cargo_test(2.3, 15)
+    def test_goldbach(self):
+        """Testing goldbach"""
+        return "cargo test goldbach"
