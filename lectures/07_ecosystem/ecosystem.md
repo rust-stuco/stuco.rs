@@ -1107,9 +1107,6 @@ pub struct MyError {
 - Use `snafu` when you need both!
 
 ---
-layout: end
-class: image-right image-width-30
----
 
 # Aside: `snafu`
 
@@ -1120,6 +1117,9 @@ class: image-right image-width-30
 
 
 --- 
+layout: end
+class: image-right image-width-30
+---
 
 
 # Next Lecture: Closures and Iterators

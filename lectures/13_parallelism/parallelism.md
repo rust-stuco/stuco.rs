@@ -385,14 +385,14 @@ Each thread retires to their cave
 
 ---
 class: image-right image-width-45
-class: image-right image-width-45
 ---
 
 # Example: Multithreaded Drawing
 
-<img class="slide-image" style="--image-size: 100%;" src="../images/week12/circle-order-A-then-B.png">
-
-<img class="slide-image" style="--image-size: 100%;" src="../images/week12/circle-order-B-then-A.png">
+<div class="slide-image" style="--image-size: 100%; display: grid; grid-template-rows: repeat(2, minmax(0, 1fr));">
+  <img style="width: 100%; height: 100%; object-fit: contain;" src="../images/week12/circle-order-A-then-B.png">
+  <img style="width: 100%; height: 100%; object-fit: contain;" src="../images/week12/circle-order-B-then-A.png">
+</div>
 
 What if our image is more complex?
 
