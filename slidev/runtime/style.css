@@ -162,7 +162,7 @@ html.dark {
 }
 
 .slidev-layout.communism {
-  background-image: url("../images/bg4.jpg");
+  background-image: url("../images/elixir-rust-cover.webp");
   background-position: center;
   background-size: cover;
 }
@@ -256,14 +256,13 @@ html.dark {
 }
 
 .slidev-layout.image-right > .slide-image {
-  --image-size: 100%;
-  --scaled-image-width: calc(var(--image-width) * (var(--image-size) / 100%));
+  --image-size: 1;
   position: absolute;
-  top: calc((100% - var(--image-size)) / 2);
-  right: calc((var(--image-width) - var(--scaled-image-width)) / 2);
+  top: calc((1 - var(--image-size)) * 50%);
+  right: calc(var(--image-width) * (1 - var(--image-size)) / 2);
   z-index: 10;
-  width: var(--scaled-image-width);
-  height: var(--image-size);
+  width: calc(var(--image-width) * var(--image-size));
+  height: calc(var(--image-size) * 100%);
   max-width: none;
   margin: 0;
   object-fit: contain;
@@ -287,11 +286,11 @@ html.dark {
 }
 
 .slidev-layout.image-full > .slide-image-full {
-  --image-size: 100%;
+  --image-size: 1;
   position: absolute;
   inset: 0;
-  width: var(--image-size);
-  height: var(--image-size);
+  width: calc(var(--image-size) * 100%);
+  height: calc(var(--image-size) * 100%);
   max-width: none;
   margin: auto;
   object-fit: contain;

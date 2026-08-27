@@ -98,7 +98,7 @@ class: image-right image-width-30
 
 # Let's Make a List
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_does_not_compile.svg">
 
 Let's say we wanted to make a recursive-style list:
 
@@ -170,7 +170,7 @@ class: image-right image-width-45
 
 # Size of Recursive Types?
 
-<img class="slide-image" style="--image-size: 100%;" src="../images/cons.svg">
+<img class="slide-image" style="--image-size: 1;" src="../images/cons.svg">
 
 What happens when we try to determine the size of a recursive type?
 
@@ -209,7 +209,7 @@ class: image-right image-width-45
 
 # A Finite `List`
 
-<img class="slide-image" style="--image-size: 90%;" src="../images/cons-finite.svg">
+<img class="slide-image" style="--image-size: 0.9;" src="../images/cons-finite.svg">
 
 ```rust
 enum List {
@@ -675,7 +675,7 @@ class: image-right image-width-30
 
 # Manual Drop
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_does_not_compile.svg">
 
 What if we want to manually drop a value before the end of the scope?
 
@@ -804,7 +804,7 @@ class: image-right image-width-25
 
 # Let's Make a List (again)
 
-<img class="slide-image" style="--image-size: 85%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.85;" src="../images/ferris_does_not_compile.svg">
 
 Let's go back to our `List`.
 
@@ -877,7 +877,7 @@ class: image-right image-width-60
 
 Ideally, we want something like this:
 
-<img class="slide-image" style="--image-size: 95%;" src="../images/cons-rc.svg">
+<img class="slide-image" style="--image-size: 0.95;" src="../images/cons-rc.svg">
 
 
 ---
@@ -932,7 +932,7 @@ class: image-right image-width-50
 
 # `Rc<T>`
 
-<img class="slide-image" style="--image-size: 95%;" src="../images/cons-rc.svg">
+<img class="slide-image" style="--image-size: 0.95;" src="../images/cons-rc.svg">
 
 ```rust
 let end = Rc::new(
@@ -1442,7 +1442,7 @@ class: image-right image-width-30
 
 # Next Lecture: Unsafe
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 

@@ -92,7 +92,7 @@ invisible to the programmer
 class: image-full
 ---
 
-<img class="slide-image-full" style="--image-size: 100%;" src="../images/week12/conc-vs-par.jpg">
+<img class="slide-image-full" style="--image-size: 1;" src="../images/week12/conc-vs-par.jpg">
 
 
 ---
@@ -389,7 +389,7 @@ class: image-right image-width-45
 
 # Example: Multithreaded Drawing
 
-<div class="slide-image" style="--image-size: 100%; display: grid; grid-template-rows: repeat(2, minmax(0, 1fr));">
+<div class="slide-image" style="--image-size: 1; display: grid; grid-template-rows: repeat(2, minmax(0, 1fr));">
   <img style="width: 100%; height: 100%; object-fit: contain;" src="../images/week12/circle-order-A-then-B.png">
   <img style="width: 100%; height: 100%; object-fit: contain;" src="../images/week12/circle-order-B-then-A.png">
 </div>
@@ -1199,7 +1199,7 @@ class: image-right image-width-20
 
 # Capturing Values in Threads
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 What if we want to use a value from outside the closure?
 
@@ -1270,7 +1270,7 @@ class: image-right image-width-20
 
 # Access from Different Threads
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 What if we want `v` to remain accessible in the main thread?
 
@@ -1408,7 +1408,7 @@ class: image-right image-width-20
 
 # Multiple Thread Access
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 Let's say we want two threads to access a mutex-protected vector.
 
@@ -1646,7 +1646,7 @@ class: image-right image-width-30
 
 # Next Lecture: Concurrency
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 

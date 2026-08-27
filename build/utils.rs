@@ -4,11 +4,13 @@ use std::{
     process::Command,
 };
 
+use ignore::WalkBuilder;
+
 /// Returns every visible file beneath the directory that is not excluded by ignore rules.
 pub fn files_in_tree(root: &Path) -> io::Result<Vec<PathBuf>> {
     let mut files = Vec::new();
 
-    for entry in ignore::Walk::new(root) {
+    for entry in WalkBuilder::new(root).follow_links(true).build() {
         let entry = entry.map_err(|error| {
             io::Error::other(format!("failed to inspect {}: {error}", root.display()))
         })?;

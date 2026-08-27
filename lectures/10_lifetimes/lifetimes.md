@@ -70,7 +70,7 @@ class: image-right image-width-25
 
 # Validating References
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 The main goal of lifetimes is to prevent _dangling references_.
 
@@ -115,7 +115,7 @@ class: image-right image-width-25
 
 # The Borrow Checker
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 The Rust compiler's borrow checker will compare scopes to determine whether all borrows are valid.
 
@@ -140,7 +140,7 @@ class: image-right image-width-20
 
 # The Borrow Checker
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 The borrow checker will compare the "size" of the two lifetimes
 
@@ -165,7 +165,7 @@ class: image-right image-width-25
 
 # Placating the Borrow Checker
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_happy.svg">
 
 We can fix this code by removing the scope.
 
@@ -213,7 +213,7 @@ class: image-right image-width-25
 
 # `longest`
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 Here is a first attempt:
 
@@ -270,7 +270,7 @@ class: image-right image-width-20
 
 # `longest` Error
 
-<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.9;" src="../images/ferris_does_not_compile.svg">
 
 ```rust
 fn longest(x: &str, y: &str) -> &str {
@@ -313,7 +313,7 @@ class: image-right image-width-20
 
 # `longest` Lifetimes
 
-<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.9;" src="../images/ferris_does_not_compile.svg">
 
 Let's return back to our `longest` function.
 
@@ -358,7 +358,7 @@ class: image-right image-width-25
 
 # `longest` Lifetimes
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_happy.svg">
 
 Since lifetimes are a kind of generic parameter, we must declare them like normal generic type parameters.
 
@@ -442,7 +442,7 @@ class: image-right image-width-20
 
 # Borrow Checker Example 2
 
-<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.9;" src="../images/ferris_does_not_compile.svg">
 
 Let's reorder some things around.
 
@@ -492,7 +492,7 @@ class: image-right image-width-20
 
 # Borrow Checker Example 3
 
-<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.9;" src="../images/ferris_does_not_compile.svg">
 
 What if we knew (as the programmer) that `string1` is always longer than `string2`?
 
@@ -516,7 +516,7 @@ class: image-right image-width-20
 
 # Borrow Checker Example 3
 
-<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.9;" src="../images/ferris_does_not_compile.svg">
 
 ```rust
 let result;
@@ -556,7 +556,7 @@ class: image-right image-width-20
 
 # Lifetimes of Return Values
 
-<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.9;" src="../images/ferris_does_not_compile.svg">
 
 The lifetime of a return value _must_ match the lifetime of one of the inputs.
 
@@ -1045,7 +1045,7 @@ class: image-right image-width-20
 
 # `'static` Bound Example 1
 
-<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.9;" src="../images/ferris_does_not_compile.svg">
 
 Here's an example of using a `'static` bound.
 
@@ -1092,7 +1092,7 @@ class: image-right image-width-20
 
 # `'static` Bound Example 2
 
-<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.9;" src="../images/ferris_does_not_compile.svg">
 
 ```rust
 fn print_with_static_lifetime(v: &'static Vec<i32>) {
@@ -1128,7 +1128,7 @@ class: image-right image-width-20
 
 # `'static` Bound Example 2
 
-<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.9;" src="../images/ferris_does_not_compile.svg">
 
 ```rust
 fn print_with_static_bound(v: impl Debug + 'static) {
@@ -1190,7 +1190,7 @@ class: image-right image-width-30
 
 # Next Lecture: Smart Pointers and Trait Objects
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 

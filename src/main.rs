@@ -1,5 +1,6 @@
 use dioxus::prelude::*;
 
+mod links;
 mod navbar;
 mod pages;
 

@@ -69,7 +69,7 @@ class: image-right image-width-25
 
 # Review Question 1
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 Why doesn't this compile?
 
@@ -168,7 +168,7 @@ class: image-right image-width-25
 
 # Review Question 2
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 Why doesn't this compile?
 
@@ -511,7 +511,7 @@ class: image-right image-width-25
 
 # References in Structs
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 Can we store references inside structs?
 
@@ -581,7 +581,7 @@ class: image-right image-width-25
 
 # Printing Structs
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 What if we wanted to print these structs for debugging?
 
@@ -1275,7 +1275,7 @@ class: image-right image-width-25
 
 # `Option<T>` vs `NULL`
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 So why is `Option<T>` better than `NULL`? Consider this:
 
@@ -1515,7 +1515,7 @@ class: image-right image-width-25
 
 # Matches Are Exhaustive
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 The `match` patterns must cover all possible values that the matched expression may take.
 
@@ -1682,7 +1682,7 @@ class: image-right image-width-30
 
 # Next Lecture: Standard Collections and Generics
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 

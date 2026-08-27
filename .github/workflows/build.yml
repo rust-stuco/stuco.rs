@@ -218,6 +218,16 @@ jobs:
             esac
           }
 
+          redirect() {
+            local path=$1 expected=$2 code=$3 actual
+            actual=$(curl -sS -o /dev/null --max-time 30 \
+              -w '%{http_code} %{redirect_url}' "$SITE_URL$path")
+            if [ "$actual" != "$code $expected" ]; then
+              echo "::error::$path returned '$actual', expected '$code $expected'"
+              failed=1
+            fi
+          }
+
           while IFS= read -r file; do
             case $file in
               *.pdf) check "${file#"$root"}" application/pdf ;;
@@ -227,6 +237,11 @@ jobs:
 
           check / text/html
           check /schedule text/html
+
+          while read -r source destination code; do
+            case $source in '' | '#'*) continue ;; esac
+            redirect "$source" "$destination" "$code"
+          done < _redirects
 
           if [ "$failed" -ne 0 ]; then
             echo "::error::$SITE_URL is missing generated content"

@@ -41,7 +41,7 @@ layout: section
 class: image-right image-width-50
 ---
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
 
 # Meet Ferris!
 
@@ -333,7 +333,7 @@ layout: section
 class: image-right image-width-50
 ---
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/cargo-ship.avif">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/cargo-ship.avif">
 
 # Cargo
 
@@ -474,7 +474,7 @@ fn main() {
 class: image-right image-width-25
 ---
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 # Immutability
 
@@ -522,7 +522,7 @@ error[E0384]: cannot assign twice to immutable variable `x`
 class: image-right image-width-25
 ---
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
 
 # Mutability
 
@@ -639,7 +639,7 @@ The value of x is: 6
 class: image-right image-width-25
 ---
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 # Aside: Shadowing vs Mutability
 
@@ -667,7 +667,7 @@ spaces = spaces.len();
 class: image-right image-width-25
 ---
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
 
 # Aside: Shadowing vs Mutability
 
@@ -1214,7 +1214,7 @@ fn main() {
 class: image-right image-width-25
 ---
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 # `if` Expressions
 
@@ -1579,7 +1579,7 @@ layout: end
 class: image-right image-width-30
 ---
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
 
 # **Next Lecture: Ownership**
 

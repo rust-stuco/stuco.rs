@@ -5,7 +5,7 @@
 //! stage while running Rust tests, then restore it for the release build.
 
 use std::{
-    env, io,
+    env, fs, io,
     path::{Path, PathBuf},
     process::Command,
     slice,
@@ -26,6 +26,7 @@ fn main() -> io::Result<()> {
         .ok_or_else(|| io::Error::other("CARGO_MANIFEST_DIR is not set"))?;
 
     println!("cargo:rerun-if-changed=src/syllabus.typ");
+    println!("cargo:rerun-if-changed=_redirects");
     println!("cargo:rerun-if-env-changed={SKIP_LECTURES}");
 
     // Watching individual files avoids rebuild loops from ignored homework artifacts.
@@ -36,11 +37,26 @@ fn main() -> io::Result<()> {
     utils::create_directory(&manifest_dir.join("public"))?;
 
     // Run stages sequentially so a failure prevents later work from starting.
+    publish_redirects(&manifest_dir)?;
     build_syllabus(&manifest_dir)?;
     if env::var_os(SKIP_LECTURES).is_none() {
         lectures::build(&manifest_dir)?;
     }
     homeworks::build(&manifest_dir)
+}
+
+fn publish_redirects(manifest_dir: &Path) -> io::Result<()> {
+    let source = manifest_dir.join("_redirects");
+    let output = manifest_dir.join("public/_redirects");
+
+    utils::require_nonempty_file(&source)?;
+    if utils::generated_files_are_current(slice::from_ref(&source), &[&output]) {
+        return Ok(());
+    }
+
+    fs::copy(&source, &output)?;
+
+    utils::require_nonempty_file(&output)
 }
 
 fn build_syllabus(manifest_dir: &Path) -> io::Result<()> {

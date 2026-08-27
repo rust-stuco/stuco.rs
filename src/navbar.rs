@@ -1,7 +1,14 @@
-use crate::pages::Route;
+use crate::{links, pages::Route};
 use dioxus::prelude::*;
 
 const FERRIS: Asset = asset!("/assets/ferris.png");
+
+pub(crate) const SHORT_LINKS: &[(&str, &str)] = &[
+    ("/excusals", "Excusals"),
+    ("/gradescope", "Gradescope"),
+    ("/github", "GitHub"),
+    ("/discord", "Discord"),
+];
 
 #[component]
 pub(crate) fn Navbar() -> Element {
@@ -52,18 +59,14 @@ pub(crate) fn Navbar() -> Element {
                         "Schedule"
                     }
                     Link { to: "/syllabus.pdf", new_tab: true, "Syllabus" }
-                    Link {
-                        to: "https://forms.gle/NCiDQsUsPuoDHcJ18",
-                        new_tab: true,
-                        "Excusals"
+                    for (path , label) in SHORT_LINKS {
+                        Link {
+                            key: "{path}",
+                            to: links::destination(path),
+                            new_tab: true,
+                            "{label}"
+                        }
                     }
-                    Link {
-                        to: "https://www.gradescope.com/courses/1326421",
-                        new_tab: true,
-                        "Gradescope"
-                    }
-                    Link { to: "https://github.com/rust-stuco", new_tab: true, "GitHub" }
-                    Link { to: "https://discord.gg/styjqeEdBG", new_tab: true, "Discord" }
                 }
             }
             div { class: "pt-16", Outlet::<Route> {} }

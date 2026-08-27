@@ -209,7 +209,7 @@ class: image-right image-width-50
 
 # The Stack: Local Variables
 
-<img class="slide-image" style="--image-size: 50%;" src="../images/week8/frames/0.png">
+<img class="slide-image" style="--image-size: 0.5;" src="../images/week8/frames/0.png">
 
 Here is a representation of `main`'s stack frame.
 
@@ -226,7 +226,7 @@ class: image-right image-width-50
 
 # The Stack: Local Variables
 
-<img class="slide-image" style="--image-size: 50%;" src="../images/week8/frames/1.png">
+<img class="slide-image" style="--image-size: 0.5;" src="../images/week8/frames/1.png">
 
 Now we call `my_function`, constructing its stack frame.
 
@@ -262,7 +262,7 @@ class: image-right image-width-50
 
 # Big Data
 
-<img class="slide-image" style="--image-size: 50%;" src="../images/week8/frames/0.png">
+<img class="slide-image" style="--image-size: 0.5;" src="../images/week8/frames/0.png">
 
 What if instead of an integer on the stack (`x = 1`)...
 
@@ -279,7 +279,7 @@ class: image-right image-width-50
 
 # Big Data
 
-<img class="slide-image" style="--image-size: 100%;" src="../images/week8/frames/2.png">
+<img class="slide-image" style="--image-size: 1;" src="../images/week8/frames/2.png">
 
 We have a 15 GB array?
 
@@ -306,7 +306,7 @@ class: image-right image-width-45
 
 # Big Data
 
-<img class="slide-image" style="--image-size: 100%;" src="../images/week8/frames/3.png">
+<img class="slide-image" style="--image-size: 1;" src="../images/week8/frames/3.png">
 
 ```rust
 fn my_function(arg: [u32; HUGE_NUMBER]) {
@@ -376,7 +376,7 @@ class: image-right image-width-50
 
 # The Stack?
 
-<img class="slide-image" style="--image-size: 100%;" src="../images/week8/frames/2.png">
+<img class="slide-image" style="--image-size: 1;" src="../images/week8/frames/2.png">
 
 Instead of storing our array buffer on the stack...
 
@@ -387,7 +387,7 @@ class: image-right image-width-50
 
 # The Heap
 
-<img class="slide-image" style="--image-size: 100%;" src="../images/week8/frames/4.png">
+<img class="slide-image" style="--image-size: 1;" src="../images/week8/frames/4.png">
 
 Instead of storing our array buffer on the stack...
 
@@ -400,7 +400,7 @@ class: image-right image-width-50
 
 # The Heap
 
-<img class="slide-image" style="--image-size: 100%;" src="../images/week8/frames/4.png">
+<img class="slide-image" style="--image-size: 1;" src="../images/week8/frames/4.png">
 
 * If the data lives in the heap...
 * The **pointer** lives on the stack
@@ -459,7 +459,7 @@ class: image-right image-width-40
 
 # The Heap
 
-<img class="slide-image" style="--image-size: 100%;" src="../images/week8/frames/5.png">
+<img class="slide-image" style="--image-size: 1;" src="../images/week8/frames/5.png">
 
 When we call `my_function`, we can copy the _pointer_ into `arg`!
 
@@ -477,7 +477,7 @@ class: image-right image-width-40
 
 # The Heap
 
-<img class="slide-image" style="--image-size: 100%;" src="../images/week8/frames/5.png">
+<img class="slide-image" style="--image-size: 1;" src="../images/week8/frames/5.png">
 
 **Before:** 15 GB per array
 
@@ -563,7 +563,7 @@ class: image-right image-width-50
 
 # Motivating Ownership
 
-<img class="slide-image" style="--image-size: 50%;" src="../images/week8/frames/0.png">
+<img class="slide-image" style="--image-size: 0.5;" src="../images/week8/frames/0.png">
 
 Recall the behavior of local variables on the stack:
 
@@ -579,7 +579,7 @@ class: image-right image-width-50
 
 # Motivating Ownership
 
-<img class="slide-image" style="--image-size: 50%;" src="../images/week8/frames/0.png">
+<img class="slide-image" style="--image-size: 0.5;" src="../images/week8/frames/0.png">
 
 What if we say that data is **"owned"** by the stack frame?
 
@@ -737,7 +737,7 @@ class: image-right image-width-50
 
 # Closure Example
 
-<img class="slide-image" style="--image-size: 100%;" src="../images/week8/closures/closure0.png">
+<img class="slide-image" style="--image-size: 1;" src="../images/week8/closures/closure0.png">
 
 First, `my_str` is moved into our `Closure`.
 
@@ -754,7 +754,7 @@ class: image-right image-width-50
 
 # Closure Example
 
-<img class="slide-image" style="--image-size: 100%;" src="../images/week8/closures/closure1.png">
+<img class="slide-image" style="--image-size: 1;" src="../images/week8/closures/closure1.png">
 
 Next, we call our closure, which gives ownership of `my_str` to `Closure::call`'s stack frame.
 
@@ -775,7 +775,7 @@ class: image-right image-width-50
 
 # Closure Example
 
-<img class="slide-image" style="--image-size: 100%;" src="../images/week8/closures/closure2.png">
+<img class="slide-image" style="--image-size: 1;" src="../images/week8/closures/closure2.png">
 
 `Closure::call` gives ownership back to `main`'s stack frame...
 
@@ -793,7 +793,7 @@ class: image-right image-width-50
 
 # Closure Example
 
-<img class="slide-image" style="--image-size: 100%;" src="../images/week8/closures/closure3.png">
+<img class="slide-image" style="--image-size: 1;" src="../images/week8/closures/closure3.png">
 
 * `Closure`'s `my_str` is invalidated
 * `my_str` is moved out of `Closure`'s "body"
@@ -832,7 +832,7 @@ class: image-right image-width-25
 
 # Vector Pop
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 Suppose we want to write this code.
 
@@ -886,7 +886,7 @@ class: image-right image-width-25
 
 # Vector Push
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 What if instead of removing the last element, we _add_ an element to the end?
 
@@ -933,7 +933,7 @@ class: image-right image-width-50
 
 # Vector Layout
 
-<img class="slide-image" style="--image-size: 90%;" src="../images/String_layout.svg">
+<img class="slide-image" style="--image-size: 0.9;" src="../images/String_layout.svg">
 
 Recall that vectors are _dynamic arrays_.
 
@@ -946,7 +946,7 @@ class: image-right image-width-35
 
 # Mutating Vectors
 
-<img class="slide-image" style="--image-size: 95%;" src="../images/String_layout.svg">
+<img class="slide-image" style="--image-size: 0.95;" src="../images/String_layout.svg">
 
 * What if pushing `5` onto `v` triggers a resize?
 * Resizing means:
@@ -1932,7 +1932,7 @@ class: image-right image-width-25
 
 # Arrays and Slices
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 Here is a seemingly reasonable solution:
 
@@ -2206,7 +2206,7 @@ class: image-right image-width-30
 
 # Next Lecture: Lifetimes
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 

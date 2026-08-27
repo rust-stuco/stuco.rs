@@ -285,7 +285,7 @@ class: image-right image-width-25
 
 # What `type_of` Error?
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_panics.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_panics.svg">
 
 In Rust there are **two** main types of errors we care about: _recoverable_ and _unrecoverable_ errors (panics).
 
@@ -750,7 +750,7 @@ class: image-right image-width-25
 
 # Traits in Action
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 What happens when we try and construct a `Shape`?
 
@@ -799,7 +799,7 @@ class: image-right image-width-25
 
 # Traits in Action
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
 
 To use the `Shape` trait, Rust must know the type that is implementing it.
 
@@ -1126,7 +1126,7 @@ class: image-right image-width-25
 
 # When `#[derive]` Fails
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 What happens if a field is not `Copy`?
 
@@ -1191,7 +1191,7 @@ class: image-right image-width-25
 
 # When `#[derive(Default)]` Fails
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 `Default` is only successfully derived if every generic type used is also `Default`.
 
@@ -1563,7 +1563,7 @@ class: image-right image-width-30
 
 # **Next Lecture: Modules and Testing**
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 

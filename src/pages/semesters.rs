@@ -43,7 +43,10 @@ pub(super) const CURRENT_SEMESTER: Semester = Semester {
         StaffMember::new("Anish Pallati", Some("apallati@andrew.cmu.edu")),
         StaffMember::new("Max Wen", Some("maxwen@andrew.cmu.edu")),
     ],
-    tas: &[StaffMember::new("Bright Zheng", Some("brightz@andrew.cmu.edu"))],
+    tas: &[StaffMember::new(
+        "Bright Zheng",
+        Some("brightz@andrew.cmu.edu"),
+    )],
     link: "https://stuco.rs",
 };
 

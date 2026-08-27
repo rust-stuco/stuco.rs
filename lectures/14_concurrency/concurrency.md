@@ -46,7 +46,7 @@ class: communism
 class: image-full
 ---
 
-<img class="slide-image-full" style="--image-size: 100%;" src="../images/week12/conc-vs-par.jpg">
+<img class="slide-image-full" style="--image-size: 1;" src="../images/week12/conc-vs-par.jpg">
 
 
 ---
@@ -313,7 +313,7 @@ class: image-right image-width-30
 
 # Lecture Done!
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_panics.svg">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_panics.svg">
 
 Thanks for coming!
 
@@ -411,7 +411,7 @@ class: image-right image-width-50
 
 # Sync vs Async
 
-<img class="slide-image" style="--image-size: 100%;" src="../images/sync-vs-async.avif">
+<img class="slide-image" style="--image-size: 1;" src="../images/sync-vs-async.avif">
 
 * In synchronous programming, we **wait/block** on the response
 * In asynchronous programming, we can do other stuff _while_ we are waiting
@@ -428,7 +428,7 @@ For example, imagine while you are watching a youtube video you can't do anythin
 class: image-full
 ---
 
-<img class="slide-image-full" style="--image-size: 80%;" src="../images/client-server.jpg">
+<img class="slide-image-full" style="--image-size: 0.8;" src="../images/client-server.jpg">
 
 <!--
 This is an illustration of network latency
@@ -866,7 +866,7 @@ class: image-right image-width-30
 
 # `std::thread::spawn`
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 Recall that we usually had to `move` variables and values into closures for `std::thread::spawn`.
 
@@ -908,7 +908,7 @@ class: image-right image-width-30
 
 # `'static` Bound
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 ```rust
 #[tokio::main]
@@ -1188,7 +1188,7 @@ class: image-right image-width-50
 
 # The End!
 
-<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.9;" src="../images/ferris_happy.svg">
 
 We've reached the end of our prepared content!
 
@@ -1301,7 +1301,7 @@ class: image-right image-width-50
 
 * Completely rewritten in Rust by [Feb 27, 2025](https://fishshell.com/blog/new-in-40/)
 
-<img class="slide-image" style="--image-size: 100%;" src="./fish-rewrite-in-rust.webp">
+<img class="slide-image" style="--image-size: 1;" src="./fish-rewrite-in-rust.webp">
 
 
 <!--
@@ -1321,7 +1321,7 @@ class: image-right image-width-50
 
 * A code editor built from scratch in Rust. (not a ... Vscode fork ...)
 
-<img class="slide-image" style="--image-size: 100%;" src="./zed-homepage.webp">
+<img class="slide-image" style="--image-size: 1;" src="./zed-homepage.webp">
 
 ---
 
@@ -1356,7 +1356,7 @@ class: image-right image-width-35
 
 # **Thanks for taking Rust StuCo!**
 
-<img class="slide-image" style="--image-size: 90%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.9;" src="../images/ferris_happy.svg">
 
 <br>
 

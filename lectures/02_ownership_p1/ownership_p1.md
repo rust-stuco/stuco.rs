@@ -387,7 +387,7 @@ class: image-right image-width-50
 
 # `String` Data Layout
 
-<img class="slide-image" style="--image-size: 90%;" src="../images/String_layout.svg">
+<img class="slide-image" style="--image-size: 0.9;" src="../images/String_layout.svg">
 
 ```rust
 let s1 = String::from("hello");
@@ -407,7 +407,7 @@ class: image-right image-width-50
 
 # Pointer Aliasing 😨
 
-<img class="slide-image" style="--image-size: 85%;" src="../images/String_alias.svg">
+<img class="slide-image" style="--image-size: 0.85;" src="../images/String_alias.svg">
 
 ```rust
 let s1 = String::from("hello");
@@ -431,7 +431,7 @@ class: image-right image-width-50
 
 # Pointer Aliasing ☠️
 
-<img class="slide-image" style="--image-size: 85%;" src="../images/String_alias.svg">
+<img class="slide-image" style="--image-size: 0.85;" src="../images/String_alias.svg">
 
 ```rust
 let s1 = String::from("hello");
@@ -450,7 +450,7 @@ class: image-right image-width-50
 
 # Enforcing Single Ownership
 
-<img class="slide-image" style="--image-size: 85%;" src="../images/String_move.svg">
+<img class="slide-image" style="--image-size: 0.85;" src="../images/String_move.svg">
 
 To ensure memory safety, after the second line, `s1` is no longer valid.
 
@@ -849,7 +849,7 @@ class: image-right image-width-25
 
 # Mutating a Reference
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 What if we want to modify the value of something we've borrowed through a reference?
 
@@ -916,7 +916,7 @@ class: image-right image-width-55
 
 # Reference Data Layout
 
-<img class="slide-image" style="--image-size: 85%;" src="../images/String_reference.svg">
+<img class="slide-image" style="--image-size: 0.85;" src="../images/String_reference.svg">
 
 * In memory, references are just like pointers
 * In practice, they have a couple of constraints that make them safer
@@ -942,7 +942,7 @@ class: image-right image-width-25
 
 # Constraint: Mutable References are Exclusive
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 If you have a mutable reference to a value, you can have no other references to that value.
 
@@ -1017,7 +1017,7 @@ class: image-right image-width-25
 
 # Multiple Mutable References
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
 
 We are allowed to hold multiple mutable references, just not _simultaneously_.
 
@@ -1041,7 +1041,7 @@ class: image-right image-width-25
 
 # Mutable and Immutable References
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 We cannot have both an immutable and mutable reference to the same value.
 
@@ -1122,7 +1122,7 @@ class: image-right image-width-25
 
 # Constraint: No Dangling References
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 The Rust compiler guarantees that references will never be invalid, which means it will not allow dangling references.
 
@@ -1259,7 +1259,7 @@ class: image-right image-width-50
 
 # String Slices
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/str_slice.svg">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/str_slice.svg">
 
 ```rust
 let s = String::from("hello world");
@@ -1443,7 +1443,7 @@ class: image-right image-width-30
 
 # Next Lecture: Structs and Enums
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 

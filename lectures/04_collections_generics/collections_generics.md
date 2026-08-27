@@ -165,7 +165,7 @@ class: image-right image-width-25
 
 # `Vec` and References
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 Recall the rules for immutable and mutable references.
 
@@ -208,7 +208,7 @@ class: image-right image-width-25
 
 # `Vec` and References
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 What about this new code snippet?
 
@@ -340,7 +340,7 @@ class: image-right image-width-25
 
 # `Vec` and Mutation
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 Say that you wanted to mutate the vector by appending a new element while you were iterating over it.
 
@@ -696,7 +696,7 @@ class: image-right image-width-25
 
 # Indexing into Strings
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 This code might seem reasonable from any other programming language like Python or C.
 
@@ -772,7 +772,7 @@ class: image-right image-width-25
 
 # Internal Representation: UTF-8
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 Let's revisit some invalid Rust code again.
 
@@ -1308,7 +1308,7 @@ class: image-right image-width-25
 
 Let's try to modify our old function directly:
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 ```rust
 fn largest<T>(list: &[T]) -> &T {
@@ -1443,7 +1443,7 @@ class: image-right image-width-25
 
 # Generic Structs
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 Observe that this declaration defines both the `x` field and the `y` field to be of the same type.
 
@@ -1780,7 +1780,7 @@ class: image-right image-width-30
 
 # **Next Lecture: Errors and Traits**
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 

@@ -711,7 +711,7 @@ class: image-right image-width-50
 
 # Docs.rs
 
-<img class="slide-image" style="--image-size: 100%;" src="../images/week7/google-rand.png">
+<img class="slide-image" style="--image-size: 1;" src="../images/week7/google-rand.png">
 
 - Docs.rs has documentation for essentially every third-party Rust library
 - When publishing your own crate, the documentation gets pushed to Docs.rs
@@ -720,7 +720,7 @@ class: image-right image-width-50
 class: image-full
 ---
 
-<img class="slide-image-full" style="--image-size: 75%;" src="../images/week7/rand-docs.png">
+<img class="slide-image-full" style="--image-size: 0.75;" src="../images/week7/rand-docs.png">
 
 ---
 class: image-right image-width-50
@@ -728,7 +728,7 @@ class: image-right image-width-50
 
 # Anatomy of `rustdoc`
 
-<img class="slide-image" style="--image-size: 95%;" src="../images/week7/hints.png">
+<img class="slide-image" style="--image-size: 0.95;" src="../images/week7/hints.png">
 
 - Navigation Bar (on the left)
 - Search Bar (at the top)
@@ -1124,7 +1124,7 @@ class: image-right image-width-30
 
 # Next Lecture: Closures and Iterators
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 

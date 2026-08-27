@@ -104,7 +104,7 @@ class: image-right image-width-25
 
 # How about this?
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 ```rust
 let example_closure = |x| x;
@@ -233,7 +233,7 @@ class: image-right image-width-25
 
 # Mutable Borrowing in Closures
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 What happens if we mutate captured variables from inside the closure?
 
@@ -341,7 +341,7 @@ class: image-right image-width-25
 
 # Giving Closures Ownership
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 ```rust
 let mystery = {
@@ -509,7 +509,7 @@ class: image-right image-width-45
 
 # The `Fn` traits: Visualized
 
-<img class="slide-image" style="--image-size: 100%;" src="../images/closure_traits.svg">
+<img class="slide-image" style="--image-size: 1;" src="../images/closure_traits.svg">
 
 Trait behavior is inherited by hierarcy
 
@@ -1158,7 +1158,7 @@ class: image-right image-width-25
 
 # Producing Iterators
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_not_desired_behavior.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_not_desired_behavior.svg">
 
 ```rust
 let v1: Vec<i32> = vec![1, 2, 3];
@@ -1221,7 +1221,7 @@ class: image-right image-width-25
 
 # Filter
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_does_not_compile.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
 ```rust
 fn filter_by(list: Vec<i32>, val: i32) -> Vec<i32> {
@@ -1247,7 +1247,7 @@ class: image-right image-width-25
 
 # Filter
 
-<img class="slide-image" style="--image-size: 75%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_happy.svg">
 ```rust
 list.into_iter().filter(|&x| x == val).collect()
 ```
@@ -1322,7 +1322,7 @@ class: image-right image-width-30
 
 # Next Lecture: Ownership Revisited
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 

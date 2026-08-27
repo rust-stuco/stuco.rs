@@ -840,7 +840,7 @@ class: image-right image-width-30
 
 # Next Lecture: Parallelism
 
-<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
+<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 
