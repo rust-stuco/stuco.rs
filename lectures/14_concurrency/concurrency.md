@@ -1301,7 +1301,7 @@ class: image-right image-width-50
 
 * Completely rewritten in Rust by [Feb 27, 2025](https://fishshell.com/blog/new-in-40/)
 
-<img class="slide-image" style="--image-size: 100%;" src="./fish-rewrite-in-rust.png">
+<img class="slide-image" style="--image-size: 100%;" src="./fish-rewrite-in-rust.webp">
 
 
 <!--
@@ -1321,7 +1321,7 @@ class: image-right image-width-50
 
 * A code editor built from scratch in Rust. (not a ... Vscode fork ...)
 
-<img class="slide-image" style="--image-size: 100%;" src="./zed-homepage.png">
+<img class="slide-image" style="--image-size: 100%;" src="./zed-homepage.webp">
 
 ---
 

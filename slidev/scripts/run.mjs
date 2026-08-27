@@ -147,7 +147,9 @@ async function runTask(taskName, lectureDirectory, extraArgs) {
         path.join(pdfOutputRoot, `${slug}-light.pdf`),
         '--with-toc',
         '--timeout',
-        '60000',
+        // Per `page.goto`, not per export. The print route mounts every slide at once, so a large
+        // deck on a cold CI runner needs more than Slidev's default.
+        '120000',
         ...browserArgs(),
       ],
       'export:dark': [
@@ -158,7 +160,7 @@ async function runTask(taskName, lectureDirectory, extraArgs) {
         '--dark',
         '--with-toc',
         '--timeout',
-        '60000',
+        '120000',
         ...browserArgs(),
       ],
     }[taskName]
