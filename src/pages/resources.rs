@@ -1,3 +1,7 @@
+//! Renders the resources page and validates its backing resource lists.
+//!
+//! [`Resources`] owns the page while the tests keep each resource file compatible with its schema.
+
 use dioxus::prelude::*;
 
 #[component]

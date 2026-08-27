@@ -10,12 +10,10 @@ Download and install `typst` from the [official website](https://typst.app/open-
 
 ### Lecture slides
 
-The build renders every lecture deck to PDF with the `marp` CLI, so you need it installed even if you
-are only working on the website:
-
-```bash
-npm install -g @marp-team/marp-cli
-```
+The build renders every lecture as an interactive [Slidev](slidev/README.md) deck and as light and
+dark PDFs. Install Node.js, npm, and Chrome or Chromium. The build installs the pinned JavaScript
+dependencies from `slidev/package-lock.json`; set `STUCO_SLIDEV_CHROME` if it cannot find your
+browser on `PATH` or in a standard installation directory.
 
 ### Website
 
@@ -41,4 +39,19 @@ Run the following command in the root of your project:
 dx serve
 ```
 
-The first time you run this, it will take longer since it needs to build the `public/` directory from `homeworks/`, `lectures/`, and `src/syllabus.typ`.
+The first run takes longer because it builds the syllabus, homework handouts, website, and all
+lecture formats.
+
+### Lecture decks
+
+`dx serve` serves each deck at `/lectures/NN_topic/deck/`, the same path used in deployments. The
+schedule links the interactive deck and both PDF variants.
+
+When editing one deck, run `npm run dev -- NN_topic` from `slidev/` for faster feedback. For example:
+
+```bash
+cd slidev
+npm run dev -- 09_ownership_p2
+```
+
+See [the Slidev README](slidev/README.md) for build, export, and output details.

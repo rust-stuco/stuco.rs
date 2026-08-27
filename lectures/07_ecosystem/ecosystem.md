@@ -1,22 +1,29 @@
 ---
-marp: true
-paginate: true
-theme: rust
-class: invert
+theme: default
+title: The Rust Ecosystem
+author: Rust StuCo
+info: |
+  Week 7 of Rust StuCo: The Rust Ecosystem.
+colorSchema: auto
+aspectRatio: 16/9
+canvasWidth: 1280
+fonts:
+  sans: Noto Sans Variable
+  mono: Noto Sans Mono Variable
+  provider: none
+lineNumbers: false
+monaco: false
+drawings:
+  enabled: true
+  persist: false
+  presenterOnly: true
+exportFilename: ecosystem
+export:
+  timeout: 60000
+  withToc: true
+layout: default
+class: communism
 ---
-
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-section {
-    font-family: "Noto Sans";
-}
-code {
-    font-family: "Noto Sans Mono";
-}
-</style>
-
-<!-- _class: communism invert  -->
 
 ## Intro to Rust Lang
 
@@ -34,6 +41,8 @@ code {
   - `anyhow` vs `thiserror`
 
 ---
+layout: section
+---
 
 # **The Rust Toolchain**
 
@@ -46,6 +55,8 @@ code {
   - Defined by release channel / version, and the host platform triplet
   - `stable-x86_64-pc-windows-msvc`, `beta-aarch64-unknown-linux-gnu`
 
+---
+layout: section
 ---
 
 # **`rustup`**
@@ -122,6 +133,8 @@ Here are some basic commands to remember:
   - Uses a specific rust toolchain one-time.
 
 ---
+layout: section
+---
 
 # **Clippy**
 
@@ -186,6 +199,8 @@ This is a very basic example, look online for more information!
 -->
 
 ---
+layout: section
+---
 
 # **`rustfmt`**
 
@@ -233,6 +248,8 @@ This is a subtle thing, but when jumping into an unknown codebase, having consis
 This is one of the reasons it is much easier to start contributing to a code base over something like a C or C++ codebase. When jumping into a C or C++ codebase, a significant fraction of the time there will be custom macros and/or templates that you have to learn before you can even understand the code. TLDR you are basically learning a new language every time you jump into a C/C++ codebase.
 -->
 
+---
+layout: section
 ---
 
 # **Performance and Analysis**
@@ -302,6 +319,8 @@ This is an overexaggeration, we ran other things at the same time on the same co
 numbers vary wildly.
 -->
 
+---
+layout: section
 ---
 
 # **Criterion**
@@ -480,6 +499,8 @@ Some details omitted.
 -->
 
 ---
+layout: section
+---
 
 # **Flamegraphs**
 
@@ -605,6 +626,8 @@ And here is the flamegraph for running both 50,000 times:
 ![](../images/week7/flamegraph_two_build_string.svg)
 
 ---
+layout: section
+---
 
 # **Reading Rust Documentation**
 
@@ -642,6 +665,8 @@ All Rust library documentation has the same structure!
 This is a much more important detail than it might seem at first. Many people do not understand that documentation is sometimes _even more_ important than the code it describes.
 -->
 
+---
+layout: section
 ---
 
 # **`rand`**
@@ -681,23 +706,29 @@ Maybe google isn't actually your friend, but you get the point. Choose whatever 
 -->
 
 ---
+class: image-right image-width-50
+---
 
 # Docs.rs
 
-![bg right:50% 100%](../images/week7/google-rand.png)
+<img class="slide-image" style="--image-size: 100%;" src="../images/week7/google-rand.png">
 
 - Docs.rs has documentation for essentially every third-party Rust library
 - When publishing your own crate, the documentation gets pushed to Docs.rs
 
 ---
+class: image-full
+---
 
-![bg 75%](../images/week7/rand-docs.png)
+<img class="slide-image-full" style="--image-size: 75%;" src="../images/week7/rand-docs.png">
 
+---
+class: image-right image-width-50
 ---
 
 # Anatomy of `rustdoc`
 
-![bg right:50% 95%](../images/week7/hints.png)
+<img class="slide-image" style="--image-size: 95%;" src="../images/week7/hints.png">
 
 - Navigation Bar (on the left)
 - Search Bar (at the top)
@@ -911,6 +942,8 @@ Note that you don't always want to use the most feature-full libraries! Simplici
 -->
 
 ---
+layout: section
+---
 
 # **Error Handling**
 
@@ -1084,11 +1117,14 @@ pub struct MyError {
 
 
 --- 
+layout: end
+class: image-right image-width-30
+---
 
 
 # Next Lecture: Closures and Iterators
 
-![bg right:30% 80%](../images/ferris_happy.svg)
+<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 

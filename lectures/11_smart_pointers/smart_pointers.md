@@ -1,22 +1,29 @@
 ---
-marp: true
-paginate: true
-theme: rust
-class: invert
+theme: default
+title: Smart Pointers and Trait Objects
+author: Rust StuCo
+info: |
+  Week 11 of Rust StuCo: Smart Pointers and Trait Objects.
+colorSchema: auto
+aspectRatio: 16/9
+canvasWidth: 1280
+fonts:
+  sans: Noto Sans Variable
+  mono: Noto Sans Mono Variable
+  provider: none
+lineNumbers: false
+monaco: false
+drawings:
+  enabled: true
+  persist: false
+  presenterOnly: true
+exportFilename: smart_pointers
+export:
+  timeout: 60000
+  withToc: true
+layout: default
+class: communism
 ---
-
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-section {
-    font-family: "Noto Sans";
-}
-code {
-    font-family: "Noto Sans Mono";
-}
-</style>
-
-<!-- _class: communism invert  -->
 
 ## Intro to Rust Lang
 
@@ -37,7 +44,8 @@ code {
 
 
 ---
-
+layout: section
+---
 
 # **`Box<T>`**
 
@@ -85,11 +93,12 @@ will always be valid UTF-8.
 
 
 ---
-
+class: image-right image-width-30
+---
 
 # Let's Make a List
 
-![bg right:30% 80%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_does_not_compile.svg">
 
 Let's say we wanted to make a recursive-style list:
 
@@ -156,11 +165,12 @@ enum Message {
 
 
 ---
-
+class: image-right image-width-45
+---
 
 # Size of Recursive Types?
 
-![bg right:45% 100%](../images/cons.svg)
+<img class="slide-image" style="--image-size: 100%;" src="../images/cons.svg">
 
 What happens when we try to determine the size of a recursive type?
 
@@ -194,11 +204,12 @@ help: insert some indirection (e.g., a `Box`, `Rc`, or `&`) to break the cycle
 
 
 ---
-
+class: image-right image-width-45
+---
 
 # A Finite `List`
 
-![bg right:45% 90%](../images/cons-finite.svg)
+<img class="slide-image" style="--image-size: 90%;" src="../images/cons-finite.svg">
 
 ```rust
 enum List {
@@ -308,7 +319,8 @@ assert_eq!(5, *y);
 
 
 ---
-
+layout: section
+---
 
 # **The `Deref` Trait**
 
@@ -550,7 +562,8 @@ fn grault(v: &[T]) { ... }
 
 
 ---
-
+layout: section
+---
 
 # **The `Drop` Trait**
 
@@ -657,11 +670,12 @@ Dropping `CustomSmartPointer` with data "I'm Connor"
 
 
 ---
-
+class: image-right image-width-30
+---
 
 # Manual Drop
 
-![bg right:30% 80%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_does_not_compile.svg">
 
 What if we want to manually drop a value before the end of the scope?
 
@@ -740,7 +754,8 @@ https://doc.rust-lang.org/src/core/mem/mod.rs.html#942
 
 
 ---
-
+layout: section
+---
 
 # **`Rc<T>`**
 
@@ -784,11 +799,12 @@ To enable multiple ownership, you must use the `Rc<T>` type.
 
 
 ---
-
+class: image-right image-width-25
+---
 
 # Let's Make a List (again)
 
-![bg right:25% 85%](../images/ferris_does_not_compile.svg)
+<img class="slide-image" style="--image-size: 85%;" src="../images/ferris_does_not_compile.svg">
 
 Let's go back to our `List`.
 
@@ -854,13 +870,14 @@ Cloning is expensive + then b and c refer to different tails---no cloning!
 
 
 ---
-
+class: image-right image-width-60
+---
 
 # Shared Ownership?
 
 Ideally, we want something like this:
 
-![bg right:60% 95%](../images/cons-rc.svg)
+<img class="slide-image" style="--image-size: 95%;" src="../images/cons-rc.svg">
 
 
 ---
@@ -910,11 +927,12 @@ let c = Cons(4, Rc::clone(&a));
 
 
 ---
-
+class: image-right image-width-50
+---
 
 # `Rc<T>`
 
-![bg right:50% 95%](../images/cons-rc.svg)
+<img class="slide-image" style="--image-size: 95%;" src="../images/cons-rc.svg">
 
 ```rust
 let end = Rc::new(
@@ -1061,7 +1079,8 @@ Another single-threaded smart pointer you might encounter is `RefCell<T>`.
 
 
 ---
-
+layout: section
+---
 
 # **Trait Objects**
 
@@ -1417,11 +1436,13 @@ If you are interested, here is some more content that explains this in more dept
 
 
 ---
-
+layout: end
+class: image-right image-width-30
+---
 
 # Next Lecture: Unsafe
 
-![bg right:30% 80%](../images/ferris_happy.svg)
+<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 

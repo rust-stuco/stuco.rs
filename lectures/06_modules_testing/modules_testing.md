@@ -1,22 +1,29 @@
 ---
-marp: true
-paginate: true
-theme: rust
-class: invert
+theme: default
+title: Modules and Testing
+author: Rust StuCo
+info: |
+  Week 6 of Rust StuCo: Modules and Testing.
+colorSchema: auto
+aspectRatio: 16/9
+canvasWidth: 1280
+fonts:
+  sans: Noto Sans Variable
+  mono: Noto Sans Mono Variable
+  provider: none
+lineNumbers: false
+monaco: false
+drawings:
+  enabled: true
+  persist: false
+  presenterOnly: true
+exportFilename: modules_testing
+export:
+  timeout: 60000
+  withToc: true
+layout: default
+class: communism
 ---
-
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-section {
-    font-family: "Noto Sans";
-}
-code {
-    font-family: "Noto Sans Mono";
-}
-</style>
-
-<!-- _class: communism invert  -->
 
 ## Intro to Rust Lang
 
@@ -61,6 +68,8 @@ Rust implements a number of organizational features, collectively referred to as
 Paths are what we've been calling namespaces this whole time basically
 -->
 
+---
+layout: section
 ---
 
 # **Packages and Crates**
@@ -187,6 +196,8 @@ testing the program easier
 * "Program"
   * Ask the mathematicians ¯\\_(ツ)_/¯
 
+---
+layout: section
 ---
 
 # **Modules**
@@ -822,6 +833,8 @@ pub enum Appetizer {
 * You can refer to items defined in other modules with paths
 * All module components are private by default, unless you mark them as `pub`
 
+---
+layout: section
 ---
 
 # **Testing**
@@ -1477,6 +1490,8 @@ Homework 6 is going to be very different from the previous 5 homeworks!
 * Your assignment will be manually graded on both correctness and robustness
 
 ---
+layout: section
+---
 
 # **Code Review**
 
@@ -1570,10 +1585,13 @@ Write good tests!
 * 5 tests testing edge cases?
 
 ---
+layout: end
+class: image-right image-width-30
+---
 
 # Next Lecture: Crates, Closures, and Iterators
 
-![bg right:30% 80%](../images/ferris_happy.svg)
+<img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
 
 Thanks for coming!
 
