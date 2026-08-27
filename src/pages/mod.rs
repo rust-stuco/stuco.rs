@@ -6,11 +6,13 @@ mod home;
 mod resources;
 mod schedule;
 mod semesters;
+mod setup;
 
 use faq::Faq;
 use home::Home;
 use resources::Resources;
 use schedule::Schedule;
+use setup::Setup;
 
 #[derive(Debug, Clone, Routable, PartialEq)]
 #[rustfmt::skip]
@@ -24,6 +26,8 @@ pub(crate) enum Route {
         Resources {},
         #[route("/schedule")]
         Schedule {},
+        #[route("/setup")]
+        Setup {},
 }
 
 #[cfg(test)]
