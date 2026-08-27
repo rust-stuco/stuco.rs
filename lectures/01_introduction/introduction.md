@@ -165,8 +165,11 @@ What is Rust at a more technical view?
 
 # Rust Is Memory Safe
 
-* _"C makes it easy to shoot yourself in the foot; C++ makes it harder, but when you do it blows your whole leg off"_
-    * Bjarne Stroustrup, creator of C++
+> _"C makes it easy to shoot yourself in the foot; C++ makes it harder, but when you do it blows your whole leg off"_
+* Bjarne Stroustrup, creator of C++
+
+<br>
+
 * Safety by default makes it much harder to shoot yourself in the foot
 * Memory accesses checked at compile-time
 * Powerful type system supports thread safety
@@ -200,7 +203,7 @@ Basically, even though Rust has all these higher-level features, it still provid
 
 # Rust Is Modern
 
-* Rust is only 10 years old
+* Rust is only 11 years old
 * Algebraic and generic data types
 * Modern developer tooling
 * Included build system and dependency management
@@ -231,7 +234,7 @@ Requires thinking a lot up front before you write down code
 
 # Issue: Ecosystem
 
-* Rust is only 10 years old...
+* Rust is only 11 years old...
 * Smaller and less mature ecosystem compared to some older languages
 * However, adoption among a wide range of companies is rapid!
 
@@ -326,30 +329,6 @@ layout: section
 
 # **Cargo Basics**
 
-
----
-
-
-# Hello World!
-
-To create an executable, we need a `main` function:
-
-###### src/main.rs
-```rust
-fn main() {
-    println!("Hello, world!");
-}
-```
-
-<br>
-
-To compile `main.rs`, use `rustc`.
-
-```
-$ rustc main.rs
-```
-
-
 ---
 class: image-right image-width-50
 ---
@@ -386,8 +365,21 @@ $ cd hello_cargo
     * `.git` repository and `.gitignore`
     * `Cargo.toml`
     * `src/main.rs`
-* We will come back `Cargo.toml` in future weeks
+* We will come back to `Cargo.toml` in future weeks
 
+
+---
+
+# Hello World!
+
+The entry point of a Rust project is its `main` function:
+
+###### src/main.rs
+```rust
+fn main() {
+    println!("Hello, world!");
+}
+```
 
 ---
 
@@ -442,8 +434,7 @@ $ cargo check
 ```
 
 * Much faster than `cargo build` since it doesn't build the executable
-* Useful when programming to check if your code still compiles
-
+* rust-analyzer will run this command automatically in your editor
 
 ---
 
@@ -474,7 +465,7 @@ Variables are values bound to a name. We define variables with the `let` keyword
 ```rust
 fn main() {
     let x = 5;
-    println!("The value of x is: {}", x);
+    println!("The value of x is: {x}");
 }
 ```
 
@@ -492,9 +483,9 @@ All variables in Rust are _immutable_ by default.
 ```rust
 fn main() {
     let x = 5;
-    println!("The value of x is: {}", x);
+    println!("The value of x is: {x}");
     x = 6;
-    println!("The value of x is: {}", x);
+    println!("The value of x is: {x}");
 }
 ```
 
@@ -519,7 +510,7 @@ error[E0384]: cannot assign twice to immutable variable `x`
   |         |
   |         first assignment to `x`
   |         help: consider making this binding mutable: `mut x`
-3 |     println!("The value of x is: {}", x);
+3 |     println!("The value of x is: {x}");
 4 |     x = 6;
   |     ^^^^^ cannot assign twice to immutable variable
 ```
@@ -540,9 +531,9 @@ To declare a variable as mutable, we use the `mut` keyword.
 ```rust
 fn main() {
     let mut x = 5;
-    println!("The value of x is: {}", x);
+    println!("The value of x is: {x}");
     x = 6;
-    println!("The value of x is: {}", x);
+    println!("The value of x is: {x}");
 }
 ```
 
@@ -587,10 +578,10 @@ fn main() {
 
     {
         let x = x * 2;
-        println!("The value of x in the inner scope is: {}", x);
+        println!("The value of x in the inner scope is: {x}");
     }
 
-    println!("The value of x is: {}", x);
+    println!("The value of x is: {x}");
 }
 ```
 
@@ -605,9 +596,9 @@ let x = 5;
 let x = x + 1;
 {
     let x = x * 2;
-    println!("The value of x in the inner scope is: {}", x);
+    println!("The value of x in the inner scope is: {x}");
 }
-println!("The value of x is: {}", x);
+println!("The value of x is: {x}");
 ```
 
 * `x` is bound to `5` first
@@ -627,9 +618,9 @@ let x = 5;
 let x = x + 1;
 {
     let x = x * 2;
-    println!("The value of x in the inner scope is: {}", x);
+    println!("The value of x in the inner scope is: {x}");
 }
-println!("The value of x is: {}", x);
+println!("The value of x is: {x}");
 ```
 
 <br>
@@ -736,14 +727,14 @@ Like most languages, there are two main categories of Data Types.
 
 Rust has similar integer types you would expect to see in C.
 
-| Length  | Signed  | Unsigned |
-|---------|---------|----------|
-| 8-bit   | `i8`    | `u8`     |
-| 16-bit  | `i16`   | `u16`    |
-| 32-bit  | `i32`   | `u32`    |
-| 64-bit  | `i64`   | `u64`    |
-| 128-bit | `i128`  | `u128`   |
-| arch    | `isize` | `usize`  |
+| **Length** | **Signed**        | **Unsigned**    |
+| :--------- | :---------------- | :-------------- |
+| 8-bit      | `i8`              | `u8`            |
+| 16-bit     | `i16`             | `u16`           |
+| 32-bit     | `i32` (default)   | `u32`           |
+| 64-bit     | `i64`             | `u64`           |
+| 128-bit    | `i128`            | `u128`          |
+| arch       | `isize`           | `usize` (index) |
 
 
 ---
@@ -801,7 +792,7 @@ fn main() {
     let integer = decimal as u8;
     let character = integer as char;
 
-    println!("{}, {}, {}", decimal, integer, character);
+    println!("{decimal}, {integer}, {character}");
 }
 ```
 
@@ -877,7 +868,7 @@ fn main() {
 
     let (x, y, z) = tup;
 
-    println!("The value of y is: {}", y);
+    println!("The value of y is: {y}");
 }
 ```
 
@@ -919,7 +910,7 @@ fn main() {
 
 * Unlike tuples, all elements must be the same type
 * The number of elements is always fixed at compile time
-    * If you want a collection that grows and shrinks, use a vector (lecture 4)
+    * If you want a collection that grows and shrinks, use a vector (next lecture)
 * Similar to stack-allocated arrays you would see in C
 
 
@@ -960,6 +951,7 @@ fn main() {
 
 * Rust will ensure that the index is within bounds at runtime
    * This is _not_ done in C/C++
+   * If the compiler can prove that an index is always safe, then it doesn't insert bounds checks
 
 <!--
 Note that Rust might not explicitly check at runtime since the compiler could optimize the check away
@@ -1013,7 +1005,7 @@ fn main() {
 }
 
 fn print_labeled_measurement(value: i32, unit_label: char) {
-    println!("The measurement is: {}{}", value, unit_label);
+    println!("The measurement is: {value}{unit_label}");
 }
 ```
 
@@ -1034,7 +1026,7 @@ You can return values back to the caller of a function with the `return` keyword
 ```rust
 fn main() {
     let x = plus_one(5);
-    println!("The value of x is: {}", x);
+    println!("The value of x is: {x}");
 }
 
 fn plus_one(x: i32) -> i32 {
@@ -1126,7 +1118,7 @@ fn main() {
         x + 1
     };
 
-    println!("The value of y is: {}", y);
+    println!("The value of y is: {y}");
 }
 ```
 
@@ -1145,7 +1137,7 @@ Let's revisit this code snippet.
 ```rust
 fn main() {
     let x = plus_one(5);
-    println!("The value of x is: {}", x);
+    println!("The value of x is: {x}");
 }
 
 fn plus_one(x: i32) -> i32 {
@@ -1252,17 +1244,17 @@ error[E0308]: mismatched types
 
 # `else if` Branching
 
-You can handle multiple conditions with `else if`
+You can handle multiple conditions with `else if`.
 
 ```rust
 fn main() {
     let number = 6;
 
-    if number % 4 == 0 {
+    if number.is_multiple_of(4) {
         println!("divisible by 4");
-    } else if number % 3 == 0 {
+    } else if number.is_multiple_of(3) {
         println!("divisible by 3");
-    } else if number % 2 == 0 {
+    } else if number.is_multiple_of(2) {
         println!("divisible by 2");
     } else {
         println!("not divisible by 4, 3, or 2");
@@ -1283,7 +1275,7 @@ fn main() {
     let condition = true;
     let number = if condition { 5 } else { 6 };
 
-    println!("The value of number is: {}", number);
+    println!("The value of number is: {number}");
 }
 ```
 
@@ -1325,7 +1317,7 @@ fn main() {
         }
     }
 
-    println!("The counter is {}", counter);
+    println!("The counter is {counter}");
 }
 ```
 
@@ -1351,7 +1343,7 @@ fn main() {
         }
     };
 
-    println!("The result is {}", result);
+    println!("The result is {result}");
 }
 ```
 
@@ -1418,7 +1410,7 @@ fn main() {
     let mut number = 3;
 
     while number != 0 {
-        println!("{}!", number);
+        println!("{number}!");
 
         number -= 1;
     }
@@ -1440,7 +1432,7 @@ fn main() {
     let a = [10, 20, 30, 40, 50];
 
     for element in a {
-        println!("the value is: {}", element);
+        println!("the value is: {element}");
     }
 }
 ```
@@ -1456,11 +1448,14 @@ To loop over a range, use the `..` syntax to create a range.
 ```rust
 fn main() {
     for number in 1..4 {
-        println!("{}...", number);
+        println!("{number}...");
     }
     println!("SURPRISE!!!");
 }
 ```
+
+* This range goes from 1 up to _but not including_ 4
+    * To create a fully inclusive range, use `..=`
 
 <!--
 There are no C-style for loops in Rust
@@ -1492,9 +1487,9 @@ layout: section
 
 # Syllabus
 
-You can find our course syllabus [here](https://stuco.rs/syllabus.pdf) or on our [website](https://stuco.rs).
+You can find our course syllabus on [stuco.rs](https://stuco.rs/syllabus.pdf).
 
-* There is a quiz on Gradescope worth 50 points (half a homework) that checks that you have read the entire syllabus
+* There is a 5-minute assignment on Gradescope worth 50 points that checks you have read the entire syllabus
 * Please make sure you understand the **bolded** parts!
 
 <!--
@@ -1510,8 +1505,10 @@ We'll go through some of the important bits right now!
 * **Attendance is mandatory**
     * We have to take attendance every lecture
     * You get a maximum of 2 unexcused absences by StuCo guidelines
-* Homeworks / programming assignments are worth 100 points each
+    * Request an excused absence by filling in the Excusals form on [stuco.rs](https://stuco.rs)
+* Homeworks are worth 100-150 points each
 * You need at least 1000 points to pass this course
+* There will be lots of extra credit!
 
 <!--
 For future instructors: we don't start counting absences until after the drop deadline!
@@ -1523,10 +1520,13 @@ For future instructors: we don't start counting absences until after the drop de
 
 # Course Logistics: Communication
 
-* [Piazza](https://piazza.com/cmu/spring2026/98008/home)
-* [Unofficial Discord](https://discord.gg/3MpqkWsNd2) (discord.gg/3MpqkWsNd2)
+* [Discord](https://discord.gg/3MpqkWsNd2) (link on [stuco.rs](https://stuco.rs))
+    * Please join and select the Fall 2026 role
 * Email
+* Office hours
 * Talk to us!
+    * **Instructors:** Anish Pallati and Max Wen
+    * **TA:** Bright Zheng
 
 
 ---
@@ -1537,11 +1537,11 @@ For future instructors: we don't start counting absences until after the drop de
 * Homeworks are designed to take less than an hour per week
     * If you are spending more than that, please let us know!
 * Autograded assignments through Gradescope
-* 7 late days
-    * _You can ask us for more late days if you ask in advance..._
+* 4 late submissions
+    * You can request more if you run out!
 
 <!--
-We may or may not give late days out like candy :D
+We may or may not give late submissions out like candy :D
 Still doesn't change the fact that assignments need to be turned in
 no more than a week after they were officially due (unless there is an
 extenuating circumstance)
@@ -1553,11 +1553,11 @@ extenuating circumstance)
 
 # Course Logistics: Homework Solutions
 
-* We have made homework solutions **public**
+* We have made most homework solutions **public**
 * We **strongly encourage** students to avoid looking at these solutions
 * Give a good-faith attempt at the homework before resorting to this
 * You will not learn anything from copying and pasting our code
-    * _We will catch you, and we are required to report you to the university_
+    * _We are required to report you to the university_
 
 
 ---
@@ -1565,9 +1565,12 @@ extenuating circumstance)
 
 # Homework 1
 
-* This first homework consists of 8 small puzzles and 4 simple function implementations
-* The objective is to build confidence with Rust syntax and experience interpreting error messages
-* Refer to `README.md` for further instructions
+* Join the Discord!
+* Install and set up Rust ([stuco.rs/setup](https://stuco.rs/setup))
+* Read the syllabus (Gradescope)
+* **PrimerLab** ([stuco.rs/schedule](https://stuco.rs/schedule))
+    * This first homework consists of 8 small puzzles and 4 simple function implementations
+    * The objective is to build confidence with Rust syntax and experience interpreting error messages
 * Please let us know if you have any questions!
 
 
@@ -1578,13 +1581,15 @@ class: image-right image-width-30
 
 <img class="slide-image" style="--image-size: 80%;" src="../images/ferris_happy.svg">
 
-# **Next Lecture: Ownership (Part 1)**
+# **Next Lecture: Ownership**
 
 Thanks for coming!
+
+Please stay seated to fill out the attendance form.
 
 <br>
 
 _Slides created by:_
 Connor Tsui, Benjamin Owad, David Rudo,
 Jessica Ruan, Fiona Fisher, Terrance Chen,
-Stephen Mao
+Stephen Mao, Max Wen
