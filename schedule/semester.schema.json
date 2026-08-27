@@ -15,8 +15,15 @@
       "type": "string"
     },
     "reveal_time": {
-      "description": "Local time each week unlocks, as `\"HH:MM\"` (24-hour).",
+      "description": "Local time each week's homework unlocks, as `\"HH:MM\"` (24-hour).",
       "type": "string"
+    },
+    "slides_reveal_minutes_before": {
+      "description": "Minutes before `reveal_time` when each week's slides unlock.",
+      "type": "integer",
+      "format": "uint16",
+      "maximum": 65535,
+      "minimum": 0
     },
     "timezone": {
       "description": "IANA time zone the reveal time is expressed in, e.g. `\"America/New_York\"`.",
@@ -33,6 +40,7 @@
   "required": [
     "name",
     "reveal_time",
+    "slides_reveal_minutes_before",
     "timezone",
     "weeks"
   ],
@@ -60,7 +68,7 @@
       "type": "object",
       "properties": {
         "date": {
-          "description": "Calendar date the week's slides and homework unlock.",
+          "description": "Calendar date the week's homework unlocks.",
           "type": "string"
         },
         "week": {
