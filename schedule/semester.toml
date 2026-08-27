@@ -11,7 +11,7 @@
 # https://www.cmu.edu/hub/calendar/docs/2627-academic-calendar.pdf
 
 name = "Fall 2026"
-reveal_time = "20:00"         # local time each week unlocks (HH:MM, 24-hour)
+reveal_time = "19:50"         # local time each week unlocks (HH:MM, 24-hour)
 timezone = "America/New_York" # any IANA time zone name
 
 # Ownership (Part 2) is not taught this semester.
