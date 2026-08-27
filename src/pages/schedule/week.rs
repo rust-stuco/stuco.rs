@@ -20,8 +20,10 @@ pub(super) struct Week {
 #[cfg_attr(test, derive(JsonSchema))]
 pub(super) struct Semester {
     pub(super) name: String,
-    /// Local time each week unlocks, as `"HH:MM"` (24-hour).
+    /// Local time each week's homework unlocks, as `"HH:MM"` (24-hour).
     pub(super) reveal_time: String,
+    /// Minutes before `reveal_time` when each week's slides unlock.
+    pub(super) slides_reveal_minutes_before: u16,
     /// IANA time zone the reveal time is expressed in, e.g. `"America/New_York"`.
     pub(super) timezone: String,
     /// The weeks shown this term, in schedule order.
@@ -37,7 +39,7 @@ pub(super) struct Semester {
 pub(super) struct ScheduledWeek {
     /// The week's slug: the file stem under `schedule/weeks/`.
     pub(super) week: String,
-    /// Calendar date the week's slides and homework unlock.
+    /// Calendar date the week's homework unlocks.
     #[cfg_attr(test, schemars(with = "String"))]
     pub(super) date: Datetime,
 }

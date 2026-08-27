@@ -1,8 +1,9 @@
 # Current semester schedule, edited once per semester by that term's instructors.
 #
-# Each entry unlocks a week's slides and homework at `reveal_time` on its date, where `week` is the
-# file stem under `schedule/weeks/`. Visitors can preview later weeks with the "Show upcoming
-# content" toggle, which marks them subject to change.
+# Each entry unlocks a week's homework at `reveal_time` on its date and its slides
+# `slides_reveal_minutes_before` earlier, where `week` is the file stem under `schedule/weeks/`.
+# Visitors can preview later weeks with the "Show upcoming content" toggle, which marks them
+# subject to change.
 #
 # A `[[breaks]]` entry marks a class date with no content. Weeks and breaks are shown in date
 # order, so they can be listed wherever they read best.
@@ -11,8 +12,9 @@
 # https://www.cmu.edu/hub/calendar/docs/2627-academic-calendar.pdf
 
 name = "Fall 2026"
-reveal_time = "19:50"         # local time each week unlocks (HH:MM, 24-hour)
-timezone = "America/New_York" # any IANA time zone name
+reveal_time = "19:50"             # local time each week's homework unlocks (HH:MM, 24-hour)
+slides_reveal_minutes_before = 60 # minutes before `reveal_time` when slides unlock
+timezone = "America/New_York"     # any IANA time zone name
 
 # Ownership (Part 2) is not taught this semester.
 

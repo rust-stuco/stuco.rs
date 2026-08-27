@@ -5,6 +5,8 @@ use toml::value::Datetime;
 
 use super::week::{Semester, Week};
 
+const MILLISECONDS_PER_MINUTE: i64 = 60_000;
+
 /// Every `schedule/weeks/*.toml`, in `WEEK_SOURCES` order. `SEMESTER` selects this term's subset.
 static LIBRARY: LazyLock<Vec<Week>> = LazyLock::new(load_library);
 
@@ -26,20 +28,27 @@ impl Entry {
     }
 }
 
-/// A week on this semester's schedule, paired with the date and instant it unlocks.
+/// A week on this semester's schedule, paired with the date and instants its content unlocks.
 pub(super) struct Scheduled {
     /// Position among this term's content weeks, counting from one and skipping breaks.
     pub(super) number: usize,
     pub(super) week: &'static Week,
     pub(super) date: Date,
-    /// Absolute reveal instant, in epoch milliseconds.
-    reveal_ms: i64,
+    /// Absolute slide reveal instant, in epoch milliseconds.
+    slides_reveal_ms: i64,
+    /// Absolute homework reveal instant, in epoch milliseconds.
+    homework_reveal_ms: i64,
 }
 
 impl Scheduled {
-    /// Whether this week has unlocked at `now_ms` (epoch milliseconds).
-    pub(super) fn is_revealed(&self, now_ms: i64) -> bool {
-        now_ms >= self.reveal_ms
+    /// Whether this week's slides have unlocked at `now_ms` (epoch milliseconds).
+    pub(super) fn slides_are_revealed(&self, now_ms: i64) -> bool {
+        now_ms >= self.slides_reveal_ms
+    }
+
+    /// Whether this week's homework has unlocked at `now_ms` (epoch milliseconds).
+    pub(super) fn homework_is_revealed(&self, now_ms: i64) -> bool {
+        now_ms >= self.homework_reveal_ms
     }
 }
 
@@ -107,6 +116,7 @@ static SEMESTER: LazyLock<Semester> = LazyLock::new(|| {
 
 fn load_schedule() -> Vec<Entry> {
     let reveal_time = parse_reveal_time(&SEMESTER.reveal_time);
+    let slides_lead_ms = i64::from(SEMESTER.slides_reveal_minutes_before) * MILLISECONDS_PER_MINUTE;
 
     let weeks = SEMESTER.weeks.iter().enumerate().map(|(index, scheduled)| {
         let slug = scheduled.week.as_str();
@@ -116,12 +126,14 @@ fn load_schedule() -> Vec<Entry> {
             .unwrap_or_else(|| panic!("schedule/semester.toml references unknown week {slug:?}"));
 
         let date = civil_date(slug, scheduled.date);
+        let homework_reveal_ms = reveal_ms(&SEMESTER.timezone, date, reveal_time);
 
         Entry::Week(Scheduled {
             number: index + 1,
             week: &LIBRARY[source],
             date,
-            reveal_ms: reveal_ms(&SEMESTER.timezone, date, reveal_time),
+            slides_reveal_ms: homework_reveal_ms - slides_lead_ms,
+            homework_reveal_ms,
         })
     });
 
@@ -162,11 +174,12 @@ pub(super) fn timeout_ms(wait_ms: i64) -> u32 {
     wait_ms.clamp(0, i32::MAX.into()) as u32
 }
 
-/// The next reveal instant strictly after `now_ms`, if any weeks are still hidden.
+/// The next slide or homework reveal strictly after `now_ms`, if any content is still hidden.
 pub(super) fn next_reveal_ms(now_ms: i64) -> Option<i64> {
     scheduled_weeks()
-        .map(|scheduled| scheduled.reveal_ms)
-        .find(|&reveal_ms| reveal_ms > now_ms)
+        .flat_map(|scheduled| [scheduled.slides_reveal_ms, scheduled.homework_reveal_ms])
+        .filter(|&reveal_ms| reveal_ms > now_ms)
+        .min()
 }
 
 /// Display name of the current semester, e.g. `"Fall 2026"`.
@@ -286,12 +299,19 @@ mod tests {
     }
 
     #[test]
-    fn reveal_is_reached_at_or_after_its_instant() {
+    fn slides_reveal_before_homework() {
         let first = scheduled_weeks().next().expect("a term should have weeks");
+        let slides_lead_ms =
+            i64::from(SEMESTER.slides_reveal_minutes_before) * MILLISECONDS_PER_MINUTE;
 
-        assert!(!first.is_revealed(first.reveal_ms - 1));
-        assert!(first.is_revealed(first.reveal_ms));
-        assert!(first.is_revealed(first.reveal_ms + 1));
+        assert_eq!(
+            first.homework_reveal_ms - first.slides_reveal_ms,
+            slides_lead_ms
+        );
+        assert!(!first.slides_are_revealed(first.slides_reveal_ms - 1));
+        assert!(first.slides_are_revealed(first.slides_reveal_ms));
+        assert!(!first.homework_is_revealed(first.homework_reveal_ms - 1));
+        assert!(first.homework_is_revealed(first.homework_reveal_ms));
     }
 
     #[test]
@@ -304,12 +324,22 @@ mod tests {
 
     #[test]
     fn next_reveal_follows_the_current_moment() {
-        let reveals: Vec<i64> = scheduled_weeks().map(|week| week.reveal_ms).collect();
-        let (first, second, last) = (reveals[0], reveals[1], reveals[reveals.len() - 1]);
+        let weeks: Vec<&Scheduled> = scheduled_weeks().collect();
+        let (first, second, last) = (weeks[0], weeks[1], weeks[weeks.len() - 1]);
 
-        assert_eq!(next_reveal_ms(first - 1), Some(first));
-        assert_eq!(next_reveal_ms(first), Some(second));
-        assert_eq!(next_reveal_ms(last), None);
+        assert_eq!(
+            next_reveal_ms(first.slides_reveal_ms - 1),
+            Some(first.slides_reveal_ms)
+        );
+        assert_eq!(
+            next_reveal_ms(first.slides_reveal_ms),
+            Some(first.homework_reveal_ms)
+        );
+        assert_eq!(
+            next_reveal_ms(first.homework_reveal_ms),
+            Some(second.slides_reveal_ms)
+        );
+        assert_eq!(next_reveal_ms(last.homework_reveal_ms), None);
     }
 
     #[test]

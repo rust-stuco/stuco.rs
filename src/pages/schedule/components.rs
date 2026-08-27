@@ -53,7 +53,8 @@ pub(crate) fn Schedule() -> Element {
                                     week_num: scheduled.number,
                                     week: scheduled.week,
                                     date: scheduled.date,
-                                    revealed: scheduled.is_revealed(now_ms()),
+                                    slides_revealed: scheduled.slides_are_revealed(now_ms()),
+                                    homework_revealed: scheduled.homework_is_revealed(now_ms()),
                                     show_upcoming: show_upcoming(),
                                 }
                             },
@@ -76,10 +77,11 @@ pub(crate) fn Schedule() -> Element {
                         "Show upcoming content"
                     }
                 }
-                if show_upcoming() {
-                    p { class: "mt-1 text-xs text-tertiary italic",
-                        "Upcoming content is subject to change"
-                    }
+                p {
+                    class: "mt-1 text-xs text-tertiary italic",
+                    class: if !show_upcoming() { "invisible" },
+                    aria_hidden: !show_upcoming(),
+                    "Upcoming content is subject to change"
                 }
             }
         }
@@ -91,7 +93,8 @@ fn WeekRow(
     week_num: usize,
     week: &'static Week,
     date: Date,
-    revealed: bool,
+    slides_revealed: bool,
+    homework_revealed: bool,
     show_upcoming: bool,
 ) -> Element {
     let mut expanded = use_signal(|| false);
@@ -99,14 +102,8 @@ fn WeekRow(
     let mut button_ref = use_signal(|| None::<std::rc::Rc<MountedData>>);
 
     // Slides and homework always occupy the row, so revealing them never shifts the layout.
-    let visible = revealed || show_upcoming;
-    let content_class = if !visible {
-        "invisible"
-    } else if !revealed {
-        "opacity-60"
-    } else {
-        ""
-    };
+    let slides_class = content_class(slides_revealed, show_upcoming);
+    let homework_class = content_class(homework_revealed, show_upcoming);
     let assignments = &week.assignments;
 
     let handle_click = move |_| {
@@ -165,10 +162,10 @@ fn WeekRow(
                     }
                 }
             }
-            td { class: "p-2 align-top {content_class}",
+            td { class: "p-2 align-top {slides_class}",
                 SlideLinks { slides: &week.slides }
             }
-            td { class: "p-2 align-top {content_class}",
+            td { class: "p-2 align-top {homework_class}",
                 if let Some(homework) = &assignments.primary {
                     HomeworkLinks { homework }
                 }
@@ -186,6 +183,16 @@ fn WeekRow(
                 }
             }
         }
+    }
+}
+
+fn content_class(revealed: bool, show_upcoming: bool) -> &'static str {
+    if revealed {
+        ""
+    } else if show_upcoming {
+        "opacity-60"
+    } else {
+        "invisible"
     }
 }
 
