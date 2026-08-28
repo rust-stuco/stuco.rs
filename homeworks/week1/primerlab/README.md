@@ -17,7 +17,7 @@ that, please let us know!
 
 # Setup
 
-Make sure you have Rust installed. You should have installed Rust through `rustup`. To confirm, run:
+Follow the instructions on our [installation and setup guide](https://stuco.rs/setup). To confirm, run:
 
 ```sh
 $ rustup --version
