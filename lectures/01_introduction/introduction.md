@@ -286,7 +286,6 @@ What is Foundational Software?
 
 * Not exactly "systems" software
 * It is software that systems _rely_ on
-    * _Software that other systems are built on top of_
 * Software that is:
     * Reliable and secure; **absolutely cannot fail**
     * Performant (zero-cost abstractions, fearless concurrency)
