@@ -59,6 +59,28 @@ documentation! Linked here is the documentation for
 There's a search bar at the top of the documentation that you should make use of. Try searching for
 a method called `trim` there!
 
+# Bonus: Rice's Theorem
+
+_This bonus problem (50 points) is optional. Feel free to skip it!_
+
+## Motivation
+
+We've talked a lot about Rust's safety guarantees and its remarkable borrow checking system. By writing safe Rust and following ownership rules, we can eliminate an entire class of memory bugs.
+
+But Rust is not perfect. In fact, it is impossible for any compiler to determine if a program is memory safe or not. **[Rice's theorem](https://en.wikipedia.org/wiki/Rice%27s_theorem)** states that all non-trivial semantic properties of programs are undecidable. This applies to the property of memory safety as well.
+
+To get around this, the creators of Rust had to make a compromise. Rust is _sound_, meaning that if safe Rust code compiles, then it is guaranteed to be memory safe. However, Rust is not _complete_, meaning that if a program is memory safe, then it might not necessarily compile.
+
+In other words, the borrow checker is designed to be _conservative_. It prefers to reject a safe program rather than risk letting an unsafe one slip through. You'll demonstrate this corollary of Rice's theorem in this bonus problem.
+
+## Task
+
+In `src/bonus.md`, write a Rust program that the borrow checker rejects but is actually memory safe. Copy the error message you get when compiling the program. Then, prove the safety of your program.
+
+**Constraints:** Do not use types, data structures, or features that we have not taught yet. You may only use programming concepts that we have covered in Weeks 1 and 2. Please don't search up this problem or use AI either - it's to your benefit that you solve this on your own.
+
+When we say _prove_, we don't require anything extremely formal. You may write paragraphs or even 15-122-style point-to proofs - whatever method you prefer, as long as you convince us!
+
 # Submission
 
 ### Formatting and Style
