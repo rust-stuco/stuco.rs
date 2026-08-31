@@ -10,7 +10,7 @@ We **_strongly_** suggest that you make sure you understand the rules of Ownersh
 this homework, and this text is a great place to reference!
 
 This homework is a bit shorter than the previous one, mainly so you can have extra time to read
-through the book and stew with the concepts a bit.
+through the book and stew with the concepts a bit. If you have more time, you are welcome to solve the bonus problem, but note that it is completely optional!
 
 If you find yourself getting stuck, it might be good to take a small break and go over the borrow
 checker's [rules](https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html#ownership-rules).
@@ -61,7 +61,7 @@ a method called `trim` there!
 
 # Bonus: Rice's Theorem
 
-_This bonus problem (50 points) is optional. Feel free to skip it!_
+_This bonus problem is worth 50 extra credit points. Feel free to skip it!_
 
 ## Motivation
 
@@ -75,11 +75,15 @@ In other words, the borrow checker is designed to be _conservative_. It prefers 
 
 ## Task
 
-In `src/bonus.md`, write a Rust program that the borrow checker rejects but is actually memory safe. Copy the error message you get when compiling the program. Then, prove the safety of your program.
+**Show that the Rust borrow checker is not complete.**
 
-**Constraints:** Do not use types, data structures, or features that we have not taught yet. You may only use programming concepts that we have covered in Weeks 1 and 2. Please don't search up this problem or use AI either - it's to your benefit that you solve this on your own.
+More specifically, in `src/bonus.md`, write a Rust program that the borrow checker rejects but is actually memory safe. Copy the error message you get when compiling the program. Then, prove the safety of your program.
+
+**Constraints:** Do not use types, data structures, or features that we have not taught yet. You may only use programming concepts that we have covered in Weeks 1 and 2. Please don't search up this problem or use AI either!
 
 When we say _prove_, we don't require anything extremely formal. You may write paragraphs or even 15-122-style point-to proofs - whatever method you prefer, as long as you convince us!
+
+We highly recommend brainstorming a solution with another student! You could make a new friend along the way :D
 
 # Submission
 
