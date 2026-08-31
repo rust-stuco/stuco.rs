@@ -113,8 +113,8 @@ pub fn closest_prime(n: u32) -> u32 {
 /// use primerlab_ref::functions::goldbach;
 ///
 /// assert_eq!(goldbach(4), 1); // 2+2
-/// assert_eq!(goldbach(10), 2); // 3+7, 2+5
-/// assert_eq!(goldbach(36), 4); // 3+31, 5+29, 11+23, 17+17
+/// assert_eq!(goldbach(10), 2); // 3+7, 5+5
+/// assert_eq!(goldbach(36), 4); // 5+31, 7+29, 13+23, 17+19
 /// ```
 pub fn goldbach(n: u32) -> u32 {
     assert!(

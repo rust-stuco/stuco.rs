@@ -126,7 +126,7 @@ fn test_goldbach_basic() {
     assert_eq!(goldbach(6), 1); // 3+3
     assert_eq!(goldbach(8), 1); // 3+5
     assert_eq!(goldbach(10), 2); // 3+7, 5+5
-    assert_eq!(goldbach(36), 4); // 3+31, 5+29, 11+23, 17+17
+    assert_eq!(goldbach(36), 4); // 5+31, 7+29, 13+23, 17+19
 }
 
 #[test]
