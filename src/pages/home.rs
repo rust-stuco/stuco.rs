@@ -66,7 +66,16 @@ pub(super) fn Home() -> Element {
                         }
                         tr {
                             td { class: "py-2 pr-4 font-bold text-primary", "Office Hours" }
-                            td { class: "py-2", "TBD" }
+                            td { class: "py-2",
+                                "At "
+                                Link {
+                                    to: "https://stuco.rs/calendar",
+                                    class: "text-secondary hover:underline",
+                                    "select times"
+                                }
+                                " or by appointment"
+
+                            }
                         }
                     }
                 }

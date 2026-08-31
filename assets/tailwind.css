@@ -197,14 +197,8 @@
   }
 }
 @layer utilities {
-  .\!visible {
-    visibility: visible !important;
-  }
   .invisible {
     visibility: hidden;
-  }
-  .visible {
-    visibility: visible;
   }
   .absolute {
     position: absolute;
