@@ -197,11 +197,6 @@ Note that you don't _need_ to name it `handin.zip`, you can name it whatever you
 In general, feel free to discuss homeworks with other students! As long as you do not copy someone
 else's work, any communication is fair game.
 
-All formal questions should be asked on Piazza. Try to discuss on Piazza so that other students can
-see your questions and answers as well!
-
-You can also discuss on Discord, but try to keep any technical questions on Piazza.
-
 # Feedback
 
 We would like to reiterate that you should let us know if you spent anywhere in significant excess
