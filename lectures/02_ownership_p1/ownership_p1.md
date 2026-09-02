@@ -1,9 +1,9 @@
 ---
 theme: default
-title: Ownership (Part 1)
+title: Ownership
 author: Rust StuCo
 info: |
-  Week 2 of Rust StuCo: Ownership (Part 1).
+  Week 2 of Rust StuCo: Ownership.
 colorSchema: auto
 aspectRatio: 16/9
 canvasWidth: 1280
@@ -27,7 +27,7 @@ class: communism
 
 ## Intro to Rust Lang
 
-# Ownership (Part 1)
+# Ownership
 
 
 ---

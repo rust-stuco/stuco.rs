@@ -1,4 +1,4 @@
-title = "Ownership (Part 1)"
+title = "Ownership"
 slides = "02_ownership_p1"
 rustlings = ["move_semantics"]
 book_chapters = ["ch04-00-understanding-ownership"]
