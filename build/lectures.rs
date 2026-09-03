@@ -292,8 +292,7 @@ fn run_task(
         .arg(task)
         .arg("--")
         .arg(lecture.directory)
-        // Cargo's HOST is a compiler host triple. Slidev reads it as the hostname for its local
-        // export server, which cannot bind to values such as `aarch64-apple-darwin`.
+        // this is the target triple, not the hostname to listen on
         .env_remove("HOST")
         .current_dir(slidev_root);
     for (name, value) in environment {
