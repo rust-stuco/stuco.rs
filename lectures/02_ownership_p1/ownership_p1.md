@@ -32,15 +32,6 @@ class: communism
 
 ---
 
-
-# Welcome back!
-
-* You can use 7 late days over the whole semester
-* If you spent over an hour on the assignment, please let us know!
-
-
----
-
 # Today: Ownership
 
 - Ownership
@@ -923,20 +914,6 @@ class: image-right image-width-55
 
 
 ---
-
-
-# Reference Constraints
-
-* Mutable references must be exclusive
-  * There can only be one mutable reference to a value at a time
-* There can never be dangling references
-
-<!--
-Outline for the next few slides
--->
-
-
----
 class: image-right image-width-25
 ---
 
@@ -1325,10 +1302,12 @@ The above is technically incorrect, it should be `&'static str`, but we're going
 
 # Owned Types
 
-* String slices and string literals are immutable because they are a special type of immutable reference
-* String is an owned type
+* `&str` is an immutable view to data owned by something else
+* `String` is an *owned* type
   * i.e. a type that has an owner
-* Another owned type is a _vector_
+* In practice, we rarely see `&String`
+  * `&str` is a reference directly to the text data, while `&String` is a reference to the "wrapper" object
+  * `&String`s are *deref-coerced* into `&str`s, which are much more flexible
 
 
 ---
@@ -1344,16 +1323,25 @@ You can create a vector with the method `new`:
 let v: Vec<i32> = Vec::new();
 ```
 
+Or use a macro to initialize one:
+```rust
+let v = vec![1, 2, 3];
+```
+
 * Internally, a `Vec` is a dynamically sized array stored on the heap
 * All values in the `Vec` must be of the same type
 * The `<i32>` just means that the vector stores `i32` values
   * We'll talk more about this `<>` syntax in week 4!
 
+<!--
+Briefly: Macros are a special type of function
+They can take in a variable number of arguments
+-->
 
 ---
 
 
-# Updating a `Vec`
+# Updating and Reading a `Vec`
 
 To add elements to a `Vec`, we can use the `push` method.
 
@@ -1363,49 +1351,11 @@ let mut v = Vec::new();
 v.push(5);
 v.push(6);
 v.push(7);
-v.push(8);
 
-println!("{:?}", v);
+println!("{:?}", v); // [5, 6, 7]
 ```
 
-```
-[5, 6, 7, 8]
-```
-
----
-
-
-# `vec!` Macro
-
-Rust provides a _macro_ to create vectors easily in your programs.
-
-```rust
-let v = vec![1, 2, 3];
-
-println!("{:?}", v);
-```
-
-```
-[1, 2, 3]
-```
-
-* Briefly: Macros are a special type of function
-  * They can take in a variable number of arguments
-
-
----
-
-
-# Reading Elements of Vectors
-
-You can index into a vector to retrieve a reference to an element.
-
-```rust
-let v = vec![1, 2, 3, 4, 5];
-
-let third: &i32 = &v[2];
-println!("The third element is {}", third);
-```
+We can read elements using bracket notation (e.g. `v[0]`), like arrays.
 
 * Note that Rust will panic if you try to index out of the bounds of the `Vec`
 
@@ -1426,14 +1376,30 @@ We will talk more about `String` and `Vec<T>` in week 4!
 ---
 
 
+# Reminders
+
+* **Syllabus Check** and **PrimerLab** are due tonight
+  * You have 4 late submissions (and you can always ask us for more)
+  * Office hours today after lecture
+* If you were recently added to the course
+  * Ask us after lecture for an extension
+  * Join the Discord [stuco.rs/discord](https://stuco.rs/discord) and select the Fall 2026 role
+  * Make sure that you have access to Gradescope
+* Waitlisted?
+  * Please fill out the attendance form so we can prioritize you
+
+
+---
+
+
 # Homework 2
 
-* The second homework consists of 12 small ownership puzzles
-  * Refer to the `README.md` for further instructions
-  * Always follow the compiler's advice!
+* **GetOwnedLab** consists of 12 small ownership puzzles
 * We **_highly_** recommend reading the Rust Book chapter on [ownership](https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html)
   * Ownership is a _very tricky concept_ that affects almost every aspect of Rust, so understanding it is key to writing more complex Rust code
-* Try your best to understand Ownership _before_ attempting the homework
+  * Follow the compiler's advice!
+* Bonus "proof" question (new!)
+  * It's optional and only for extra credit
 
 
 ---
@@ -1447,8 +1413,10 @@ class: image-right image-width-30
 
 Thanks for coming!
 
+Please stay seated to fill out the attendance form.
+
 <br>
 
 _Slides created by:_
 Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen
+Jessica Ruan, Fiona Fisher, Terrance Chen, Max Wen
