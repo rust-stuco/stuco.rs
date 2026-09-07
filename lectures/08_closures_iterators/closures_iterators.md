@@ -1316,16 +1316,7 @@ Filter { iter: Skip { iter: Map { iter: 0..100 }, n: 1 } }
 
 
 ---
-layout: default
-class: image-right image-width-30
+layout: none
 ---
 
-# Next Lecture: Ownership Revisited
-
-<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
-
-Thanks for coming!
-
-<br>
-
-<SlideCredits />
+<EndingSlide next-lecture="Ownership Revisited" />

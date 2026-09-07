@@ -1184,16 +1184,7 @@ Some quick points:
 * Both interpretations are valid!
 
 ---
-layout: default
-class: image-right image-width-30
+layout: none
 ---
 
-# Next Lecture: Smart Pointers and Trait Objects
-
-<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
-
-Thanks for coming!
-
-<br>
-
-<SlideCredits />
+<EndingSlide next-lecture="Smart Pointers and Trait Objects" />

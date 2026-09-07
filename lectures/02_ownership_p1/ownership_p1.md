@@ -1403,18 +1403,7 @@ We will talk more about `String` and `Vec<T>` in week 4!
 
 
 ---
-layout: default
-class: image-right image-width-30
+layout: none
 ---
 
-# Next Lecture: Structs and Enums
-
-<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
-
-Thanks for coming!
-
-Please stay seated to fill out the attendance form.
-
-<br>
-
-<SlideCredits />
+<EndingSlide next-lecture="Structs and Enums" />

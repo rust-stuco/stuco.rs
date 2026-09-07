@@ -1574,18 +1574,7 @@ extenuating circumstance)
 
 
 ---
-layout: default
-class: image-right image-width-30
+layout: none
 ---
 
-<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
-
-# **Next Lecture: Ownership**
-
-Thanks for coming!
-
-Please stay seated to fill out the attendance form.
-
-<br>
-
-<SlideCredits />
+<EndingSlide next-lecture="Ownership" />

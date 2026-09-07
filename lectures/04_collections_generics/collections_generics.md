@@ -1774,16 +1774,7 @@ let float = Option_f64::Some(5.0);
 
 
 ---
-layout: default
-class: image-right image-width-30
+layout: none
 ---
 
-# **Next Lecture: Errors and Traits**
-
-<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
-
-Thanks for coming!
-
-<br>
-
-<SlideCredits />
+<EndingSlide next-lecture="Errors and Traits" />

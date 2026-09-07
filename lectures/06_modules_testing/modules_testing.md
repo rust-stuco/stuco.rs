@@ -1585,16 +1585,7 @@ Write good tests!
 * 5 tests testing edge cases?
 
 ---
-layout: default
-class: image-right image-width-30
+layout: none
 ---
 
-# Next Lecture: Crates, Closures, and Iterators
-
-<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
-
-Thanks for coming!
-
-<br>
-
-<SlideCredits />
+<EndingSlide next-lecture="Crates, Closures, and Iterators" />

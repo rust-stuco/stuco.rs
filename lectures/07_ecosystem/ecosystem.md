@@ -1116,18 +1116,8 @@ pub struct MyError {
 - Look at the [docs](https://docs.rs/snafu/latest/snafu/) if you are interested!
 
 
---- 
-layout: default
-class: image-right image-width-30
+---
+layout: none
 ---
 
-
-# Next Lecture: Closures and Iterators
-
-<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
-
-Thanks for coming!
-
-<br>
-
-<SlideCredits />
+<EndingSlide next-lecture="Closures and Iterators" />
