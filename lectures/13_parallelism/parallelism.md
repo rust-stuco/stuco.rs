@@ -1640,7 +1640,7 @@ For simplicity’s sake, concurrent means concurrent and/or parallel. Please men
 * Have fun 😁
 
 ---
-layout: end
+layout: default
 class: image-right image-width-30
 ---
 
@@ -1652,7 +1652,4 @@ Thanks for coming!
 
 <br>
 
-_Slides created by:_
-Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen,
-Stephen Mao
+<SlideCredits />

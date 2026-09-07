@@ -1557,7 +1557,7 @@ This was the previous homework 5... now extra credit!
 
 
 ---
-layout: end
+layout: default
 class: image-right image-width-30
 ---
 
@@ -1569,6 +1569,4 @@ Thanks for coming!
 
 <br>
 
-_Slides created by:_
-Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen
+<SlideCredits />

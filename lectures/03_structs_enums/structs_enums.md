@@ -1676,7 +1676,7 @@ Pattern Matching is an incredibly powerful tool.
 
 
 ---
-layout: end
+layout: default
 class: image-right image-width-30
 ---
 
@@ -1688,6 +1688,4 @@ Thanks for coming!
 
 <br>
 
-_Slides created by:_
-Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen, Hugo Latendresse
+<SlideCredits />

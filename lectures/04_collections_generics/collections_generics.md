@@ -1774,7 +1774,7 @@ let float = Option_f64::Some(5.0);
 
 
 ---
-layout: end
+layout: default
 class: image-right image-width-30
 ---
 
@@ -1786,6 +1786,4 @@ Thanks for coming!
 
 <br>
 
-_Slides created by:_
-Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen
+<SlideCredits />

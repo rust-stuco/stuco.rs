@@ -1360,11 +1360,7 @@ class: image-right image-width-35
 
 <br>
 
-_Rust StuCo (98-008) has been created by:_
-Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen,
-Stephen Mao, Hugo Latendresse, Anish Pallati,
-Max Wen
+<SlideCredits label="Rust StuCo (98-008) has been created by:" />
 
 <!-- Include this section if still missing instructor candidates -->
 

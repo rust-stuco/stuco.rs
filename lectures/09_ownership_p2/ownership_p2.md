@@ -2200,7 +2200,7 @@ Usually you can be pretty sure when you need it vs. when you don't.
 
 
 ---
-layout: end
+layout: default
 class: image-right image-width-30
 ---
 
@@ -2212,6 +2212,4 @@ Thanks for coming!
 
 <br>
 
-_Slides created by:_
-Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen, Hugo Latendresse
+<SlideCredits />

@@ -834,7 +834,7 @@ It is tempting to reason about unsafety _locally_.
 * `unsafe` is a way to _promise_ to the compiler that the indicated code is safe
 
 ---
-layout: end
+layout: default
 class: image-right image-width-30
 ---
 
@@ -846,6 +846,4 @@ Thanks for coming!
 
 <br>
 
-_Slides created by:_
-Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen
+<SlideCredits />

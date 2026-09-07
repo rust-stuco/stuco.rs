@@ -1574,7 +1574,7 @@ extenuating circumstance)
 
 
 ---
-layout: end
+layout: default
 class: image-right image-width-30
 ---
 
@@ -1588,7 +1588,4 @@ Please stay seated to fill out the attendance form.
 
 <br>
 
-_Slides created by:_
-Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen,
-Stephen Mao, Max Wen
+<SlideCredits />
