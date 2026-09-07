@@ -8,5 +8,6 @@
 
 # Legacy generated assets.
 /public
+/.wrangler/
 
 __pycache__/
