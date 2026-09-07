@@ -1,57 +1,71 @@
 # Contributing
 
-## Setup
+## Website
 
-### Syllabus
-
-This project uses the `typst` CLI to compile the [syllabus source file](src/syllabus.typ) into a PDF located at `public/syllabus.pdf` during the build process. You need to have `typst` installed on your system for this to work.
-
-Download and install `typst` from the [official website](https://typst.app/open-source/#download)!
-
-### Lecture slides
-
-The build renders every lecture as an interactive [Slidev](slidev/README.md) deck and as light and
-dark PDFs. Install Node.js, npm, and Chrome or Chromium. The build installs the pinned JavaScript
-dependencies from `slidev/package-lock.json`; set `STUCO_SLIDEV_CHROME` if it cannot find your
-browser on `PATH` or in a standard installation directory.
-
-### Website
-
-You need to install `dioxus-cli` to build and run the website. Pin the same version CI uses, since a
-mismatch can fail to build the crate:
+Install Rust with `rustup`. Then prepare the website tools:
 
 ```bash
-cargo install dioxus-cli --version 0.7.2
+rustup target add wasm32-unknown-unknown
+cargo install dioxus-cli --version 0.7.2 --locked
 ```
 
-Alternatively, you can use `cargo binstall` to install a pre-built binary (faster):
-
-```bash
-cargo install cargo-binstall
-cargo binstall dioxus-cli@0.7.2
-```
-
-## Development
-
-Run the following command in the root of your project:
+From the repository root, start the website:
 
 ```bash
 dx serve
 ```
 
-The first run takes longer because it builds the syllabus, homework handouts, website, and all
-lecture formats.
+`dx serve`, `dx build`, and `cargo test` build only the website. The full build includes the syllabus,
+lecture decks, PDFs, and homework downloads.
 
-### Lecture decks
+## Lecture slides
 
-`dx serve` serves each deck at `/lectures/NN_topic/deck/`, the same path used in deployments. The
-schedule links the interactive deck and both PDF variants.
-
-When editing one deck, run `npm run dev -- NN_topic` from `slidev/` for faster feedback. For example:
+Install Node.js 22 and npm. Then install the Slidev dependencies and start a lecture:
 
 ```bash
 cd slidev
+npm ci
 npm run dev -- 09_ownership_p2
 ```
 
-See [the Slidev README](slidev/README.md) for build, export, and output details.
+Slidev serves the deck at `http://localhost:3030` and refreshes after Markdown changes.
+See [the Slidev README](slidev/README.md) for individual deck builds and PDF exports.
+
+## Full build
+
+Complete the website and Slidev setup first. Also install Python 3.11 or later,
+[Typst](https://typst.app/open-source/#download), and Chrome or Chromium.
+If the browser is not in a standard location, set `STUCO_SLIDEV_CHROME` to its executable path.
+
+From the repository root, run the same build command as CI:
+
+```bash
+python3 scripts/build.py
+```
+
+The script builds the website, then generates the syllabus, lecture decks, PDFs, and homework
+downloads. It checks the generated files before it succeeds. The complete site is in
+`target/dx/stuco-rs/release/web/public/`.
+
+To preview the complete site locally, run:
+
+```bash
+npx wrangler@4 dev --local
+```
+
+Wrangler uses the output directory in `wrangler.jsonc` and prints the local URL.
+After source changes, run the full build again to update the preview.
+
+## Tests
+
+From the repository root, run the website tests:
+
+```bash
+cargo test --locked
+```
+
+To test the build script, run:
+
+```bash
+python3 -m unittest discover -s scripts -p 'test_*.py'
+```
