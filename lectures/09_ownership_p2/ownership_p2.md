@@ -1,5 +1,7 @@
 ---
 theme: default
+addons: [stuco]
+preloadImages: false
 title: Ownership Revisited
 author: Rust StuCo
 info: |

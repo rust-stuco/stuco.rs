@@ -71,6 +71,16 @@
   margin-bottom: 16px;
 }
 
+/* Remove the paragraph box so standalone Markdown images can shrink with the slide. */
+.slidev-layout > p:has(> img:only-child) {
+  display: contents;
+}
+
+.slidev-layout > p > img:only-child {
+  min-height: 0;
+  object-fit: contain;
+}
+
 .slidev-layout li {
   margin-left: 0;
   padding-left: 0;
@@ -162,7 +172,7 @@ html.dark {
 }
 
 .slidev-layout.communism {
-  background-image: url("../images/elixir-rust-cover.webp");
+  background-image: url("../../lectures/images/elixir-rust-cover.webp");
   background-position: center;
   background-size: cover;
 }
@@ -201,7 +211,7 @@ html.dark {
 }
 
 .slidev-layout.communism2 {
-  background-image: url("../images/bg5.jpg");
+  background-image: url("../../lectures/images/bg5.jpg");
   background-position: center;
   background-size: cover;
 }

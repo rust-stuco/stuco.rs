@@ -2,10 +2,10 @@
   "name": "stuco-rs-slidev",
   "private": true,
   "scripts": {
-    "dev": "node scripts/run.mjs dev",
-    "build": "node scripts/run.mjs build",
-    "export:light": "node scripts/run.mjs export:light",
-    "export:dark": "node scripts/run.mjs export:dark"
+    "dev": "slidev",
+    "build": "slidev build",
+    "export:light": "slidev export",
+    "export:dark": "slidev export --dark"
   },
   "devDependencies": {
     "@fontsource-variable/noto-sans": "5.3.0",
@@ -14,6 +14,7 @@
     "@slidev/cli": "52.18.0",
     "@slidev/theme-default": "0.25.0",
     "playwright-chromium": "1.61.1",
+    "slidev-addon-stuco": "file:./runtime",
     "vue": "3.5.40"
   }
 }

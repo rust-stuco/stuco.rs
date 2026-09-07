@@ -1,5 +1,7 @@
 ---
 theme: default
+addons: [stuco]
+preloadImages: false
 title: Introduction
 author: Rust StuCo
 info: |

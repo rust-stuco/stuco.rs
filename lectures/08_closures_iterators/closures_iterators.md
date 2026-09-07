@@ -1,5 +1,7 @@
 ---
 theme: default
+addons: [stuco]
+preloadImages: false
 title: Closures and Iterators
 author: Rust StuCo
 info: |

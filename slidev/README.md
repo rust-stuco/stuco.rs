@@ -1,21 +1,16 @@
 # Lecture slides with Slidev
 
 All 14 published lecture decks use the pinned Slidev toolchain in this directory. Their Markdown
-stays under `../lectures/NN_topic/topic.md`; shared runtime files stay under `runtime/`.
-
-The commands create an ignored workspace for the selected lecture under `.slidev-work/`. They copy
-the lecture directory and runtime into it, then link the shared images directory. Keeping Slidev's
-generated files here prevents it from adding configuration and cache files beside the source decks.
-On Windows, the shared image directory uses a junction and the lecture files are copied, so the
-workflow does not require Developer Mode or administrator privileges.
+stays under `../lectures/NN_topic/topic.md`. Each deck loads the shared `stuco` addon from `runtime/`.
+Slidev reads the lecture source files directly and refreshes the browser after edits.
 
 ## Develop a deck
 
-Pass the lecture directory after `--`:
+From `slidev/`, pass the Markdown file after `--`:
 
 ```bash
 npm ci
-npm run dev -- 01_introduction
+npm run dev -- ../lectures/01_introduction/introduction.md
 ```
 
 Slidev serves the deck at `http://localhost:3030` and refreshes when its Markdown changes. Presenter
@@ -24,14 +19,17 @@ mode, notes, overview, drawings, and the theme toggle are available from the pre
 ## Build and export
 
 ```bash
-npm run build -- 01_introduction
-npm run export:light -- 01_introduction
-npm run export:dark -- 01_introduction
+npm run build -- ../lectures/01_introduction/introduction.md \
+  --base /lectures/01_introduction/deck/ --router-mode hash \
+  --out ../../slidev/dist/01_introduction/deck
+npm run export:light -- ../lectures/01_introduction/introduction.md --output introduction-light.pdf
+npm run export:dark -- ../lectures/01_introduction/introduction.md --output introduction-dark.pdf
 ```
 
-By default, generated files go to `dist/01_introduction/`: the interactive deck is under `deck/`,
-and the two PDFs sit beside it. Set `STUCO_SLIDEV_SITE_OUTPUT`, `STUCO_SLIDEV_PDF_OUTPUT`, or
-`STUCO_SLIDEV_CHROME` to override those locations or the browser used for PDF export.
+These commands write the deck to `slidev/dist/01_introduction/deck/` and the PDFs to `slidev/`.
+Slidev resolves `--out` relative to the lecture directory and `--output` relative to the current
+directory. `npm ci` installs the Chromium browser used for PDF export. To use another browser,
+add `--executable-path /path/to/browser` to the export command.
 
 The full build runs these commands for every published lecture, one lecture at a time. After
 `dx build --release`, it writes the decks and PDFs into the final site at
