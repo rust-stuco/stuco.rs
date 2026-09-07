@@ -1,5 +1,7 @@
 ---
 theme: default
+addons: [stuco]
+preloadImages: false
 title: Ownership
 author: Rust StuCo
 info: |

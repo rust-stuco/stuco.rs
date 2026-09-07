@@ -1,5 +1,7 @@
 ---
 theme: default
+addons: [stuco]
+preloadImages: false
 title: Lifetimes
 author: Rust StuCo
 info: |

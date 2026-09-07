@@ -1,5 +1,7 @@
 ---
 theme: default
+addons: [stuco]
+preloadImages: false
 title: The Rust Ecosystem
 author: Rust StuCo
 info: |

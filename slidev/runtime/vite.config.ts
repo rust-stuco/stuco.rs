@@ -1,5 +1,20 @@
+import { fileURLToPath } from 'node:url'
+
 export default {
+  plugins: [{
+    name: 'watch-shared-images',
+    configureServer(server) {
+      // Shared images are outside Slidev's per-deck Vite root.
+      server.watcher.add(fileURLToPath(new URL('../../lectures/images', import.meta.url)))
+    },
+  }],
   slidev: {
+    vue: {
+      template: {
+        // Import relative images so Vite can serve assets outside the deck directory.
+        transformAssetUrls: { base: null },
+      },
+    },
     markdown: {
       markdownSetup(markdownIt) {
         const renderBulletListOpen =
@@ -57,7 +72,7 @@ export default {
   },
   server: {
     fs: {
-      allow: [process.env.STUCO_SLIDEV_REPOSITORY_ROOT],
+      allow: [fileURLToPath(new URL('../../', import.meta.url))],
     },
   },
   build: {

@@ -1,5 +1,7 @@
 ---
 theme: default
+addons: [stuco]
+preloadImages: false
 title: Error Handling and Traits
 author: Rust StuCo
 info: |

@@ -1,5 +1,7 @@
 ---
 theme: default
+addons: [stuco]
+preloadImages: false
 title: Modules and Testing
 author: Rust StuCo
 info: |

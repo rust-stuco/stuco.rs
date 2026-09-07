@@ -122,17 +122,16 @@ def main() -> None:
 
     for lecture in LECTURES:
         slug = lecture[3:]
+        source = ROOT / "lectures" / lecture / f"{slug}.md"
         destination = OUTPUT / "lectures" / lecture
         site = destination / "deck"
-        runner = ["node", "scripts/run.mjs"]
-        environment = os.environ | {
-            "STUCO_SLIDEV_SITE_OUTPUT": str(site),
-            "STUCO_SLIDEV_PDF_OUTPUT": str(destination),
-        }
+        cli = ["node", SLIDEV / "node_modules/@slidev/cli/bin/slidev.mjs"]
         print(f"Building lecture: {lecture}", flush=True)
 
         subprocess.run(
-            [*runner, "build", lecture], cwd=SLIDEV, env=environment, check=True,
+            [*cli, "build", source, "--base", f"/lectures/{lecture}/deck/",
+             "--out", site, "--router-mode", "hash"],
+            cwd=SLIDEV, check=True,
         )
         require_file(site / "index.html")
         # Cloudflare rejects the catch-all redirect that Slidev emits for each deck.
@@ -140,14 +139,21 @@ def main() -> None:
 
         # Export sequentially, with one retry for transient browser failures.
         for theme in ["light", "dark"]:
-            command = [*runner, f"export:{theme}", lecture]
+            pdf = destination / f"{slug}-{theme}.pdf"
+            command = [*cli, "export", source, "--output", pdf, "--with-toc",
+                       "--timeout", "120000"]
+            if theme == "dark":
+                command.append("--dark")
+            if browser := os.environ.get("STUCO_SLIDEV_CHROME"):
+                command.extend(["--executable-path", browser])
+
             try:
-                subprocess.run(command, cwd=SLIDEV, env=environment, check=True)
+                subprocess.run(command, cwd=SLIDEV, check=True)
             except subprocess.CalledProcessError:
                 print(f"Retrying {lecture} {theme} PDF export", flush=True)
-                subprocess.run(command, cwd=SLIDEV, env=environment, check=True)
+                subprocess.run(command, cwd=SLIDEV, check=True)
 
-            require_file(destination / f"{slug}-{theme}.pdf", b"%PDF-")
+            require_file(pdf, b"%PDF-")
 
     print(f"Built complete site: {OUTPUT}", flush=True)
 

@@ -25,7 +25,7 @@ Install Node.js 22 and npm. Then install the Slidev dependencies and start a lec
 ```bash
 cd slidev
 npm ci
-npm run dev -- 09_ownership_p2
+npm run dev -- ../lectures/09_ownership_p2/ownership_p2.md
 ```
 
 Slidev serves the deck at `http://localhost:3030` and refreshes after Markdown changes.
@@ -33,9 +33,10 @@ See [the Slidev README](slidev/README.md) for individual deck builds and PDF exp
 
 ## Full build
 
-Complete the website and Slidev setup first. Also install Python 3.11 or later,
-[Typst](https://typst.app/open-source/#download), and Chrome or Chromium.
-If the browser is not in a standard location, set `STUCO_SLIDEV_CHROME` to its executable path.
+Complete the website and Slidev setup first. Also install Python 3.11 or later and
+[Typst](https://typst.app/open-source/#download).
+`npm ci` installs the Chromium browser used for PDF export.
+To use another browser, set `STUCO_SLIDEV_CHROME` to its executable path.
 
 From the repository root, run the same build command as CI:
 

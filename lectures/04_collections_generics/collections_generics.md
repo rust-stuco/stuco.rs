@@ -1,5 +1,7 @@
 ---
 theme: default
+addons: [stuco]
+preloadImages: false
 title: Standard Collections and Generics
 author: Rust StuCo
 info: |

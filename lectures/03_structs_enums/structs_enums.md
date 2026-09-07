@@ -1,5 +1,7 @@
 ---
 theme: default
+addons: [stuco]
+preloadImages: false
 title: Structs and Enums
 author: Rust StuCo
 info: |

@@ -1,5 +1,7 @@
 ---
 theme: default
+addons: [stuco]
+preloadImages: false
 title: Smart Pointers and Trait Objects
 author: Rust StuCo
 info: |

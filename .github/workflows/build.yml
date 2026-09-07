@@ -49,14 +49,14 @@ jobs:
           cache-dependency-path: slidev/package-lock.json
 
       - name: Install Slidev
-        env:
-          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: npm ci --no-audit --no-fund
 
-      # This deck uses shared and lecture-local images, exercising both Windows workspace links.
-      - name: Build a representative lecture deck
+      # This deck uses both shared images and images from its lecture directory.
+      - name: Build and export a representative lecture deck
         run: |
-          npm run build -- 14_concurrency
+          npm run build -- ../lectures/14_concurrency/concurrency.md `
+            --base /lectures/14_concurrency/deck/ --router-mode hash `
+            --out ../../slidev/dist/14_concurrency/deck
           if ($LASTEXITCODE -ne 0) {
             throw "Slidev failed to build 14_concurrency"
           }
@@ -64,6 +64,17 @@ jobs:
           $index = "dist/14_concurrency/deck/index.html"
           if (-not (Test-Path $index -PathType Leaf)) {
             throw "Slidev did not create $index"
+          }
+
+          $pdf = "dist/14_concurrency/concurrency-light.pdf"
+          npm run export:light -- ../lectures/14_concurrency/concurrency.md --range "1,3,68" --output $pdf
+          if ($LASTEXITCODE -ne 0) {
+            throw "Slidev failed to export 14_concurrency"
+          }
+
+          $signature = [Text.Encoding]::ASCII.GetString((Get-Content $pdf -AsByteStream -TotalCount 5))
+          if ($signature -ne "%PDF-") {
+            throw "Slidev did not create a valid PDF at $pdf"
           }
 
   build:
