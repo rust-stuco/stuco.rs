@@ -103,7 +103,7 @@ fn WeekRow(
 
     // Slides and homework always occupy the row, so revealing them never shifts the layout.
     let slides_class = content_class(slides_revealed, show_upcoming);
-    let homework_class = content_class(homework_revealed, show_upcoming);
+    let homework_class = content_class(homework_revealed, false);
     let assignments = &week.assignments;
 
     let handle_click = move |_| {
