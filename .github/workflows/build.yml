@@ -121,6 +121,12 @@ jobs:
           echo "STUCO_SLIDEV_CHROME=$(command -v google-chrome || command -v chromium)" \
             >> "$GITHUB_ENV"
 
+      - name: Install Slidev
+        working-directory: slidev
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+        run: npm ci --no-audit --no-fund
+
       - name: Add wasm target
         run: rustup target add wasm32-unknown-unknown
 
@@ -151,26 +157,15 @@ jobs:
         with:
           tool: dioxus-cli@0.7.2
 
+      - name: Test build packaging
+        run: python3 -m unittest discover -s scripts -p 'test_*.py'
+
       # Catches schedule misconfiguration, which would otherwise only panic in the browser.
-      - name: Run tests
-        env:
-          STUCO_SKIP_LECTURES: 1
+      - name: Run Rust tests
         run: cargo test --locked
 
       - name: Build
-        run: dx build --release
-
-      # The decks are pre-built single-page apps, so they are built outside `public/`: `dx` re-bundles
-      # every JavaScript file it finds there, which does not survive Slidev's module graph. Overlay
-      # them onto the bundle that `wrangler` uploads instead.
-      - name: Validate and add the Slidev decks to the bundle
-        run: |
-          test "$(find target/slidev/lectures -path '*/deck/index.html' -type f -size +0c | wc -l)" -eq 14
-          test "$(find public/lectures -type f \( -name '*-light.pdf' -o -name '*-dark.pdf' \) -size +0c | wc -l)" -eq 28
-          mkdir -p target/dx/stuco-rs/release/web/public/lectures
-          cp -r target/slidev/lectures/. target/dx/stuco-rs/release/web/public/lectures/
-          test "$(find target/dx/stuco-rs/release/web/public/lectures -path '*/deck/index.html' -type f -size +0c | wc -l)" -eq 14
-          test "$(find target/dx/stuco-rs/release/web/public/lectures -type f \( -name '*-light.pdf' -o -name '*-dark.pdf' \) -size +0c | wc -l)" -eq 28
+        run: python3 scripts/build.py
 
       - name: Upload syllabus artifact
         uses: actions/upload-artifact@v4
@@ -241,7 +236,7 @@ jobs:
           while read -r source destination code; do
             case $source in '' | '#'*) continue ;; esac
             redirect "$source" "$destination" "$code"
-          done < _redirects
+          done < static/_redirects
 
           if [ "$failed" -ne 0 ]; then
             echo "::error::$SITE_URL is missing generated content"

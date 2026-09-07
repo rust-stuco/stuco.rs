@@ -2,7 +2,7 @@ use std::sync::LazyLock;
 
 static RULES: LazyLock<Vec<ShortLink>> = LazyLock::new(|| parse(REDIRECTS));
 
-const REDIRECTS: &str = include_str!("../_redirects");
+const REDIRECTS: &str = include_str!("../static/_redirects");
 
 struct ShortLink {
     path: &'static str,
