@@ -47,7 +47,8 @@ HOMEWORKS = [
 ]
 
 
-def require_file(path: Path, prefix: bytes = b""):
+def require_file(path: Path, prefix: bytes = b"") -> None:
+    """Require a nonempty output file with the optional byte prefix."""
     with path.open("rb") as file:
         start = file.read(max(1, len(prefix)))
 
@@ -55,8 +56,8 @@ def require_file(path: Path, prefix: bytes = b""):
         raise ValueError(f"Missing or invalid build output: {path}")
 
 
-def create_archive(source: Path, output: Path):
-    """Archive current source files, excluding hidden files and Git-ignored artifacts."""
+def create_archive(source: Path, output: Path) -> None:
+    """Archive working-tree files under source.name, excluding hidden and Git-ignored files."""
     files = subprocess.check_output(
         ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--", "."],
         cwd=source,
@@ -67,6 +68,7 @@ def create_archive(source: Path, output: Path):
         ["git", "check-ignore", "--no-index", "-z", "--stdin"],
         cwd=source, input=files, stdout=subprocess.PIPE,
     )
+    # git check-ignore returns 1 when no paths match.
     if ignored.returncode != 1:
         ignored.check_returncode()
 
@@ -81,7 +83,7 @@ def create_archive(source: Path, output: Path):
                 archive.write(source / path, (Path(source.name) / path).as_posix())
 
 
-def main():
+def main() -> None:
     subprocess.run(["dx", "build", "--release"], cwd=ROOT, check=True)
     require_file(OUTPUT / "index.html")
     require_file(OUTPUT / "_redirects")
