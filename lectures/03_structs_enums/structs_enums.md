@@ -280,7 +280,7 @@ Does this compile?
 fn main() {
     let mut data = 1;
     let r = &data;
-    read(r); 
+    read(r);
     println!("{}", r);
 }
 
@@ -311,8 +311,8 @@ Does this compile?
 fn main() {
     let mut data = 0;
     let r = &mut data;
-    modify(r); 
-    *r += 20; 
+    modify(r);
+    *r += 20;
     println!("{}", r);
 }
 
@@ -1804,6 +1804,20 @@ Pattern Matching is an incredibly powerful tool.
     * _**DO NOT copy and paste someone else's code**_
 
 <!-- Contents of chapter 18 will not be fully covered by the course -->
+
+
+---
+
+
+# Art Contest!
+
+Create a banner for our website and our lecture slides!
+
+* 1920x1080 resolution or larger in a 16:9 aspect ratio
+* Must include Ferris the Rustacean in some way
+* No AI-generated content
+* Keep the left side (where the lecture title will go) free of any busy imagery
+* This is completely `Option`al
 
 
 ---
