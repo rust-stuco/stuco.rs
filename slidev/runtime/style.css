@@ -325,3 +325,87 @@ html.dark {
   margin: 0;
   object-fit: contain;
 }
+
+/* Struct memory-layout diagram (lecture 03) */
+.slidev-layout .memlayout {
+  margin-top: 0.5em;
+}
+
+.slidev-layout .mem-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  margin-bottom: 0.4em;
+}
+
+.slidev-layout .mem-tag {
+  width: 7em;
+  flex: none;
+  font-size: 0.8em;
+  text-align: right;
+  line-height: 1.2;
+}
+
+.slidev-layout .mem-tag code {
+  white-space: nowrap;
+}
+
+.slidev-layout .mem-grid {
+  display: grid;
+  grid-template-columns: repeat(24, 1fr);
+  flex: 1;
+  min-width: 0;
+}
+
+.slidev-layout .mem-grid .cell {
+  height: 2.3em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Noto Sans Mono Variable", monospace;
+  font-size: 0.75em;
+  border: 1px solid rgba(128, 128, 128, 0.6);
+  box-sizing: border-box;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.slidev-layout .mem-grid .f-a {
+  background: rgba(80, 160, 120, 0.55);
+}
+
+.slidev-layout .mem-grid .f-b {
+  background: rgba(70, 130, 200, 0.55);
+}
+
+.slidev-layout .mem-grid .f-c {
+  background: rgba(220, 150, 70, 0.6);
+}
+
+.slidev-layout .mem-grid .pad {
+  background: repeating-linear-gradient(45deg, rgba(128, 128, 128, 0.3) 0 6px, transparent 6px 12px);
+  color: gray;
+}
+
+.slidev-layout .mem-grid .saved {
+  border-style: dashed;
+  border-color: rgba(80, 160, 120, 0.9);
+  color: rgba(80, 160, 120, 0.95);
+  font-style: italic;
+}
+
+.slidev-layout .mem-ruler {
+  display: grid;
+  grid-template-columns: repeat(24, 1fr);
+  margin-left: 7.75em;
+  font-size: 0.7em;
+  color: gray;
+}
+
+.slidev-layout .mem-ruler span {
+  justify-self: start;
+}
+
+.slidev-layout .mem-ruler .end {
+  justify-self: end;
+}

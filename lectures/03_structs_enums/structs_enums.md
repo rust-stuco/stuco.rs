@@ -256,7 +256,7 @@ Let's try a mutable reference instead of moving the entire value.
 
 ```rust
 fn main() {
-    let favorite_computers = Vec::new();
+    let mut favorite_computers = Vec::new();
     add_to_list(&mut favorite_computers, String::from("Framework Laptop"));
     println!("{:?}", favorite_computers);
 }
@@ -361,6 +361,7 @@ struct Student {
 * To define a struct, we enter the keyword `struct` and name the entire group
 * Within the curly braces, we define _fields_
 * Each field is named and has an associated type
+* A struct is a *product type*: multiply its fields' value counts
 
 <!-- Very similar to C structs -->
 
@@ -379,7 +380,7 @@ fn init_connor() -> Student {
         andrew_id: String::from("cjtsui"),
         stress_level: u64::MAX,
         grade: 80,
-        attendance: vec![true, false, false, false, false, false, false],
+        attendance: vec![true, false],
     }
 }
 ```
@@ -401,7 +402,7 @@ fn init_connor() -> Student {
         andrew_id: String::from("cjtsui"),
         stress_level: u64::MAX,
         grade: 80,
-        attendance: vec![true, false, false, false, false, false, false],
+        attendance: vec![true, false],
     };
 
     connor.grade = 60; // shh
@@ -479,6 +480,7 @@ fn main() {
 
 * The same as structs, except without named fields
 * The same as tuples, except with an associated name
+* Also a *product type*: `|Color| = |u8| × |u8| × |u8|` possible values
 
 
 ---
@@ -498,12 +500,81 @@ fn main() {
 
 * Structs that have no fields
 * Most commonly used as compile-time markers since they are zero-sized types
+* A *product type* with no fields, so `|AlwaysEqual| = 1` (a zero-sized type)
 
 <!--
 Isomorphic to the unit type ()
 Useful when you want to implement a trait, but don't need to store any data with it
 -->
 
+
+---
+
+
+# Aside: Struct Memory Layout
+
+Each field must begin at an offset that respects its alignment, so the compiler inserts _padding_. In C, fields are laid out in declaration order:
+
+```c
+struct Foo { uint8_t a; uint64_t b; uint8_t c; };
+```
+
+<div class="memlayout">
+<div class="mem-row">
+  <div class="mem-tag">C layout<br><b>24 bytes</b></div>
+  <div class="mem-grid">
+    <div class="cell f-a">a</div>
+    <div class="cell pad" style="grid-column: span 7">padding</div>
+    <div class="cell f-b" style="grid-column: span 8">b : u64</div>
+    <div class="cell f-c">c</div>
+    <div class="cell pad" style="grid-column: span 7">padding</div>
+  </div>
+</div>
+<div class="mem-ruler">
+  <span style="grid-column: 1">0</span>
+  <span style="grid-column: 9">8</span>
+  <span style="grid-column: 17">16</span>
+  <span class="end" style="grid-column: 24 / 25">24</span>
+</div>
+</div>
+
+* `b` is a `u64`, so it must begin at an offset that is a multiple of 8
+* Laid out in source order, `Foo` needs 14 bytes of padding
+
+---
+
+
+# `#[repr(C)]`
+
+Rust reorders fields to minimize padding, so the same struct takes only 16 bytes:
+
+```rust
+struct Foo { a: u8, b: u64, c: u8 }
+```
+
+<div class="memlayout">
+<div class="mem-row">
+  <div class="mem-tag">Rust<br>default<br><b>16 bytes</b></div>
+  <div class="mem-grid">
+    <div class="cell f-b" style="grid-column: span 8">b : u64</div>
+    <div class="cell f-a">a</div>
+    <div class="cell f-c">c</div>
+    <div class="cell pad" style="grid-column: span 6">padding</div>
+    <div class="cell saved" style="grid-column: span 8">saved</div>
+  </div>
+</div>
+<div class="mem-ruler">
+  <span style="grid-column: 1">0</span>
+  <span style="grid-column: 9">8</span>
+  <span style="grid-column: 17">16</span>
+  <span class="end" style="grid-column: 24 / 25">24</span>
+</div>
+</div>
+
+`#[repr(C)]` opts out of reordering and uses C's declaration-order layout (24 bytes) from the last slide.
+
+* Rust's field order is unspecified and can change between compiler versions
+* Use `#[repr(C)]` when the layout must stay fixed: FFI, `unsafe`, on-disk formats
 
 ---
 class: image-right image-width-25
@@ -820,7 +891,7 @@ impl Rectangle {
 ```
 
 ```rust
-let rect = Rectangle { width: 42, height: 98 };
+let rect = Rectangle { x: 0, y: 0, width: 42, height: 98 };
 
 println!("Area: {}", rect.area());
 // println!("Width: {}", rect.width); <-- Cannot do this
@@ -895,15 +966,32 @@ Often used for "constructors" that return a new instance of the struct
 # Aside: What About `->`?
 
 ```rust
-p1.distance(&p2);
-(&p1).distance(&p2); // This is the same!
+rect.area();
+(&rect).area(); // This is the same!
 ```
 
 * In C and C++, you use `.` for direct access and `->` for access through a pointer
 * Rust instead has _**automatic referencing and dereferencing**_
 * When you call `object.something()`, Rust will automatically add `&`, `&mut`, or `*` so that `object` matches the signature of the method
     * Makes ownership and borrowing more ergonomic
+* This only applies to the receiver (the value before the `.`). Regular arguments still need an explicit `&`/`&mut`
 
+
+---
+
+
+# The Algebra of Types
+
+Write `|T|` for how many values a type `T` has:
+
+| Type | Number of values |
+| --- | --- |
+| `()`, unit struct | 1 |
+| `struct Pair(bool, bool)` | 2 × 2 = 4 |
+| `enum Dir { N, S, E, W }` | 1 + 1 + 1 + 1 = 4 |
+| `Option<bool>` | 1 + 2 = 3 |
+
+A **struct** multiplies its fields (a *product type*); an **enum** adds its variants (a *sum type*). Next up: enums.
 
 ---
 layout: section
@@ -941,6 +1029,7 @@ enum IpAddrKind {
 * IP addresses can be _either_ IPv4 _or_ IPv6
 * We can express this concept in code with an enum consisting of V4 and V6 variants
 * In general, we enumerate variants of a sum type as fields in an enum
+* An enum is a *sum type*: `|IpAddrKind| = 1 + 1 = 2` possible values
 
 <!--
 Express that variants are equivalent to distinct types from previous slide
@@ -972,7 +1061,9 @@ let six = IpAddrKind::V6;
 We can define a function that takes an `IpAddrKind`:
 
 ```rust
-fn route(ip_kind: IpAddrKind) { ... }
+fn route(ip_kind: IpAddrKind) {
+    // <-- snip -->
+}
 ```
 
 And call it with any of the variants:
@@ -1079,6 +1170,24 @@ let loopback = IpAddr::V6(String::from("::1"));
 ---
 
 
+# Make Invalid States Unrepresentable
+
+The struct lets `kind` and `address` disagree, and it still compiles:
+
+```rust
+IpAddr { kind: IpAddrKind::V4, address: String::from("::1") } // "::1" is V6!
+```
+
+* Every function reading an `IpAddr` has to re-check that the two agree
+
+The enum binds each address to its variant: `V4` holds four bytes, `V6` holds a `String`. That mismatch cannot be constructed at all.
+
+* Push the rules into the type, and the compiler enforces them for you
+* A whole class of bugs becomes impossible to write
+
+---
+
+
 # Aside: `std::net::IpAddr`
 
 The Rust Standard Library actually has its own implementation of `IpAddr`.
@@ -1122,8 +1231,8 @@ enum Message {
 
 * `Quit` has no associated data
 * `Move` has named fields like a struct
-* `Write` includes a single `String`
-* `ChangeColor` includes 3 `i32` values
+* `Write` holds a `String`, and `ChangeColor` holds 3 `i32` values
+* Together, a *sum of products*: `|Message| = 1 + |i32|² + |String| + |i32|³`
 
 
 ---
@@ -1244,6 +1353,7 @@ enum Option<T> {
 * We can return either `None` or `Some`, where `Some` contains a value
 * The `<T>` is a generic type parameter which means it can hold any type
     * We'll talk about this next week!
+* A *sum type*: `|Option<T>| = 1 + |T|` (`None`, plus every value of `T`)
 
 
 ---
