@@ -1351,20 +1351,10 @@ We hope that you all can answer this question now!
 
 
 ---
-class: image-right image-width-35
+layout: none
 ---
 
-# **Thanks for taking Rust StuCo!**
-
-<img class="slide-image" style="--image-size: 0.9;" src="../images/ferris_happy.svg">
-
-<br>
-
-_Rust StuCo (98-008) has been created by:_
-Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen,
-Stephen Mao, Hugo Latendresse, Anish Pallati,
-Max Wen
+<EndingSlide />
 
 <!-- Include this section if still missing instructor candidates -->
 

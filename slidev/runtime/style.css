@@ -123,11 +123,6 @@ html.dark .slidev-layout h1 strong {
   color: #7bf;
 }
 
-html:not(.dark) .slidev-layout.end,
-html:not(.dark) .slidev-layout.end p {
-  color: #fff !important;
-}
-
 .slidev-layout p {
   line-height: 1.5;
   opacity: 1 !important;

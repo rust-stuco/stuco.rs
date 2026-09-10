@@ -1436,18 +1436,7 @@ If you are interested, here is some more content that explains this in more dept
 
 
 ---
-layout: end
-class: image-right image-width-30
+layout: none
 ---
 
-# Next Lecture: Unsafe
-
-<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
-
-Thanks for coming!
-
-<br>
-
-_Slides created by:_
-Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen, Hugo Latendresse
+<EndingSlide next-lecture="Unsafe" />

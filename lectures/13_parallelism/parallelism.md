@@ -1640,19 +1640,7 @@ For simplicity’s sake, concurrent means concurrent and/or parallel. Please men
 * Have fun 😁
 
 ---
-layout: end
-class: image-right image-width-30
+layout: none
 ---
 
-# Next Lecture: Concurrency
-
-<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
-
-Thanks for coming!
-
-<br>
-
-_Slides created by:_
-Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen,
-Stephen Mao
+<EndingSlide next-lecture="Concurrency" />

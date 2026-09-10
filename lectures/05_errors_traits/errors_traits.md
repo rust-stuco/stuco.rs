@@ -1557,18 +1557,7 @@ This was the previous homework 5... now extra credit!
 
 
 ---
-layout: end
-class: image-right image-width-30
+layout: none
 ---
 
-# **Next Lecture: Modules and Testing**
-
-<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
-
-Thanks for coming!
-
-<br>
-
-_Slides created by:_
-Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen
+<EndingSlide next-lecture="Modules and Testing" />

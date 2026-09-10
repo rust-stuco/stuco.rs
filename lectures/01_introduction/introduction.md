@@ -1574,21 +1574,7 @@ extenuating circumstance)
 
 
 ---
-layout: end
-class: image-right image-width-30
+layout: none
 ---
 
-<img class="slide-image" style="--image-size: 0.8;" src="../images/ferris_happy.svg">
-
-# **Next Lecture: Ownership**
-
-Thanks for coming!
-
-Please stay seated to fill out the attendance form.
-
-<br>
-
-_Slides created by:_
-Connor Tsui, Benjamin Owad, David Rudo,
-Jessica Ruan, Fiona Fisher, Terrance Chen,
-Stephen Mao, Max Wen
+<EndingSlide next-lecture="Ownership" />

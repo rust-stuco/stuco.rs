@@ -97,6 +97,11 @@ async function runTask(taskName, lectureDirectory, extraArgs) {
     )
 
     await Promise.all([
+      cp(
+        path.join(runtimeRoot, 'components'),
+        path.join(lectureRoot, 'components'),
+        { recursive: true },
+      ),
       copyFile(
         path.join(runtimeRoot, 'style.css'),
         path.join(lectureRoot, 'style.css'),
