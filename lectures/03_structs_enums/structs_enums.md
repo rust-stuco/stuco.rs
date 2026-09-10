@@ -1196,12 +1196,15 @@ The struct lets `kind` and `address` disagree, and it still compiles:
 IpAddr { kind: IpAddrKind::V4, address: String::from("::1") } // "::1" is V6!
 ```
 
-* Every function reading an `IpAddr` has to re-check that the two agree
+The enum stores the address in each variant instead:
 
-The enum binds each address to its variant: `V4` holds four bytes, `V6` holds a `String`. That mismatch cannot be constructed at all.
+```rust
+enum IpAddr { V4(u8, u8, u8, u8), V6(String) }
+```
 
-* Push the rules into the type, and the compiler enforces them for you
-* A whole class of bugs becomes impossible to write
+* Every function reading the struct has to re-check that the two agree
+* The enum has no separate `kind` field to keep in sync
+    * Push the rules into the type so the compiler can enforce them for you
 
 ---
 
