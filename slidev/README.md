@@ -33,13 +33,14 @@ By default, generated files go to `dist/01_introduction/`: the interactive deck 
 and the two PDFs sit beside it. Set `STUCO_SLIDEV_SITE_OUTPUT`, `STUCO_SLIDEV_PDF_OUTPUT`, or
 `STUCO_SLIDEV_CHROME` to override those locations or the browser used for PDF export.
 
-The Rust build script runs these commands for every published lecture. It installs the exact npm
-dependencies recorded in `package-lock.json`, renders one lecture at a time, writes PDFs to
-`public/lectures/`, and stages interactive decks for `/lectures/NN_topic/deck/`.
+The full build runs these commands for every published lecture, one lecture at a time. After
+`dx build --release`, it writes the decks and PDFs into the final site at
+`target/dx/stuco-rs/release/web/public/lectures/`. See [CONTRIBUTING.md](../CONTRIBUTING.md#full-build)
+for setup and the full build command.
 
 The static decks use hash routing, so deep links survive reloads without server rewrites. They are
-built outside `public/` because the Dioxus asset pipeline cannot preserve Slidev's JavaScript module
-graph. The deployment workflow overlays the completed sites onto the Dioxus bundle after its build.
+built after the website because the Dioxus asset pipeline cannot preserve Slidev's JavaScript module
+graph. Local builds and CI use the same script to produce the complete site.
 
 The sources under `lectures/review.md` and `lectures/graveyard/` are historical material, not
 published decks, and are not supported by this toolchain.
