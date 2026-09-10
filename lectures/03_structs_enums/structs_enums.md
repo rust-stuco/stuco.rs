@@ -1039,6 +1039,24 @@ Express that variants are equivalent to distinct types from previous slide
 ---
 
 
+# The Empty Enum
+
+An enum with zero variants has zero values:
+
+```rust
+enum Void {} // |Void| = 0
+```
+
+* It has no variant, so a `Void` value can never be created
+* Rust's built-in version is the never type `!` (the type of `panic!` and `loop {}`)
+* `std::convert::Infallible` is an empty enum, an alias for `!`
+* This mirrors the unit struct (`|AlwaysEqual| = 1`):
+    * `()` is the multiplicative identity (`1`), the empty product
+    * `enum Void {}` is the additive identity (`0`), the empty sum
+
+---
+
+
 # Enum Variants
 
 We can make a value of type `IpAddrKind` as such:

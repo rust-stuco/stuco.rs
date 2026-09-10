@@ -85,6 +85,9 @@
   padding: 0 1em;
   font-size: 1em;
   line-height: 1.5;
+  border: none;
+  border-left: 6px solid var(--slidev-theme-primary);
+  border-radius: 0;
 }
 
 .slidev-layout blockquote > p {
