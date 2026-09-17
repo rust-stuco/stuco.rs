@@ -95,8 +95,83 @@ v.push(6);
 v.push(7);
 v.push(8);
 
-println!("{:?}", v);
+println!("{v:?}");
 ```
+
+
+---
+
+
+# Length and Capacity
+
+A vector keeps track of two numbers: its **length** and its **capacity**.
+
+<div class="memlayout">
+<div class="mem-row">
+  <div class="mem-tag"><code>len</code> = 5<br><code>cap</code> = 8</div>
+  <div class="mem-grid">
+    <div class="cell f-b" style="grid-column: span 3">1</div>
+    <div class="cell f-b" style="grid-column: span 3">2</div>
+    <div class="cell f-b" style="grid-column: span 3">3</div>
+    <div class="cell f-b" style="grid-column: span 3">4</div>
+    <div class="cell f-b" style="grid-column: span 3">5</div>
+    <div class="cell pad" style="grid-column: span 3"></div>
+    <div class="cell pad" style="grid-column: span 3"></div>
+    <div class="cell pad" style="grid-column: span 3"></div>
+  </div>
+</div>
+</div>
+
+* **Length** is how many elements the vector holds right now
+* **Capacity** is how many it can hold before asking for more memory
+    * The striped slots are allocated but unused
+* Retrieve them with `v.len()` and `v.capacity()`
+
+<!--
+Vec::with_capacity(n) pre-allocates room for `n` elements when you know the size up front, avoiding repeated reallocations.
+-->
+
+
+---
+
+
+# Growing a Vector
+
+When you `push` onto a full vector, it has to _reallocate_.
+
+<div class="memlayout">
+<div class="mem-row">
+  <div class="mem-tag">before<br><code>len</code> = 4<br><code>cap</code> = 4</div>
+  <div class="mem-grid">
+    <div class="cell f-b" style="grid-column: span 3">1</div>
+    <div class="cell f-b" style="grid-column: span 3">2</div>
+    <div class="cell f-b" style="grid-column: span 3">3</div>
+    <div class="cell f-b" style="grid-column: span 3">4</div>
+  </div>
+</div>
+<div class="mem-row">
+  <div class="mem-tag">after&nbsp;<code>push</code><br><code>len</code> = 5<br><code>cap</code> = 8</div>
+  <div class="mem-grid">
+    <div class="cell f-b" style="grid-column: span 3">1</div>
+    <div class="cell f-b" style="grid-column: span 3">2</div>
+    <div class="cell f-b" style="grid-column: span 3">3</div>
+    <div class="cell f-b" style="grid-column: span 3">4</div>
+    <div class="cell f-a" style="grid-column: span 3">5</div>
+    <div class="cell pad" style="grid-column: span 3"></div>
+    <div class="cell pad" style="grid-column: span 3"></div>
+    <div class="cell pad" style="grid-column: span 3"></div>
+  </div>
+</div>
+</div>
+
+* Once `len == cap`, there is no room for another element
+* Rust allocates a bigger buffer (usually **double**), copies the elements over, and frees the old one
+    * The data can end up at a completely new address in memory!
+* Doubling keeps `push` _amortized_ O(1), so this rarely happens
+
+<!--
+This reallocation is exactly why we can't hold a reference to an element while pushing (coming up in a few slides): the element might move.
+-->
 
 
 ---
@@ -109,7 +184,7 @@ Rust provides a _macro_ to create vectors easily in your programs.
 ```rust
 let v = vec![1, 2, 3];
 
-println!("{:?}", v);
+println!("{v:?}");
 ```
 
 ```
@@ -128,10 +203,10 @@ You can index into a vector to retrieve a reference to an element.
 let v = vec![1, 2, 3, 4, 5];
 
 let third_ref: &i32 = &v[2];
-println!("The third element is {}", third_ref);
+println!("The third element is {third_ref}");
 
 let third: i32 = v[2]; // This is only possible because `i32` is `Copy`
-println!("The third element is {}", third);
+println!("The third element is {third}");
 ```
 
 <!--
@@ -151,7 +226,7 @@ let v = vec![1, 2, 3, 4, 5];
 
 let third: Option<&i32> = v.get(2);
 match third {
-    Some(third) => println!("The third element is {}", third),
+    Some(third) => println!("The third element is {third}"),
     None => println!("There is no third element."),
 }
 ```
@@ -176,7 +251,7 @@ let vec_ref = &v;
 
 v.push(6); // `push` takes a mutable reference!
 
-println!("The vector is: {:?}", vec_ref);
+println!("The vector is: {vec_ref:?}");
 ```
 
 * What is wrong with this code?
@@ -197,8 +272,8 @@ error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immuta
 6 |     v.push(6);
   |     ^^^^^^^^^ mutable borrow occurs here
 7 |
-8 |     println!("The vector is: {:?}", vec_ref);
-  |                                     ------- immutable borrow later used here
+8 |     println!("The vector is: {vec_ref:?}");
+  |                               ------- immutable borrow later used here
 ```
 
 
@@ -220,7 +295,7 @@ let first = &v[0];
 
 v.push(6);
 
-println!("The first element is: {}", first);
+println!("The first element is: {first}");
 ```
 
 <!--
@@ -240,7 +315,7 @@ If we try to run this:
 let mut v = vec![1, 2, 3, 4, 5];
 let first = &v[0];
 v.push(6);
-println!("The first element is: {}", first);
+println!("The first element is: {first}");
 ```
 
 ```
@@ -251,8 +326,8 @@ error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immuta
   |                  - immutable borrow occurs here
 4 |     v.push(6);
   |     ^^^^^^^^^ mutable borrow occurs here
-5 |     println!("The first element is: {}", first);
-  |                                          ----- immutable borrow later used here
+5 |     println!("The first element is: {first}");
+  |                                      ----- immutable borrow later used here
 ```
 
 
@@ -269,8 +344,8 @@ error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immuta
   |                  - immutable borrow occurs here
 4 |     v.push(6);
   |     ^^^^^^^^^ mutable borrow occurs here
-5 |     println!("The first element is: {}", first);
-  |                                          ----- immutable borrow later used here
+5 |     println!("The first element is: {first}");
+  |                                      ----- immutable borrow later used here
 ```
 
 * You cannot mutate a vector while references to its elements exist
@@ -289,7 +364,7 @@ To access each element in order, we can iterate through the elements with a `for
 let v = vec![100, 32, 57];
 
 for elem in &v { // `elem` is a reference to an `i32` (aka `&i32`)
-    println!("{}", elem);
+    println!("{elem}");
 }
 ```
 
@@ -319,7 +394,7 @@ for elem in &mut v {  // `elem` is a mutable reference to an `i32`
     *elem += 50;
 }
 
-println!("{:?}", v);
+println!("{v:?}");
 ```
 
 ```
@@ -399,10 +474,10 @@ You can also _consume_ the vector when you want to loop over it.
 let v = vec![100, 32, 57];
 
 for i in v {
-    println!("{}", i);
+    println!("{i}");
 }
 
-// println!("{:?}", v); <-- Can't do this anymore!
+// println!("{v:?}"); <-- Can't do this anymore!
 ```
 
 * We'll talk more about this in a future week!
@@ -601,7 +676,7 @@ let mut s = String::from("foo");
 s.push('b'); // push a `char`
 s.push_str("ar"); // push a `&str`
 
-println!("{}", s);
+println!("{s}");
 ```
 
 ```
@@ -629,7 +704,7 @@ let s2 = String::from("bar");
 
 s1.push_str(&s2);
 
-println!("s2 is {}", s2); // `s2` is still valid!
+println!("s2 is {s2}"); // `s2` is still valid!
 ```
 
 ```
@@ -680,7 +755,7 @@ let s = s1 + "-" + &s2 + "-" + &s3;
 Or you can use the `format!` macro:
 
 ```rust
-let s = format!("{}-{}-{}", s1, s2, s3);
+let s = format!("{}-{}-{}", s1, s2, s3); // (alternative to the `+` version)
 
 let s = format!("{s1}-{s2}-{s3}"); // now considered more idiomatic
 ```
@@ -924,6 +999,7 @@ The type `HashMap<K, V>` stores keys with type `K` mapped to values with type `V
     - Hash Table
     - Dictionary
     - Associative Array
+* Keys must implement `Eq` and `Hash`
 
 
 ---
@@ -961,13 +1037,13 @@ scores.insert(String::from("Blue"), 10);
 scores.insert(String::from("Yellow"), 50);
 
 let team_name = String::from("Blue");
-let score = scores.get(&team_name).unwrap_or(&0);
+let score = scores.get(&team_name).copied().unwrap_or(0);
 ```
 
 * The `get` method returns an `Option<&V>`, similar to `Vec::get()`
-* We use `unwrap_or(&0)` on the result
-    * If it returns `Some(&x)`, we unwrap and get `&x`
-    * If it returns `None`, we go to the default case `&0`
+* We use `unwrap_or(0)` on the result
+    * If it returns `Some(x)`, we unwrap and get `x`
+    * If it returns `None`, we go to the default case `0`
 
 
 ---
@@ -983,7 +1059,7 @@ let mut scores = HashMap::new();
 scores.insert(String::from("Blue"), 10);
 scores.insert(String::from("Yellow"), 50);
 
-for (key, value) in scores {
+for (key, value) in &scores {
     println!("{key}: {value}");
 }
 ```
@@ -1027,7 +1103,7 @@ let mut scores = HashMap::new();
 scores.insert(String::from("Blue"), 10);
 scores.insert(String::from("Blue"), 25);
 
-println!("{:?}", scores);
+println!("{scores:?}");
 ```
 
 ```
@@ -1062,7 +1138,7 @@ scores.insert(String::from("Blue"), 10);
 scores.entry(String::from("Yellow")).or_insert(50);
 scores.entry(String::from("Blue")).or_insert(50);
 
-println!("{:?}", scores);
+println!("{scores:?}");
 ```
 
 ```
@@ -1088,7 +1164,7 @@ for word in text.split_whitespace() {
     *count += 1;
 }
 
-println!("{:?}", map);
+println!("{map:?}");
 ```
 
 ```
