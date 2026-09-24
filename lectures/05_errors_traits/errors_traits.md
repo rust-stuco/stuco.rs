@@ -33,6 +33,66 @@ class: communism
 ---
 
 
+# `Option<T>` vs `Result<T, ()>`
+
+Recall these two generic enums from last lecture:
+
+```rust
+enum Option<T> {
+    Some(T),
+    None,
+}
+
+enum Result<T, E> {
+    Ok(T),
+    Err(E),
+}
+```
+
+* With `E = ()`, both have `1 + |T|` values
+* Are `Option<T>` and `Result<T, ()>` the same type?
+
+
+---
+
+
+# Converting Between Them
+
+```rust
+let opt: Option<i32> = Some(5);
+let res: Result<i32, ()> = opt.ok_or(()); // Ok(5)
+let back: Option<i32> = res.ok();         // Some(5)
+```
+
+* `ok_or(())` sends `Some(x)` to `Ok(x)`, and `None` to `Err(())`
+* `ok()` undoes `ok_or(())`, so converting there and back changes nothing
+* A conversion that can be undone like this is a *bijection*
+
+
+---
+
+
+# Isomorphism
+
+`map(f)` applies `f` to the value inside, if there is one:
+
+$$
+\begin{CD}
+\texttt{Option<A>} @>{\texttt{map(f)}}>> \texttt{Option<B>} \\
+@V{\texttt{ok\_or(())}}VV @VV{\texttt{ok\_or(())}}V \\
+\texttt{Result<A, ()>} @>{\texttt{map(f)}}>> \texttt{Result<B, ()>}
+\end{CD}
+$$
+
+* Mapping then converting is the same as converting then mapping
+    * So `ok_or(())` preserves `map`, which makes it a *homomorphism*
+* A bijective homomorphism is called an *isomorphism*
+    * So `Option<T>` ≅ `Result<T, ()>`
+
+
+---
+
+
 # Today: Error Handling and Traits
 
 * Type Aliases
@@ -40,7 +100,7 @@ class: communism
 * Error Handling
 * The Never Type
 * Traits
-* Derived Traits
+* Derivable Traits
 * Advanced Types
 
 
@@ -114,6 +174,9 @@ struct ArrayPair<T, const N: usize> {
 ```
 
 * Const generics allow items to be generic over constant values
+    * A limited form of *dependent types*, meaning types that depend on values
+* `|[T; N]| = |T|^N`, since an array is a product of `N` copies of `T`
+    * So `|ArrayPair<T, N>| = |T|^N × |T|^N`
 
 
 ---
@@ -312,6 +375,7 @@ enum Result<T, E> {
 ```
 
 * Notice how `Ok` does _not_ have to be the same type as `Err`
+* A *sum type*: `|Result<T, E>| = |T| + |E|`
 
 
 ---
@@ -325,7 +389,7 @@ enum Result<T, E> {
 pub const fn unwrap(self) -> T {
     match self {
         Ok(val) => val,
-        Err => panic!("called `Result::unwrap()` on an `Err` value"),
+        Err(_) => panic!("called `Result::unwrap()` on an `Err` value"),
     }
 }
 ```
@@ -431,7 +495,7 @@ There are other useful macros that panic:
 <!--
 `unreachable` won't actually help in optimization, unless you use the `unsafe` variant.
 
-If you use the `unsafe` invariant and your assumption is wrong and the code does execute, the program causes undefined behavior rather than a safe panic.
+If you use the `unsafe` variant and your assumption is wrong and the code does execute, the program causes undefined behavior rather than a safe panic.
 -->
 
 
@@ -494,9 +558,9 @@ To make error handling more ergonomic, Rust provides the `?` (try) operator.
 let x = potential_fail()?;
 
 let x = match potential_fail() {
-    Ok(v) => v
+    Ok(v) => v,
     Err(e) => return Err(e.into()), // Error is propagated up a level
-}
+};
 ```
 
 * If `potential_fail` returns an `Err`, return early
@@ -535,7 +599,7 @@ Make sure to point out that `ParseIntError` is a built-in error type
 ---
 
 
-# The ? Operator Example
+# The `?` Operator Example
 
 If `parse` fails, we will get the `parse` function's `Err` values as expected.
 
@@ -560,7 +624,7 @@ Error: invalid digit found in string
 ---
 
 
-# The ? Operator
+# The `?` Operator
 
 We can also chain multiple `?` together:
 
@@ -603,7 +667,7 @@ let x = loop { println!("forever"); };
 ---
 
 
-# The "Never" Type`!`
+# The "Never" Type `!`
 
 Rust has a special type called `!`, or the "never" type, for this exact reason.
 
@@ -614,6 +678,10 @@ fn bar() -> ! {
     loop {}
 }
 ```
+
+* `!` has no values: `|!| = 0`, like `enum Void {}`
+* `std::convert::Infallible` is an alias for `!`
+* `|Result<T, !>| = |T| + 0 = |T|`, so a `Result<T, !>` can never be an `Err`
 
 
 ---
@@ -632,7 +700,7 @@ let guess: u32 = match guess.trim().parse() {
 
 * Recall match statements can only return one type
 * `continue` has the `!` type
-    * Rust knows this can't be value and allows `guess: u32`
+    * `!` can be coerced into any type, so this arm becomes a `u32`
     * This is why we can have `panic!` in a match statement like `unwrap()`
 
 
@@ -642,9 +710,9 @@ let guess: u32 = match guess.trim().parse() {
 # What else is `!`?
 
 * `panic!`
-* `break`
-* `continue`
-* Everything that doesn't return a value (typically related to control flow)
+* `break`, `continue`, and `return`
+* `std::process::exit`
+* Any expression that _diverges_ (never produces a value)
     * `print!` and `assert!` return `()`, so they don't use `!`
 
 
@@ -755,7 +823,7 @@ class: image-right image-width-25
 What happens when we try and construct a `Shape`?
 
 ```rust
-let rec = Shape::new_unit();
+let rec = Shape::new_shape();
 ```
 
 <!--
@@ -770,7 +838,7 @@ Reiterate that `Shape` is a _trait_, not a struct or an enum.
 
 
 ```rust
-let rec = Shape::new_unit();
+let rec = Shape::new_shape();
 ```
 
 ```
@@ -804,7 +872,7 @@ class: image-right image-width-25
 To use the `Shape` trait, Rust must know the type that is implementing it.
 
 ```rust
-let rec: Rectangle = Shape::new_unit();
+let rec: Rectangle = Shape::new_shape();
 let rec = <Rectangle as Shape>::new_shape();
 ```
 
@@ -934,7 +1002,7 @@ impl fmt::Debug for Student {
         write!(f, "andrew_id: {:?}, ", self.andrew_id)?;
         write!(f, "attendance: {:?}, ", self.attendance)?;
         write!(f, "grade: {:?}, ", self.grade)?;
-        write!(f, "stress_level: {:?}, ", self.stress_level)?;
+        write!(f, "stress_level: {:?} ", self.stress_level)?;
         write!(f, "}}")
     }
 }
@@ -956,11 +1024,11 @@ Lecturer's note: it really was...
 
 # Derivable Traits
 
-Luckily, Rust can `derive` traits for us when there there is an obvious and common implementation.
+Luckily, Rust can `derive` traits for us when there is an obvious and common implementation.
 
 * The compiler can provide basic implementations for some traits via the
 `#[derive]` [attribute](https://doc.rust-lang.org/reference/attributes.html)
-* `struct X` can `#[derive]` a trait if all the fields of `X` can derive that trait
+* `struct X` can `#[derive]` a trait if all the fields of `X` implement that trait
 * These traits can still be manually implemented if a more complex behavior is required
 
 
@@ -996,7 +1064,7 @@ let mut foo = vec![1, 2, 3];
 let mut foo2 = foo.clone(); // explicit duplication of an object
 
 foo.push(4); // foo = [1,2,3,4]
-let y = foo2.pop(); // y=3, foo2 = [1, 2]
+let y = foo2.pop(); // y = Some(3), foo2 = [1, 2]
 ```
 
 * A type that implements `Clone` can be duplicated / deep copied
@@ -1045,6 +1113,7 @@ impl Clone for Student {
             grade: self.grade.clone(),
             stress_level: self.stress_level.clone(),
         }
+    }
 }
 ```
 
@@ -1069,13 +1138,15 @@ Here's a list of other traits that can be derived:
 
 # Copy
 
-Recall that the `Copy` is a marker for types whose values can be duplicated simply by copying bits.
+Recall that `Copy` is a marker for types whose values can be duplicated simply by copying bits.
 
-The only types that are `Copy` are:
-- All integer types: `u8`, `i32`, etc
-- `bool`
-- All floating point types: `f32`, `f64`, etc
-- `char` type
+The built-in types that are `Copy` are:
+- Integers, floats, `bool`, and `char`
+- `!`
+- Shared references `&T` (but not `&mut T`)
+- Raw pointers `*const T` and `*mut T`
+- Tuples and arrays, if their elements are `Copy`
+- Functions, function pointers, and closures that only capture `Copy` values
 
 
 ---
@@ -1097,9 +1168,29 @@ pub trait Copy: Clone {}
 ---
 
 
+# Affine Types
+
+In SML, `fun dup x = (x, x)` works for every type. In Rust, it doesn't:
+
+```rust
+fn dup<T>(x: T) -> (T, T) {
+    (x, x) // error: use of moved value: `x`
+}
+```
+
+* SML lets you use a variable any number of times
+* Rust allows *at most once*, unless the type is `Copy`
+    * Borrowing with `&x` doesn't count as a use
+    * Zero times is fine, the value just gets dropped
+* A type system with this rule is called *affine*
+
+
+---
+
+
 # What Can `#[derive(Copy)]`?
 
-Since `Clone` is a supertrait of `Copy`, we must first derive `Clone` to derive `Copy`.
+Since `Clone` is a supertrait of `Copy`, deriving `Copy` also requires `Clone`.
 
 ```rust
 #[derive(Clone, Copy)]
@@ -1108,8 +1199,6 @@ pub struct Cat {
     name: &'static str // reference to a string literal
 }
 ```
-
-* Note that we cannot `impl Copy` ourselves, it must be derived
 
 <!--
 If you try to do this on a type that has fields that are not copyable,
@@ -1248,7 +1337,9 @@ struct SomeOptions {
 }
 ```
 
-* Defaults for both `i32` and `f32` is `0`
+* Derived `Default` gives every field its default: `0` for both `i32` and `f32`
+    * A struct is a product, so it needs a default for _every_ field
+    * An enum is a sum, so you mark _one_ variant (with no data) as `#[default]`
 * We don't always want this behavior...
 
 
@@ -1375,14 +1466,29 @@ Last time we got lucky because `fly` took `&self` as a parameter. What would we 
 
 ```rust
 fn main() {
-    let person = Human;
-    <person as Pilot>::fly();
-    <person as Wizard>::fly();
-    person.fly();
+    <Human as Pilot>::fly();
+    <Human as Wizard>::fly();
+    Human::fly();
 }
 ```
 
 * This is considered the *fully qualified syntax* of a trait
+
+
+---
+
+
+# What Does `mystery` Return?
+
+```rust
+fn mystery<T>(x: T) -> T {
+    // ???
+}
+```
+
+* `mystery` knows nothing about `T`, so it can't create, copy, compare, or print one
+* The only value it can return is `x`, so it must be the identity function
+    * Unless it never returns, like by calling `panic!`
 
 
 ---
@@ -1404,6 +1510,8 @@ pub fn notify<T: Summary>(item: &T) {
 ```
 
 * We can only call `item.summarize()` because `T` is `Summary`
+* A generic function can only do to `T` what its bounds allow
+    * `mystery` had no bounds, so all it could do was return `x`
 
 
 ---
@@ -1432,6 +1540,25 @@ First is strictly more powerful
 ---
 
 
+# Argument Position `impl Trait`
+
+```rust
+fn show(x: impl Display) -> String {
+    format!("<{x}>")
+}
+
+show(5);    // caller picks i32
+show("hi"); // caller picks &str
+```
+
+* The caller picks the type, so `show` must accept any `Display`
+    * This is called a *universal* type, like `'a` in SML
+    * `mystery` was universal too, which is why it could only return `x`
+
+
+---
+
+
 # Return Position `impl Trait`
 
 If your function _returns_ a type that implements `MyTrait`, you can write its return type as `-> impl MyTrait`.
@@ -1442,7 +1569,25 @@ fn to_key<T>(v: Vec<T>) -> impl Hash;
 
 * This is called _return-position impl trait (RPIT)_
 * Starting in Rust 1.75, you can use [RPIT in traits](https://blog.rust-lang.org/2023/12/21/async-fn-rpit-in-traits.html)!
-* These are no longer generics, but are instead _existential_ types
+
+
+---
+
+
+# Return Position `impl Trait`
+
+```rust
+fn make() -> impl Display {
+    5 // make picks i32
+}
+
+let d = make();
+println!("{d}"); // ok, the caller knows d is Display
+d + 1;           // error: the caller doesn't know it's i32
+```
+
+* The function picks the type, and the caller only knows it's `Display`
+    * This is an *existential* type, like `type t` in an opaque SML signature
     * Read [this](https://varkor.github.io/blog/2018/07/03/existential-types-in-rust.html) blog for more information
 
 
@@ -1522,7 +1667,7 @@ impl<T: Display + PartialOrd> Pair<T> {
 
 * `T` must implement `Display` to be printed
 * `T` must implement `PartialOrd` to be compared
-* `cmp_display` will exist for a `Pair<i32>` but not for `Pair<T: !PartialOrd>`
+* `cmp_display` will exist for a `Pair<i32>` but not for a `Pair` of a type that isn't `PartialOrd`
 
 <!--
 Bad formatting for slide real estate

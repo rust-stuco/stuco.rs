@@ -836,6 +836,25 @@ are pointing to
 ---
 
 
+# `fn` vs. `Fn`
+
+* Function types have a count too: `|fn(A) -> B| = |B|^|A|`
+    * e.g. `fn(bool) -> bool` has `2² = 4` (ignoring side effects): `x`, `!x`, `true`, and `false`
+    * `|fn(!) -> T| = |T|^0 = 1`, meaning there's exactly one way to turn a `!` into a `T`
+
+```rust
+fn absurd<T>(x: !) -> T {
+    match x {} // `!` has no values, so no arms are needed
+}
+```
+
+* Intuition: when `!` coerces into a type, it's as if the compiler calls `absurd` for you
+    * `absurd` can never actually run, since there's no `!` value to call it with
+
+
+---
+
+
 # Recap: Closure Traits
 
 * `Fn`, `FnMut`, `FnOnce` describe different groups of closures
