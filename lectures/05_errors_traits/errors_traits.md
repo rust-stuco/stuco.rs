@@ -453,7 +453,7 @@ We can do better than this if we *expect* this error and know what message to pr
 ```rust
 fn main() {
     let greeting_file = File::open("hello.txt")
-        .expect("Was unable to find 'hello.txt'");
+        .expect("hello.txt should exist");
 }
 ```
 
@@ -461,7 +461,7 @@ Now we get:
 
 ```
 thread 'main' panicked at src/main.rs:5:33:
-Was unable to find 'hello.txt':
+hello.txt should exist:
     Os { code: 2, kind: NotFound, message: "No such file or directory" }
 ```
 
