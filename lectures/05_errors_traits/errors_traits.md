@@ -102,6 +102,7 @@ $$
 * Traits
 * Derivable Traits
 * Advanced Types
+* Comparison Traits
 
 
 ---
@@ -836,11 +837,6 @@ Reiterate that `Shape` is a _trait_, not a struct or an enum.
 
 # Traits `!=` Types
 
-
-```rust
-let rec = Shape::new_shape();
-```
-
 ```
 error[E0790]: cannot call associated function on trait without
               specifying the corresponding `impl` type
@@ -1028,8 +1024,10 @@ Luckily, Rust can `derive` traits for us when there is an obvious and common imp
 
 * The compiler can provide basic implementations for some traits via the
 `#[derive]` [attribute](https://doc.rust-lang.org/reference/attributes.html)
-* `struct X` can `#[derive]` a trait if all the fields of `X` implement that trait
-* These traits can still be manually implemented if a more complex behavior is required
+* A type can `#[derive]` a trait if all of its fields implement that trait
+    * For a struct (a product), that's every field
+    * For an enum (a sum), that's every field of every variant
+    * Except `Default`, which needs a `#[default]` variant with no data
 
 
 ---
@@ -1251,9 +1249,7 @@ error[E0204]: the trait `Copy` cannot be implemented for this type
 ---
 
 
-# Deriving `Default`
-
-What if we tried to derive `Default` instead?
+# The `Default` Trait
 
 ```rust
 pub trait Default: Sized {
@@ -1261,6 +1257,20 @@ pub trait Default: Sized {
     fn default() -> Self;
 }
 ```
+
+* `Sized` is a marker trait, like `Copy`
+    * Every type whose size is known at compile time implements it automatically
+* `Default: Sized` makes `Sized` a supertrait, like `Student: Person`
+    * So only types with a known size can implement `Default`
+    * `default()` returns a `Self`, so `Self` must have a known size
+
+
+---
+
+
+# Deriving `Default`
+
+What if we tried to derive `Default` instead?
 
 ```rust
 #[derive(Default)]
@@ -1270,7 +1280,7 @@ pub struct Stuff<T> {
 }
 ```
 
-* This compiles even though `T` is not `Default`!
+* This compiles, even though `T` might not be `Default`!
     * However...
 
 
@@ -1313,9 +1323,36 @@ error[E0277]: the trait bound `Nope: Default` is not satisfied
    = help: the trait `Default` is implemented for `Stuff<T>`
 ```
 
+* `#[derive(Default)]` generates `impl<T: Default> Default for Stuff<T>`
+    * So `Stuff<T>` is only `Default` when `T` is, which is checked on use
+* The fields are still checked up front, assuming `T: Default`
+    * So `#[derive(Copy)]` failed early, since `Vec<T>` is never `Copy`
+
 <!--
 This might be confusing so don't hesitate to spend time on this.
 -->
+
+
+---
+
+
+# Bounding the Struct Instead
+
+We could also put the bound on the struct itself:
+
+```rust
+#[derive(Default)]
+struct Stuff<T: Default> {
+    singleton: T,
+    many: Vec<T>,
+}
+
+fn takes<T>(s: Stuff<T>) {} // error: `T: Default` is not satisfied
+```
+
+* Now `Stuff<Nope>` can't exist at all, even without calling `default()`
+* Every use of `Stuff<T>` has to repeat the `T: Default` bound
+* [Prefer putting bounds on `impl`s](https://rust-lang.github.io/api-guidelines/future-proofing.html#c-struct-bounds) instead, which is what `#[derive]` does
 
 
 ---
@@ -1326,11 +1363,6 @@ This might be confusing so don't hesitate to spend time on this.
 Sometimes we can't derive a trait, or need a more complex behavior than what the `#[derive]` will provide.
 
 ```rust
-pub trait Default: Sized {
-    // Required method
-    fn default() -> Self;
-}
-
 struct SomeOptions {
     foo: i32,
     bar: f32,
@@ -1338,8 +1370,6 @@ struct SomeOptions {
 ```
 
 * Derived `Default` gives every field its default: `0` for both `i32` and `f32`
-    * A struct is a product, so it needs a default for _every_ field
-    * An enum is a sum, so you mark _one_ variant (with no data) as `#[default]`
 * We don't always want this behavior...
 
 
@@ -1363,6 +1393,51 @@ impl Default for SomeOptions {
 
 * `#[derive(Default)]` would make both of those values `0`
 * Instead we manually set them to values we want
+
+
+---
+
+
+# Deriving `Default` on Enums
+
+```rust
+#[derive(Default)]
+enum Size {
+    Small,
+    #[default]
+    Medium,
+    Large,
+}
+
+let s = Size::default(); // Size::Medium
+```
+
+* An enum has no obvious default, so we pick one variant with `#[default]`
+* That variant can't hold data, so `#[default] Large(u32)` won't compile
+
+
+---
+
+
+# `Default` for Variants With Data
+
+For a variant with data, we write `impl Default` by hand:
+
+```rust
+enum Size {
+    Small,
+    Medium,
+    Large(u32),
+}
+
+impl Default for Size {
+    fn default() -> Self {
+        Size::Large(0)
+    }
+}
+```
+
+* Just like `SomeOptions`, we choose the value ourselves
 
 
 ---
@@ -1430,20 +1505,16 @@ fn main() {
 }
 ```
 
+* `Human` is a unit struct, so `Human` here is its only value, not the type
+    * Just like `let subject = AlwaysEqual;` from structs & enums
+
 
 ---
 
 
 # Trait Mix Ups
 
-Here, Rust uses `.fly()` from `Human`.
-
-```rust
-fn main() {
-    let person = Human;
-    person.fly();
-}
-```
+Here, Rust uses `.fly()` from `Human`, printing `*waving arms furiously*`.
 
 How do we call every version of `.fly()`?
 
@@ -1454,6 +1525,12 @@ fn main() {
     Wizard::fly(&person);
     person.fly();
 }
+```
+
+```
+This is your captain speaking.
+Up!
+*waving arms furiously*
 ```
 
 
@@ -1472,6 +1549,12 @@ fn main() {
 }
 ```
 
+```
+This is your captain speaking.
+Up!
+*waving arms furiously*
+```
+
 * This is considered the *fully qualified syntax* of a trait
 
 
@@ -1486,9 +1569,12 @@ fn mystery<T>(x: T) -> T {
 }
 ```
 
-* `mystery` knows nothing about `T`, so it can't create, copy, compare, or print one
-* The only value it can return is `x`, so it must be the identity function
-    * Unless it never returns, like by calling `panic!`
+* Try brainstorming anything else `mystery` could do with `x`
+* `T` has no trait bounds, so `mystery` knows nothing about `T`
+    * It can't create, copy, compare, or print a `T`
+    * There's literally not enough information to do anything else
+* So the only value it can return is `x`, making it the identity function
+    * Unless it never returns, like by calling `panic!` or `loop {}`ing
 
 
 ---
@@ -1529,7 +1615,7 @@ fn get_csv_lines(src: impl std::io::BufRead) -> u32; // Similar!
 ```
 
 * The second signature is an example of _argument-position impl trait (APIT)_.
-* There is a slight difference here which we won't cover, just know that these aren't completely identical
+* These two aren't completely identical, as we'll see in a few slides
     * Watch [this](https://youtu.be/CWiz_RtA1Hw?si=nJ4lFAJz7Uczz50I&t=882) for more information
 
 <!--
@@ -1554,6 +1640,57 @@ show("hi"); // caller picks &str
 * The caller picks the type, so `show` must accept any `Display`
     * This is called a *universal* type, like `'a` in SML
     * `mystery` was universal too, which is why it could only return `x`
+
+
+---
+
+
+# Aside: Turbofish
+
+We've already been writing `::<>` to pick generic types by hand:
+
+```rust
+let n = "5".parse::<i32>().unwrap();
+let pair = ArrayPair::<i32, 5> { left: [0; 5], right: [1; 5] };
+```
+
+* This `::<>` syntax is called the *turbofish*
+* It's needed when Rust can't infer the type, like `"5".parse().unwrap()` alone
+* Why not `parse<i32>()`? Rust would read `<` and `>` as comparisons
+
+
+---
+
+
+# Difference 1: No Turbofish
+
+```rust
+fn generic<T: Display>(x: T) {}
+fn apit(x: impl Display) {}
+
+generic::<i32>(5); // ok
+apit::<i32>(5);    // error: function takes 0 generic arguments
+```
+
+* `impl Display` still makes a type parameter, but it has no name
+* So the caller can't pick it with turbofish
+
+
+---
+
+
+# Difference 2: Separate Types
+
+```rust
+fn same<T: Display>(a: T, b: T) {}
+fn diff(a: impl Display, b: impl Display) {}
+
+same(1, "a"); // error: mismatched types
+diff(1, "a"); // ok
+```
+
+* One named `T` means both arguments must be the same type
+* Each `impl Display` is its own type, like `fn diff<A: Display, B: Display>`
 
 
 ---
@@ -1672,6 +1809,69 @@ impl<T: Display + PartialOrd> Pair<T> {
 <!--
 Bad formatting for slide real estate
 -->
+
+
+---
+layout: section
+---
+
+# **Comparison Traits**
+
+
+---
+
+
+# `PartialEq` vs `Eq`
+
+```rust
+let x = f64::NAN;
+println!("{}", x == x); // false
+```
+
+* `Eq` means `==` is an *equivalence relation* (reflexive, symmetric, and transitive)
+* `PartialEq` drops reflexivity, so `x == x` might be `false`
+* `NaN` isn't equal to itself, so `f64` is `PartialEq` but not `Eq`
+
+
+---
+
+
+# `PartialOrd` vs `Ord`
+
+```rust
+let x = f64::NAN;
+println!("{:?}", 1.0.partial_cmp(&x)); // None
+
+let mut v: Vec<f64> = vec![2.0, 1.0];
+v.sort(); // error: the trait bound `f64: Ord` is not satisfied
+```
+
+* `Ord` is a *total order*, so any two values compare with `cmp`
+* `PartialOrd` allows incomparable pairs, so `partial_cmp` returns an `Option`
+* A math partial order is reflexive, but `NaN <= NaN` is `false`
+    * So Rust's "partial" is looser than the discrete math definition
+
+
+---
+
+
+# Deriving Comparisons
+
+```rust
+#[derive(PartialEq, Eq, PartialOrd, Ord)]
+enum Hand {
+    HighCard,
+    Pair,
+    TwoPair,
+}
+
+assert!(Hand::Pair < Hand::TwoPair);
+```
+
+* Derived orderings compare enum variants in the order they're declared
+    * Variants holding data compare by variant first, then by the data
+* Structs compare field by field, from the first field to the last
+* This is how `PokerHand` gets its ordering in the homework!
 
 
 ---
