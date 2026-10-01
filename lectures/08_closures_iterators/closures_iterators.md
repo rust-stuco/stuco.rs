@@ -1338,4 +1338,4 @@ Filter { iter: Skip { iter: Map { iter: 0..100 }, n: 1 } }
 layout: none
 ---
 
-<EndingSlide next-lecture="Ownership Revisited" />
+<EndingSlide next-lecture="Lifetimes" />
