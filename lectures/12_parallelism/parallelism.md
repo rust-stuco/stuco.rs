@@ -3,7 +3,7 @@ theme: default
 title: Parallelism
 author: Rust StuCo
 info: |
-  Week 13 of Rust StuCo: Parallelism.
+  Week 12 of Rust StuCo: Parallelism.
 colorSchema: auto
 aspectRatio: 16/9
 canvasWidth: 1280

@@ -1,5 +1,5 @@
 title = "Concurrency"
-slides = "14_concurrency"
+slides = "13_concurrency"
 
 [[videos]]
 title = "Crust of Rust"

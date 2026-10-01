@@ -3,7 +3,7 @@ theme: default
 title: Unsafe
 author: Rust StuCo
 info: |
-  Week 12 of Rust StuCo: Unsafe.
+  Week 14 of Rust StuCo: Unsafe.
 colorSchema: auto
 aspectRatio: 16/9
 canvasWidth: 1280
@@ -834,7 +834,190 @@ It is tempting to reason about unsafety _locally_.
 * `unsafe` is a way to _promise_ to the compiler that the indicated code is safe
 
 ---
+class: image-right image-width-50
+---
+
+# The End!
+
+<img class="slide-image" style="--image-size: 0.9;" src="../images/ferris_happy.svg">
+
+We've reached the end of our prepared content!
+
+
+---
+
+
+# **Why Rust?**
+
+* Déjà vu?
+
+
+---
+
+
+# Why Rust?
+
+Let's briefly go back to the very beginning of the semester.
+
+* What is Rust?
+* What are the biggest advantages of Rust?
+* What are some issues that Rust has?
+* Who is Rust for?
+
+<!--
+Keen observers will be aware that one bullet point is missing. I removed it because it overlaps quite a lot with the other points.
+-->
+
+
+---
+
+
+# What is Rust?
+
+* A language empowering everyone to build reliable and efficient software
+* From the official rust [website](https://www.rust-lang.org/), Rust is:
+    - Fast
+    - Reliable
+    - Productive
+
+<!--
+Hopefully by now, you actually believe these things to be true!
+-->
+
+
+---
+
+
+# Rust's Advantages
+
+* Rust is fast
+* Rust is memory safe
+* Rust enables fearless concurrency
+* Rust is modern
+
+
+---
+
+
+# Rust's Pitfalls
+
+* Rust is hard
+* Rust is young
+
+
+---
+
+
+# Who is Rust for?
+
+* Rust targets complex programs while providing stability and security
+* Rust is not a magic silver bullet
+* Rust is _not_ for everyone
+* Rust is arguably the best tool for the specific problems it is trying to solve!
+
+<!--
+Many people view Rust as an ideology, which is a huge problem. Rust is just a tool, and we have to be careful that we are not pushing the idea that Rust is the solution to everything.
+
+That being said, it is a very, very good tool for what it tries to solve (complex computer systems). Really, we are comparing Rust to the existing tools that have been around for decades (cough cough C/C++).
+-->
+
+
+---
+
+
+# The Future of Rust
+
+We believe that Rust is the future of computer systems.
+
+* We _do not_ mean that people will _eventually_ start using Rust
+* Many companies (large and small) have _already_ placed their bets on Rust
+    * "Exponential growth" of Rust in big tech
+    * Many startups methodically choosing Rust to build their foundation
+* Rust will continue to grow, and many more people will continue to adopt it
+
+<!--
+By future, we don't mean that people will _eventually_ start to pick up Rust in a decade and begrudgingly force themselves to write Rust code. This is happening _right now_. Companies of all sizes (startups to the tech giants including Microsoft and Google) are actively developing and pursuing Rust development.
+
+Rust has had "exponential growth" at Microsoft: https://youtu.be/phvKOfk7keg?si=ry3Nr2IfaZFgF_wn&t=2967,
+and they have said that 2025 is the year of Rust at Microsoft.
+
+Also note that the linux project has adopted Rust (the first language other than C to be integrated into Linux). It has been a bumpy road, but there is real achievement there too.
+-->
+
+---
+class: image-right image-width-50
+---
+
+# Fish 4.0
+
+* Completely rewritten in Rust by [Feb 27, 2025](https://fishshell.com/blog/new-in-40/)
+
+<img class="slide-image" style="--image-size: 1;" src="./fish-rewrite-in-rust.webp">
+
+
+<!--
+The reason that the team decide to port to Rust. (excerpted from https://github.com/fish-shell/fish-shell/pull/9512)
+
+- Nobody really likes C++ or CMake, and there's no clear path for getting off old toolchains. Every year the pain will get worse.
+- C++ is becoming a legacy language and finding contributors in the future will become difficult, while Rust has an active and growing community.
+- Rust is what we need to turn on concurrent function execution.
+- Being written in Rust will help fish continue to be perceived as modern and relevant.
+-->
+
+---
+class: image-right image-width-50
+---
+
+# Zed
+
+* A code editor built from scratch in Rust. (not a ... Vscode fork ...)
+
+<img class="slide-image" style="--image-size: 1;" src="./zed-homepage.webp">
+
+---
+
+
+# Course Goals
+
+We wanted all students to:
+
+* Be able to read, write, and reason about Rust code
+* Become an intermediate to advanced Rust developer
+* Be confident that you can use Rust going forward!
+
+<!--
+We hope that we were able to achieve our goals, enabling you to achieve your own goals more easily!
+
+Terrance: When I took this course
+
+-->
+
+
+---
+
+
+# Why Rust?
+
+We hope that you all can answer this question now!
+
+
+---
 layout: none
 ---
 
-<EndingSlide next-lecture="Parallelism" />
+<EndingSlide />
+
+<!-- Include this section if still missing instructor candidates -->
+
+<!--
+---
+layout: end
+---
+
+# Looking for Instructors and TAs!
+
+- If you have achieved the course goals, you are qualified to teach this course!
+    - _This **just** means completing the homeworks, nothing more_
+- We will train you in whatever you are unsure of
+- 3-hour commitment every week
+- If you are interested in teaching this course, please let us know! -->
