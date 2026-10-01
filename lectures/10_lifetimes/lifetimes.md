@@ -93,17 +93,19 @@ fn main() {
 
 # Validating References
 
-```
-error[E0597]: `x` does not live long enough
- --> src/main.rs:6:13
-  |
-6 |         r = &x;
-  |             ^^ borrowed value does not live long enough
-7 |     }
-  |     - `x` dropped here while still borrowed
-8 |
-9 |     println!("r: {}", r);
-  |                       - borrow later used here
+```ansi
+[1m[91merror[E0597][0m[1m: `x` does not live long enough[0m
+ [1m[94m--> [0msrc/main.rs:6:13
+  [1m[94m|[0m
+[1m[94m5[0m [1m[94m|[0m         let x = 5;
+  [1m[94m|[0m             [1m[94m-[0m [1m[94mbinding `x` declared here[0m
+[1m[94m6[0m [1m[94m|[0m         r = &x;
+  [1m[94m|[0m             [1m[91m^^[0m [1m[91mborrowed value does not live long enough[0m
+[1m[94m7[0m [1m[94m|[0m     }
+  [1m[94m|[0m     [1m[94m-[0m [1m[94m`x` dropped here while still borrowed[0m
+[1m[94m8[0m [1m[94m|[0m
+[1m[94m9[0m [1m[94m|[0m     println!("r: {}", r);
+  [1m[94m|[0m                       [1m[94m-[0m [1m[94mborrow later used here[0m
 ```
 
 * The value that `r` refers to has gone out of scope before we could use it
@@ -235,19 +237,19 @@ fn longest(x: &str, y: &str) -> &str {
 
 Unfortunately, our attempt will not compile:
 
-```
-error[E0106]: missing lifetime specifier
- --> src/main.rs:9:33
-  |
-9 | fn longest(x: &str, y: &str) -> &str {
-  |               ----     ----     ^ expected named lifetime parameter
-  |
-  = help: this function's return type contains a borrowed value,
+```ansi
+[1m[91merror[E0106][0m[1m: missing lifetime specifier[0m
+ [1m[94m--> [0msrc/main.rs:9:33
+  [1m[94m|[0m
+[1m[94m9[0m [1m[94m|[0m fn longest(x: &str, y: &str) -> &str {
+  [1m[94m|[0m               [1m[94m----[0m     [1m[94m----[0m     [1m[91m^[0m [1m[91mexpected named lifetime parameter[0m
+  [1m[94m|[0m
+  [1m[94m= [0m[1mhelp[0m: this function's return type contains a borrowed value,
     but the signature does not say whether it is borrowed from `x` or `y`
-help: consider introducing a named lifetime parameter
-  |
-9 | fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
-  |           ++++     ++          ++          ++
+[1m[96mhelp[0m: consider introducing a named lifetime parameter
+  [1m[94m|[0m
+[1m[94m9[0m [1m[94m| [0mfn longest[92m<'a>[0m(x: &[92m'a [0mstr, y: &[92m'a [0mstr) -> &[92m'a [0mstr {
+  [1m[94m|[0m           [92m++++[0m     [92m++[0m          [92m++[0m          [92m++[0m
 ```
 
 ---
@@ -256,8 +258,8 @@ help: consider introducing a named lifetime parameter
 
 The help text from the compiler error reveals some useful information:
 
-```
-  = help: this function's return type contains a borrowed value,
+```ansi
+  [1m[94m= [0m[1mhelp[0m: this function's return type contains a borrowed value,
     but the signature does not say whether it is borrowed from `x` or `y`
 ```
 
@@ -470,20 +472,20 @@ println!("The longest string is {}", result);
 
 Sure enough, this does not compile! Rust gives us this error:
 
-```
-error[E0597]: `string2` does not live long enough
-  --> src/main.rs:7:44
-   |
-6  |         let string2 = String::from("long string is long");
-   |             ------- binding `string2` declared here
-7  |         result = longest(string1.as_str(), string2.as_str());
-   |                                            ^^^^^^^ borrowed value does
-                                                        not live long enough
-8  |     }
-   |     - `string2` dropped here while still borrowed
-9  |
-10 |     println!("The longest string is {}", result);
-   |                                          ------ borrow later used here
+```ansi
+[1m[91merror[E0597][0m[1m: `string2` does not live long enough[0m
+  [1m[94m--> [0msrc/main.rs:7:44
+   [1m[94m|[0m
+[1m[94m 6[0m [1m[94m|[0m         let string2 = String::from("long string is long");
+   [1m[94m|[0m             [1m[94m-------[0m [1m[94mbinding `string2` declared here[0m
+[1m[94m 7[0m [1m[94m|[0m         result = longest(string1.as_str(), string2.as_str());
+   [1m[94m|[0m                                            [1m[91m^^^^^^^[0m [1m[91mborrowed value does
+                                                        not live long enough[0m
+[1m[94m 8[0m [1m[94m|[0m     }
+   [1m[94m|[0m     [1m[94m-[0m [1m[94m`string2` dropped here while still borrowed[0m
+[1m[94m 9[0m [1m[94m|[0m
+[1m[94m10[0m [1m[94m|[0m     println!("The longest string is {}", result);
+   [1m[94m|[0m                                          [1m[94m------[0m [1m[94mborrow later used here[0m
 ```
 
 ---
@@ -942,24 +944,24 @@ fn foo() -> &i32 {
 }
 ```
 
-```
-help: consider using the `'static` lifetime, but this is uncommon unless you're
+```ansi
+[1m[96mhelp[0m: consider using the `'static` lifetime, but this is uncommon unless you're
       returning a borrowed value from a `const` or a `static`
-  |
-2 | fn foo() -> &'static i32 {
-  |              +++++++
+  [1m[94m|[0m
+[1m[94m2[0m [1m[94m| [0mfn foo() -> &[92m'static [0mi32 {
+  [1m[94m|[0m              [92m+++++++[0m
 ```
 
 ---
 
 # `'static` Error Messages
 
-```
-help: consider using the `'static` lifetime, but this is uncommon unless you're
+```ansi
+[1m[96mhelp[0m: consider using the `'static` lifetime, but this is uncommon unless you're
       returning a borrowed value from a `const` or a `static`
-  |
-2 | fn foo() -> &'static i32 {
-  |              +++++++
+  [1m[94m|[0m
+[1m[94m2[0m [1m[94m| [0mfn foo() -> &[92m'static [0mi32 {
+  [1m[94m|[0m              [92m+++++++[0m
 ```
 
 * Before making a change, think about if your reference will _really_ live until the end of the program
@@ -1072,17 +1074,22 @@ fn main() {
 
 We get a compiler error:
 
-```
-error[E0597]: `i` does not live long enough
-  --> src/lib.rs:15:15
-   |
-15 |     print_it(&i);
-   |     ---------^^--
-   |     |         |
-   |     |         borrowed value does not live long enough
-   |     argument requires that `i` is borrowed for `'static`
-16 | }
-   | - `i` dropped here while still borrowed
+```ansi
+[1m[91merror[E0597][0m[1m: `i` does not live long enough[0m
+  [1m[94m--> [0msrc/main.rs:15:14
+<-- snip -->
+[1m[94m15[0m [1m[94m|[0m     print_it(&i);
+   [1m[94m|[0m     [1m[94m---------[0m[1m[91m^^[0m[1m[94m-[0m
+   [1m[94m|[0m     [1m[94m|[0m        [1m[91m|[0m
+   [1m[94m|[0m     [1m[94m|[0m        [1m[91mborrowed value does not live long enough[0m
+   [1m[94m|[0m     [1m[94margument requires that `i` is borrowed for `'static`[0m
+[1m[94m16[0m [1m[94m|[0m }
+   [1m[94m|[0m [1m[94m-[0m [1m[94m`i` dropped here while still borrowed[0m
+[1m[92mnote[0m: requirement that the value outlives `'static` introduced here
+  [1m[94m--> [0msrc/main.rs:3:33
+   [1m[94m|[0m
+[1m[94m 3[0m [1m[94m|[0m fn print_it(input: impl Debug + 'static) {
+   [1m[94m|[0m                                 [1m[92m^^^^^^^[0m
 ```
 
 

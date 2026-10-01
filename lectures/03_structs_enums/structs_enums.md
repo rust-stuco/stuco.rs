@@ -91,18 +91,18 @@ fn taker(some_string: String) {
 
 # Review Question 1
 
-```
-error[E0382]: borrow of moved value: `s`
- --> src/main.rs:4:42
-  |
-2 |     let s = String::from("yo");
-  |         - move occurs because `s` has type `String`,
-  |           which does not implement the `Copy` trait
-3 |     taker(s);
-  |           - value moved here
-4 |     println!("I *totally* still own {}", s);
-  |                                          ^ value borrowed here after move
-  |
+```ansi
+[1m[91merror[E0382][0m[1m: borrow of moved value: `s`[0m
+ [1m[94m--> [0msrc/main.rs:4:42
+  [1m[94m|[0m
+[1m[94m2[0m [1m[94m|[0m     let s = String::from("yo");
+  [1m[94m|[0m         [1m[94m-[0m [1m[94mmove occurs because `s` has type `String`,[0m
+  [1m[94m|[0m           [1m[94mwhich does not implement the `Copy` trait[0m
+[1m[94m3[0m [1m[94m|[0m     taker(s);
+  [1m[94m|[0m           [1m[94m-[0m [1m[94mvalue moved here[0m
+[1m[94m4[0m [1m[94m|[0m     println!("I *totally* still own {}", s);
+  [1m[94m|[0m                                          [1m[91m^[0m [1m[91mvalue borrowed here after move[0m
+  [1m[94m|[0m
 ```
 * Looks like `taker` took the ownership of `s` and did not give it back.
 
@@ -112,15 +112,15 @@ error[E0382]: borrow of moved value: `s`
 
 # Review Question 1
 
-```
-note: consider changing this parameter type in function `taker` to borrow
+```ansi
+[1m[92mnote[0m: consider changing this parameter type in function `taker` to borrow
       instead if owning the value isn't necessary
- --> src/main.rs:7:23
-  |
-7 | fn taker(some_string: String) {
-  |    -----              ^^^^^^ this parameter takes ownership of the value
-  |    |
-  |    in this function
+ [1m[94m--> [0msrc/main.rs:7:23
+  [1m[94m|[0m
+[1m[94m7[0m [1m[94m|[0m fn taker(some_string: String) {
+  [1m[94m|[0m    [1m[94m-----[0m              [1m[92m^^^^^^[0m [1m[92mthis parameter takes ownership of the value[0m
+  [1m[94m|[0m    [1m[94m|[0m
+  [1m[94m|[0m    [1m[94min this function[0m
 ```
 
 * Suggestion from the compiler: Rewrite `taker` to _borrow_ `some_string`
@@ -151,11 +151,11 @@ fn taker(some_string: &String) { // <-- Change to expect a reference to a String
 
 # Review Question 1 (Alternative Solution)
 
-```
-help: consider cloning the value if the performance cost is acceptable
-  |
-3 |     taker(s.clone());
-  |            ++++++++
+```ansi
+[1m[96mhelp[0m: consider cloning the value if the performance cost is acceptable
+  [1m[94m|[0m
+[1m[94m3[0m [1m[94m| [0m    taker(s[92m.clone()[0m);
+  [1m[94m|[0m            [92m++++++++[0m
 ```
 
 * Making a clone (deep copy) allows this compile
@@ -190,17 +190,18 @@ fn add_to_list(fav_items: Vec<String>, item: String) {
 
 # Review Question 2
 
-```
-error[E0596]: cannot borrow `fav_items` as mutable, as it is not declared as mutable
- --> src/main.rs:8:5
-  |
-8 |     fav_items.push(item);
-  |     ^^^^^^^^^ cannot borrow as mutable
-  |
-help: consider changing this to be mutable
-  |
-7 | fn add_to_list(mut fav_items: Vec<String>, item: String) {
-  |                +++
+```ansi
+[1m[91merror[E0596][0m[1m: cannot borrow `fav_items` as mutable,[0m
+              [1mas it is not declared as mutable[0m
+ [1m[94m--> [0msrc/main.rs:8:5
+  [1m[94m|[0m
+[1m[94m8[0m [1m[94m|[0m     fav_items.push(item);
+  [1m[94m|[0m     [1m[91m^^^^^^^^^[0m [1m[91mcannot borrow as mutable[0m
+  [1m[94m|[0m
+[1m[96mhelp[0m: consider changing this to be mutable
+  [1m[94m|[0m
+[1m[94m7[0m [1m[94m| [0mfn add_to_list([92mmut [0mfav_items: Vec<String>, item: String) {
+  [1m[94m|[0m                [92m+++[0m
 ```
 
 * Missing two `mut` annotations
@@ -601,17 +602,18 @@ struct Student {
 
 # Lifetimes Sneak Peek
 
-```
-error[E0106]: missing lifetime specifier
- --> src/main.rs:2:16
-  |
-2 |     andrew_id: &str, // <- &str instead of String
-  |                ^ expected named lifetime parameter
-  |
-help: consider introducing a named lifetime parameter
-  |
-1 ~ struct Student<'a> {
-2 ~     andrew_id: &'a str, // <- &str instead of String
+```ansi
+[1m[91merror[E0106][0m[1m: missing lifetime specifier[0m
+ [1m[94m--> [0msrc/main.rs:2:16
+  [1m[94m|[0m
+[1m[94m2[0m [1m[94m|[0m     andrew_id: &str, // <- &str instead of String
+  [1m[94m|[0m                [1m[91m^[0m [1m[91mexpected named lifetime parameter[0m
+  [1m[94m|[0m
+[1m[96mhelp[0m: consider introducing a named lifetime parameter
+  [1m[94m|[0m
+[1m[94m1[0m [92m~ [0mstruct Student[92m<'a>[0m {
+[1m[94m2[0m [92m~ [0m    andrew_id: &[92m'a [0mstr, // <- &str instead of String
+  [1m[94m|[0m
 ```
 
 * We can store references in structs, but we need lifetime specifiers
@@ -691,14 +693,15 @@ fn main() {
 }
 ```
 
-```
-error[E0277]: `Student` doesn't implement `Debug`
-  --> src/main.rs:11:22
-   |
-11 |     println!("{:?}", connor);
-   |                      ^^^^^^ `Student` cannot be formatted using `{:?}`
-   |
-   = help: the trait `Debug` is not implemented for `Student`
+```ansi
+[1m[91merror[E0277][0m[1m: `Student` doesn't implement `Debug`[0m
+  [1m[94m--> [0msrc/main.rs:11:22
+   [1m[94m|[0m
+[1m[94m11[0m [1m[94m|[0m     println!("{:?}", connor);
+   [1m[94m|[0m               [1m[94m----[0m   [1m[91m^^^^^^[0m [1m[91m`Student` cannot be formatted using `{:?}`[0m
+   [1m[94m|[0m                             [1m[91mbecause it doesn't implement `Debug`[0m
+<-- snip -->
+   [1m[94m= [0m[1mhelp[0m: the trait `Debug` is not implemented for `Student`
 ```
 
 
@@ -709,10 +712,10 @@ error[E0277]: `Student` doesn't implement `Debug`
 
 What's this all about?
 
-```
-error[E0277]: `Student` doesn't implement `Debug`
+```ansi
+[1m[91merror[E0277][0m[1m: `Student` doesn't implement `Debug`[0m
 <-- snip -->
-   = help: the trait `Debug` is not implemented for `Student`
+   [1m[94m= [0m[1mhelp[0m: the trait `Debug` is not implemented for `Student`
 ```
 
 * More on traits in an upcoming lecture!
@@ -726,12 +729,12 @@ error[E0277]: `Student` doesn't implement `Debug`
 
 As is often the case, the compiler provides a helpful suggestion.
 
-```
-help: consider annotating `Student` with `#[derive(Debug)]`
-   |
-2  + #[derive(Debug)]
-3  | struct Student {
-   |
+```ansi
+[1m[96mhelp[0m: consider annotating `Student` with `#[derive(Debug)]`
+   [1m[94m|[0m
+[1m[94m 1[0m [92m+ #[derive(Debug)][0m
+[1m[94m 2[0m [1m[94m|[0m struct Student {
+   [1m[94m|[0m
 ```
 
 * For now, let's just follow the advice blindly
@@ -1434,14 +1437,15 @@ let y: Option<i8> = Some(5);
 let sum = x + y;
 ```
 
-```
-error[E0277]: cannot add `Option<i8>` to `i8`
- --> src/main.rs:6:17
-  |
-6 |     let sum = x + y;
-  |                 ^ no implementation for `i8 + Option<i8>`
-  |
-  = help: the trait `Add<Option<i8>>` is not implemented for `i8`
+```ansi
+[1m[91merror[E0277][0m[1m: cannot add `Option<i8>` to `i8`[0m
+   [1m[94m--> [0msrc/main.rs:5:17
+    [1m[94m|[0m
+[1m[94m  5[0m [1m[94m|[0m     let sum = x + y;
+    [1m[94m|[0m                 [1m[91m^[0m [1m[91mno implementation for `i8 + Option<i8>`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mhelp[0m: the trait `Add<Option<i8>>` is not implemented for `i8`
+<-- snip -->
 ```
 
 * Instead of runtime error, we catch the error immediately at compile time!
@@ -1676,12 +1680,13 @@ let sum = match y {
 };
 ```
 
-```
-error[E0004]: non-exhaustive patterns: `None` not covered
-   --> src/main.rs:6:21
-    |
-6   |     let sum = match y {
-    |                     ^ pattern `None` not covered
+```ansi
+[1m[91merror[E0004][0m[1m: non-exhaustive patterns: `None` not covered[0m
+   [1m[94m--> [0msrc/main.rs:5:21
+    [1m[94m|[0m
+[1m[94m  5[0m [1m[94m|[0m     let sum = match y {
+    [1m[94m|[0m                     [1m[91m^[0m [1m[91mpattern `None` not covered[0m
+<-- snip -->
 ```
 
 * Forces us to explicitly handle the `None` case

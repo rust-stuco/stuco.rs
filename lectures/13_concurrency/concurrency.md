@@ -879,14 +879,29 @@ thread::spawn(|| {
 });
 ```
 
-```
-note: function requires argument type to outlive `'static`
- --> src/main.rs:6:5
-  |
-6 | /     thread::spawn(|| {
-7 | |         println!("Here's a vector: {:?}", v);
-8 | |     });
-  | |______^
+
+---
+
+
+```ansi
+[1m[92m   Compiling[0m spawn-borrow v0.1.0 (/projects/spawn-borrow)
+[1m[91merror[E0373][0m[1m: closure may outlive the current function, but it borrows `v`, which
+              is owned by the current function[0m
+ [1m[94m--> [0msrc/main.rs:6:19
+  [1m[94m|[0m
+[1m[94m6[0m [1m[94m|[0m     thread::spawn(|| {
+  [1m[94m|[0m                   [1m[91m^^[0m [1m[91mmay outlive borrowed value `v`[0m
+[1m[94m7[0m [1m[94m|[0m         println!("Here's a vector: {:?}", v);
+  [1m[94m|[0m                                           [1m[94m-[0m [1m[94m`v` is borrowed here[0m
+  [1m[94m|[0m
+[1m[92mnote[0m: function requires argument type to outlive `'static`
+ [1m[94m--> [0msrc/main.rs:6:5
+  [1m[94m|[0m
+[1m[94m6[0m [1m[94m|[0m [1m[92m/[0m     thread::spawn(|| {
+[1m[94m7[0m [1m[94m|[0m [1m[92m|[0m         println!("Here's a vector: {:?}", v);
+[1m[94m8[0m [1m[94m|[0m [1m[92m|[0m     });
+  [1m[94m|[0m [1m[92m|______^[0m
+<-- snip -->
 ```
 
 
@@ -927,34 +942,25 @@ async fn main() {
 ---
 
 
-```
-error[E0373]: async block may outlive the current function, but it borrows `v`, which is owned by the current function
- --> src/main.rs:7:23
-  |
-7 |       task::spawn(async {
-  |  _______________________^
-8 | |         println!("Here's a vec: {:?}", v);
-  | |                                        - `v` is borrowed here
-9 | |     });
-  | |_____^ may outlive borrowed value `v`
-  |
-
-note: function requires argument type to outlive `'static`
- --> src/main.rs:7:17
-  |
-7 |       task::spawn(async {
-  |  _________________^
-8 | |         println!("Here's a vector: {:?}", v);
-9 | |     });
-  | |_____^
-
-help: to force the async block to take ownership of `v` (and any other
-      referenced variables), use the `move` keyword
-  |
-7 |     task::spawn(async move {
-8 |         println!("Here's a vec: {:?}", v);
-9 |     });
-  |
+```ansi
+[1m[92m   Compiling[0m tokio-borrow v0.1.0 (/projects/tokio-borrow)
+[1m[91merror[E0373][0m[1m: async block may outlive the current function, but it borrows `v`,
+              which is owned by the current function[0m
+ [1m[94m--> [0msrc/main.rs:5:24
+  [1m[94m|[0m
+[1m[94m5[0m [1m[94m|[0m     tokio::task::spawn(async {
+  [1m[94m|[0m                        [1m[91m^^^^^[0m [1m[91mmay outlive borrowed value `v`[0m
+[1m[94m6[0m [1m[94m|[0m         println!("Here's a vec: {:?}", v);
+  [1m[94m|[0m                                        [1m[94m-[0m [1m[94m`v` is borrowed here[0m
+  [1m[94m|[0m
+  [1m[94m= [0m[1mnote[0m: async blocks are not executed immediately and must either take a
+          reference or ownership of outside variables they use
+[1m[96mhelp[0m: to force the async block to take ownership of `v` (and any other referenced
+      variables), use the `move` keyword
+  [1m[94m|[0m
+[1m[94m5[0m [1m[94m| [0m    tokio::task::spawn(async[92m move[0m {
+  [1m[94m|[0m                              [92m++++[0m
+<-- snip -->
 ```
 
 
@@ -1001,13 +1007,16 @@ The reason it is "controversial" is because many people believe that the default
 
 If you see this error (or something similar):
 
-```
-error: future cannot be sent between threads safely
-   --> src/main.rs:6:5
-    |
-6   |     tokio::spawn(async {
-    |     ^^^^^^^^^^^^ future created by async block is not `Send`
-    |
+```ansi
+[1m[91merror[0m[1m: future cannot be sent between threads safely[0m
+   [1m[94m--> [0msrc/main.rs:6:5
+    [1m[94m|[0m
+[1m[94m  6[0m [1m[94m|[0m [1m[91m/[0m     tokio::spawn(async {
+[1m[94m  7[0m [1m[94m|[0m [1m[91m|[0m         let _rc = Rc::new("hello");
+[1m[94m  8[0m [1m[94m|[0m [1m[91m|[0m         yield_now().await;
+[1m[94m  9[0m [1m[94m|[0m [1m[91m|[0m     });
+    [1m[94m|[0m [1m[91m|______^[0m [1m[91mfuture created by async block is not `Send`[0m
+<-- snip -->
 ```
 
 * RUN AWAY!!!

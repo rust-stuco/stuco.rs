@@ -31,6 +31,15 @@ npm run dev -- 09_ownership_p2
 Slidev serves the deck at `http://localhost:3030` and refreshes after Markdown changes.
 See [the Slidev README](slidev/README.md) for individual deck builds and PDF exports.
 
+Blocks that show cargo, rustc, or test output use the `ansi` language, so they keep cargo's colors. Capture real output instead of writing escape codes by hand:
+
+```bash
+TERM=ansi CARGO_TERM_HYPERLINKS=false cargo +stable build --color=always > out.ansi 2>&1
+TERM=ansi CARGO_TERM_HYPERLINKS=false cargo +stable test --color=always -- --color=always > out.ansi 2>&1
+```
+
+`TERM=ansi` makes the test harness reset colors with codes Slidev renders, and `CARGO_TERM_HYPERLINKS=false` removes link escapes that would show up as text. Put the output in a code block tagged `ansi`. You can delete lines and shorten paths, but keep the escape codes intact.
+
 ## Full build
 
 Complete the website and Slidev setup first. Also install Python 3.11 or later,

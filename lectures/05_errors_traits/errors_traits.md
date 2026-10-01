@@ -837,21 +837,21 @@ Reiterate that `Shape` is a _trait_, not a struct or an enum.
 
 # Traits `!=` Types
 
-```
-error[E0790]: cannot call associated function on trait without
-              specifying the corresponding `impl` type
-  --> src/main.rs:20:15
-   |
-3  |     fn new_shape() -> Self;
-   |     ----------------------- `Shape::new_shape` defined here
-...
-20 |     let rec = Shape::new_shape();
-   |               ^^^^^^^^^^^^^^^^ cannot call associated function of trait
-   |
-help: use the fully-qualified path to the only available implementation
-   |
-20 |     let rec = <Rectangle as Shape>::new_shape();
-   |               +++++++++++++      +
+```ansi
+[1m[91merror[E0790][0m[1m: cannot call associated function on trait without
+              specifying the corresponding `impl` type[0m
+  [1m[94m--> [0msrc/main.rs:31:15
+   [1m[94m|[0m
+[1m[94m 3[0m [1m[94m|[0m     fn new_shape() -> Self;
+   [1m[94m|[0m     [1m[94m-----------------------[0m [1m[94m`Shape::new_shape` defined here[0m
+[1m[94m...[0m
+[1m[94m31[0m [1m[94m|[0m     let rec = Shape::new_shape();
+   [1m[94m|[0m               [1m[91m^^^^^^^^^^^^^^^^^^[0m [1m[91mcannot call associated function of trait[0m
+   [1m[94m|[0m
+[1m[96mhelp[0m: use the fully-qualified path to the only available implementation
+   [1m[94m|[0m
+[1m[94m31[0m [1m[94m| [0m    let rec = [92m<Rectangle as [0mShape[92m>[0m::new_shape();
+   [1m[94m|[0m               [92m+++++++++++++[0m      [92m+[0m
 ```
 
 * Traits are _abstract_, we cannot construct a trait by itself
@@ -1232,17 +1232,15 @@ pub struct Stuff<T> {
 # When `#[derive]` Fails
 
 
-```
-error[E0204]: the trait `Copy` cannot be implemented for this type
- --> src/lib.rs:1:17
-  |
-1 | #[derive(Clone, Copy)]
-  |                 ^^^^
-...
-4 |     many: Vec<T>,
-  |     ------------ this field does not implement `Copy`
-  |
-  = note: this error originates in the derive macro `Copy`
+```ansi
+[1m[91merror[E0204][0m[1m: the trait `Copy` cannot be implemented for this type[0m
+ [1m[94m--> [0msrc/lib.rs:1:17
+  [1m[94m|[0m
+[1m[94m1[0m [1m[94m|[0m #[derive(Clone, Copy)]
+  [1m[94m|[0m                 [1m[91m^^^^[0m
+[1m[94m...[0m
+[1m[94m4[0m [1m[94m|[0m     many: Vec<T>,
+  [1m[94m|[0m     [1m[94m------------[0m [1m[94mthis field does not implement `Copy`[0m
 ```
 
 
@@ -1313,14 +1311,16 @@ fn main() {
 
 We get this error only after trying to construct `Stuff<Nope>`.
 
-```
-error[E0277]: the trait bound `Nope: Default` is not satisfied
-  --> src/main.rs:10:26
-   |
-10 |     let d: Stuff<Nope> = Stuff::default();
-   |                          ^^^^^ the trait `Default` is not implemented for `Nope`
-   |
-   = help: the trait `Default` is implemented for `Stuff<T>`
+```ansi
+[1m[91merror[E0277][0m[1m: the trait bound `Nope: Default` is not satisfied[0m
+  [1m[94m--> [0msrc/main.rs:11:26
+   [1m[94m|[0m
+[1m[94m11[0m [1m[94m|[0m     let d: Stuff<Nope> = Stuff::default();
+   [1m[94m|[0m                          [1m[91m^^^^^[0m [1m[91mthe trait `Default` is not implemented
+                                    for `Nope`[0m
+   [1m[94m|[0m
+[1m[96mhelp[0m: the trait `Default` [1m[35mis[0m implemented for `[1m[35mStuff<T>[0m`
+<-- snip -->
 ```
 
 * `#[derive(Default)]` generates `impl<T: Default> Default for Stuff<T>`

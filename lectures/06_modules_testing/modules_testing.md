@@ -194,9 +194,10 @@ testing the program easier
 
 Let's walk through what happens when we create a package with `cargo new`.
 
-```sh
+```ansi
 $ cargo new my-project
-     Created binary (application) `my-project` package
+[1m[92m    Creating[0m binary (application) `my-project` package
+[1m[92mnote[0m: see more `Cargo.toml` keys and their definitions at <-- snip -->
 
 $ ls my-project
 Cargo.toml
@@ -953,22 +954,22 @@ mod tests {
 
 We run tests with `cargo test`.
 
-```
+```ansi
 $ cargo test
-   Compiling adder v0.1.0 (/projects/adder)
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.57s
-     Running unittests src/lib.rs (target/debug/deps/adder-92948b65e88960b4)
+[1m[92m   Compiling[0m adder v0.1.0 (/projects/adder)
+[1m[92m    Finished[0m `test` profile [unoptimized + debuginfo] target(s) in 0.30s
+[1m[92m     Running[0m unittests src/lib.rs (target/debug/deps/adder-ff710a55681752b1)
 
 running 1 test
-test tests::it_works ... ok
+test tests::it_works ... [32mok[0;10m
 
-test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; <-- snip -->
+test result: [32mok[0;10m. 1 passed; 0 failed; 0 ignored; 0 measured; <-- snip -->
 
-   Doc-tests adder
+[1m[92m   Doc-tests[0m adder
 
 running 0 tests
 
-test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; <-- snip -->
+test result: [32mok[0;10m. 0 passed; 0 failed; 0 ignored; 0 measured; <-- snip -->
 ```
 
 ---
@@ -977,11 +978,11 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; <-- snip -->
 
 Let's break down the output of `cargo test`.
 
-```
+```ansi
 running 1 test
-test tests::it_works ... ok
+test tests::it_works ... [32mok[0;10m
 
-test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; <-- snip -->
+test result: [32mok[0;10m. 1 passed; 0 failed; 0 ignored; 0 measured; <-- snip -->
 ```
 
 * We see `test result: ok`, meaning we have passed all the tests
@@ -997,12 +998,12 @@ Disregard the "0 measured", that is for nightly benchmarking
 
 You may have seen something similar to this in your homework:
 
-```
-   Doc-tests adder
+```ansi
+[1m[92m   Doc-tests[0m adder
 
 running 0 tests
 
-test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; <-- snip -->
+test result: [32mok[0;10m. 0 passed; 0 failed; 0 ignored; 0 measured; <-- snip -->
 ```
 
 * Rust code examples in a library's documentation comments are run as tests!
@@ -1073,31 +1074,31 @@ mod tests {
 
 Let's see what we get:
 
-```
+```ansi
 $ cargo test
 
 running 2 tests
-test tests::another ... FAILED
-test tests::exploration ... ok
+test tests::exploration ... [32mok[0;10m
+test tests::another ... [31mFAILED[0;10m
 
 failures:
 <-- snip -->
 
-test result: FAILED. 1 passed; 1 failed; <-- snip -->
+test result: [31mFAILED[0;10m. 1 passed; 1 failed; <-- snip -->
 
-error: test failed, to rerun pass `--lib`
+[1m[91merror[0m: test failed, to rerun pass `--lib`
 ```
 
 ---
 
 # Failing Tests
 
-```
+```ansi
 failures:
 
 ---- tests::another stdout ----
 
-thread 'tests::another' panicked at src/lib.rs:10:9:
+thread 'tests::another' (26397132) panicked at src/lib.rs:10:9:
 Make this test fail
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
@@ -1105,9 +1106,9 @@ note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 failures:
     tests::another
 
-test result: FAILED. 1 passed; 1 failed; <-- snip -->
+test result: [31mFAILED[0;10m. 1 passed; 1 failed; <-- snip -->
 
-error: test failed, to rerun pass `--lib`
+[1m[91merror[0m: test failed, to rerun pass `--lib`
 ```
 
 * Instead of `ok`, we get that the result of `tests::another` is `FAILED`
@@ -1121,14 +1122,8 @@ We can use the `assert!` macro to ensure that something is `true`.
 ```rust
 #[test]
 fn larger_can_hold_smaller() {
-    let larger = Rectangle {
-        width: 8,
-        height: 7,
-    };
-    let smaller = Rectangle {
-        width: 5,
-        height: 1,
-    };
+    let larger = Rectangle { width: 8, height: 7 };
+    let smaller = Rectangle { width: 5, height: 1 };
 
     assert!(larger.can_hold(&smaller));
 }
@@ -1304,13 +1299,13 @@ Note that `cargo test` will show the print output of failed tests
 
 Let's say we have 1000 tests, but only one is named `one_hundred`. We can run `cargo test one_hundred` to only run the `one_hundred` test.
 
-```
+```ansi
 $ cargo test one_hundred
 
 running 1 test
-test tests::one_hundred ... ok
+test tests::one_hundred ... [32mok[0;10m
 
-test result: ok. 1 passed; <-- snip --> 999 filtered out; finished in 0.00s
+test result: [32mok[0;10m. 1 passed; <-- snip --> 999 filtered out; finished in 0.00s
 ```
 
 * Notice how there are now `999 filtered out` tests, these were the tests that didn't match the name `one_hundred`
@@ -1321,14 +1316,14 @@ test result: ok. 1 passed; <-- snip --> 999 filtered out; finished in 0.00s
 
 `cargo` will actually find _any_ test that matches the name you passed in.
 
-```
+```ansi
 $ cargo test add
 
 running 2 tests
-test tests::add_three_and_two ... ok
-test tests::add_two_and_two ... ok
+test tests::add_three_and_two ... [32mok[0;10m
+test tests::add_two_and_two ... [32mok[0;10m
 
-test result: ok. 2 passed; <-- snip --> 998 filtered out; finished in 0.00s
+test result: [32mok[0;10m. 2 passed; <-- snip --> 998 filtered out; finished in 0.00s
 ```
 
 * If you want an exact match, pass the full path: `cargo test tests::one_hundred -- --exact`
@@ -1472,19 +1467,18 @@ fn it_adds_two() {
 
 # Sharing Code Between Integration Tests
 
-What if several test files need the same helper functions?
+What if several test files need the same helper functions? Let's try putting them in `tests/common.rs`:
 
-* Because every file directly inside `tests/` is its own crate, a `tests/common.rs` file becomes a test crate too:
-
-```
+```ansi
 $ cargo test
 <-- snip -->
-     Running tests/common.rs (target/debug/deps/common-c6398a39389184f1)
+[1m[92m     Running[0m tests/common.rs (target/debug/deps/common-4697aa33ac8d80b0)
 
 running 0 tests
 ```
 
-* `common` shows up in the output even though it has no tests!
+* Every file directly inside `tests/` is compiled as its own crate
+* So `common` shows up as a test crate, even though it has no tests!
 
 ---
 

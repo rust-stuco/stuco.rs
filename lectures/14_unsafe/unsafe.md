@@ -505,22 +505,22 @@ Pretend that confused ferris is somewhere on the right looking worried (not enou
 
 If we try to compile, we get this error:
 
-```
-error[E0499]: cannot borrow `*values` as mutable more than once at a time
- --> src/main.rs:6:31
-  |
-1 | fn split_at_mut(values: &mut [i32], mid: usize) -> (&mut [i32], &mut [i32]) {
-  |                         - let's call the lifetime of this reference `'1`
-...
-6 |     (&mut values[..mid], &mut values[mid..])
-  |     --------------------------^^^^^^--------
-  |     |     |                   |
-  |     |     |                   second mutable borrow occurs here
-  |     |     first mutable borrow occurs here
-  |     returning this value requires that `*values` is borrowed for `'1`
-
-For more information about this error, try `rustc --explain E0499`.
-error: could not compile `unsafe-example` due to previous error
+```ansi
+[1m[91merror[E0499][0m[1m: cannot borrow `*values` as mutable more than once at a time[0m
+ [1m[94m--> [0msrc/main.rs:6:31
+  [1m[94m|[0m
+[1m[94m1[0m [1m[94m|[0m fn split_at_mut(values: &mut [i32], mid: usize) -> (&mut [i32], &mut [i32]) {
+  [1m[94m|[0m                         [1m[94m-[0m [1m[94mlet's call the lifetime of this reference `'1`[0m
+[1m[94m...[0m
+[1m[94m6[0m [1m[94m|[0m     (&mut values[..mid], &mut values[mid..])
+  [1m[94m|[0m     [1m[94m--------------------------[0m[1m[91m^^^^^^[0m[1m[94m--------[0m
+  [1m[94m|[0m     [1m[94m|[0m     [1m[94m|[0m                   [1m[91m|[0m
+  [1m[94m|[0m     [1m[94m|[0m     [1m[94m|[0m                   [1m[91msecond mutable borrow occurs here[0m
+  [1m[94m|[0m     [1m[94m|[0m     [1m[94mfirst mutable borrow occurs here[0m
+  [1m[94m|[0m     [1m[94mreturning this value requires that `*values` is borrowed for `'1`[0m
+<-- snip -->
+[1mFor more information about this error, try `rustc --explain E0499`.[0m
+[1m[91merror[0m: could not compile `unsafe-example` (bin "unsafe-example") <-- snip -->
 ```
 
 <!--

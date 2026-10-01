@@ -127,20 +127,15 @@ let s = example_closure(String::from("hello"));
 let n = example_closure(5);
 ```
 
-```
-error[E0308]: mismatched types
- --> src/main.rs:5:29
-  |
-5 |     let n = example_closure(5);
-  |             --------------- ^- help: try using a conversion method: `.to_string()`
-  |             |               |
-  |             |               expected struct `String`, found integer
-  |             arguments to this function are incorrect
-note: closure parameter defined here
- --> src/main.rs:2:28
-  |
-2 |     let example_closure = |x| x;
-  |                            ^
+```ansi
+[1m[91merror[E0308][0m[1m: mismatched types[0m
+ [1m[94m--> [0msrc/main.rs:4:29
+  [1m[94m|[0m
+[1m[94m4[0m [1m[94m|[0m     let n = example_closure(5);
+  [1m[94m|[0m             [1m[94m---------------[0m [1m[91m^[0m [1m[91mexpected `String`, found integer[0m
+  [1m[94m|[0m             [1m[94m|[0m
+  [1m[94m|[0m             [1m[94marguments to this function are incorrect[0m
+<-- snip -->
 ```
 
 
@@ -255,16 +250,18 @@ println!("After calling closure: {:?}", list);
 
 # Mutable Borrowing in Closures
 
-```
-error[E0596]: cannot borrow `borrows_mutably` as mutable, as it is not declared as mutable
- --> src/main.rs:7:5
-  |
-5 |     let borrows_mutably = || { list.push(7); };
-  |                                ---- calling `borrows_mutably` requires mutable
-  |                                     binding due to mutable borrow of `list`
-6 |
-7 |     borrows_mutably();
-  |     ^^^^^^^^^^^^^^^ cannot borrow as mutable
+```ansi
+[1m[91merror[E0596][0m[1m: cannot borrow `borrows_mutably` as mutable,
+ as it is not declared as mutable[0m
+ [1m[94m--> [0msrc/main.rs:7:5
+  [1m[94m|[0m
+[1m[94m5[0m [1m[94m|[0m     let borrows_mutably = || { list.push(7); };
+  [1m[94m|[0m                                [1m[94m----[0m [1m[94mcalling `borrows_mutably` requires mutable
+                                     binding due to mutable borrow of `list`[0m
+[1m[94m6[0m [1m[94m|[0m
+[1m[94m7[0m [1m[94m|[0m     borrows_mutably();
+  [1m[94m|[0m     [1m[91m^^^^^^^^^^^^^^^[0m [1m[91mcannot borrow as mutable[0m
+<-- snip -->
 ```
 
 * A closure mutating its captured state is _equivalent_ to mutating _itself_
@@ -277,11 +274,12 @@ error[E0596]: cannot borrow `borrows_mutably` as mutable, as it is not declared 
 
 # Mutable Borrowing in Closures
 
-```
-help: consider changing this to be mutable
-  |
-5 |     let mut borrows_mutably = || { list.push(7); };
-  |         +++
+```ansi
+[1m[96mhelp[0m: consider changing this to be mutable
+  [1m[94m|[0m
+[1m[94m5[0m [1m[94m| [0m    let [92mmut [0mborrows_mutably = || { list.push(7); };
+  [1m[94m|[0m         [92m+++[0m
+<-- snip -->
 ```
 
 * As always, the compiler tells us how to fix our mistake!
@@ -362,23 +360,23 @@ Make sure people understand that we're trying to bind a closure to `mystery`
 
 # Giving Closures Ownership
 
-```
-error[E0373]: closure may outlive the current block, but it borrows `x`,
- which is owned by the current block
- --> src/main.rs:6:9
-  |
-6 |         |y: u32| -> u32 { x + y }
-  |         ^^^^^^^^^^^^^^^   - `x` is borrowed here
-  |         |
-  |         may outlive borrowed value `x`
-  |
-  |
-4 |     let mystery = {
-  |         ^^^^^^^
-help: to force the closure to take ownership of `x`, use the `move` keyword
-  |
-6 |         move |y: u32| -> u32 { x + y }
-  |
+```ansi
+[1m[91merror[E0373][0m[1m: closure may outlive the current block, but it borrows `x`,
+ which is owned by the current block[0m
+ [1m[94m--> [0msrc/main.rs:4:9
+  [1m[94m|[0m
+[1m[94m4[0m [1m[94m|[0m         |y: u32| -> u32 { x + y }
+  [1m[94m|[0m         [1m[91m^^^^^^^^^^^^^^^[0m   [1m[94m-[0m [1m[94m`x` is borrowed here[0m
+  [1m[94m|[0m         [1m[91m|[0m
+  [1m[94m|[0m         [1m[91mmay outlive borrowed value `x`[0m
+  [1m[94m|[0m
+<-- snip -->
+[1m[96mhelp[0m: to force the closure to take ownership of `x`
+(and any other referenced variables), use the `move` keyword
+  [1m[94m|[0m
+[1m[94m4[0m [1m[94m| [0m        [92mmove [0m|y: u32| -> u32 { x + y }
+  [1m[94m|[0m         [92m++++[0m
+<-- snip -->
 ```
 
 ---
@@ -838,9 +836,9 @@ are pointing to
 
 # `fn` vs. `Fn`
 
-* Function types have a count too: `|fn(A) -> B| = |B|^|A|`
-    * e.g. `fn(bool) -> bool` has `2² = 4` (ignoring side effects): `x`, `!x`, `true`, and `false`
-    * `|fn(!) -> T| = |T|^0 = 1`, meaning there's exactly one way to turn a `!` into a `T`
+- Function types have a count too: `|fn(A) -> B| = |B|^|A|`
+    - e.g. `fn(bool) -> bool` has `2² = 4` (ignoring side effects): `x`, `!x`, `true`, and `false`
+    - `|fn(!) -> T| = |T|^0 = 1`, meaning there's exactly one way to turn a `!` into a `T`
 
 ```rust
 fn absurd<T>(x: !) -> T {
@@ -1197,15 +1195,16 @@ Mention that ferris is not confused but is trying to point out something to us..
 
 # Producing Iterators
 
-```text
-warning: unused `Map` that must be used
- --> src/main.rs:4:5
-  |
-4 |     v1.iter().map(|x| x + 1);
-  |     ^^^^^^^^^^^^^^^^^^^^^^^^
-  |
-  = note: iterators are lazy and do nothing unless consumed
-  = note: `#[warn(unused_must_use)]` on by default
+```ansi
+[1m[33mwarning[0m[1m: unused `Map` that must be used[0m
+ [1m[94m--> [0msrc/main.rs:4:5
+  [1m[94m|[0m
+[1m[94m4[0m [1m[94m|[0m     v1.iter().map(|x| x + 1);
+  [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [1m[94m|[0m
+  [1m[94m= [0m[1mnote[0m: iterators are lazy and do nothing unless consumed
+  [1m[94m= [0m[1mnote[0m: `#[warn(unused_must_use)]` (part of `#[warn(unused)]`) on by default
+<-- snip -->
 ```
 
 * Zero-cost abstractions at work
@@ -1248,16 +1247,30 @@ fn filter_by(list: Vec<i32>, val: i32) -> Vec<i32> {
 }
 ```
 
-```
---> src/main.rs:2:35
-  |
-2 |     list.into_iter().filter(|x| x == val).collect()
-  |                                   ^^ no implementation for `&i32 == i32`
-  |
+* _Note how our filter closure captures the input `val` for our filtering needs!_
+
+
+---
+
+
+# Filter
+
+```ansi
+[1m[91merror[E0277][0m[1m: can't compare `&i32` with `i32`[0m
+ [1m[94m--> [0msrc/main.rs:2:35
+  [1m[94m|[0m
+[1m[94m2[0m [1m[94m|[0m     list.into_iter().filter(|x| x == val).collect()
+  [1m[94m|[0m                                   [1m[91m^^[0m [1m[91mno implementation for `&i32 == i32`[0m
+  [1m[94m|[0m
+  [1m[94m= [0m[1mhelp[0m: the trait `PartialEq<i32>` is not implemented for `&i32`
+[1m[96mhelp[0m: consider dereferencing here
+  [1m[94m|[0m
+[1m[94m2[0m [1m[94m| [0m    list.into_iter().filter(|x| [92m*[0mx == val).collect()
+  [1m[94m|[0m                                 [92m+[0m
+<-- snip -->
 ```
 
 * Some iterator functions take a reference instead of ownership
-* _Note how our filter closure captures the input `val` for our filtering needs!_
 
 
 ---

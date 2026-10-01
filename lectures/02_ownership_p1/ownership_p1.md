@@ -464,18 +464,19 @@ let s2 = s1;
 println!("{}, world!", s1);
 ```
 
-```
-error[E0382]: borrow of moved value: `s1`
-  |
-2 |     let s1 = String::from("hello");
-  |         -- move occurs because `s1` has type `String`,
-               which does not implement the `Copy` trait
-3 |     let s2 = s1;
-  |              -- value moved here
-4 |
-5 |     println!("{}, world!", s1);
-  |                            ^^ value borrowed here after move
-  |
+```ansi
+[1m[91merror[E0382][0m[1m: borrow of moved value: `s1`[0m
+ [1m[94m--> [0msrc/main.rs:4:28
+  [1m[94m|[0m
+[1m[94m2[0m [1m[94m|[0m     let s1 = String::from("hello");
+  [1m[94m|[0m         [1m[94m--[0m [1m[94mmove occurs because `s1` has type `String`,
+               which does not implement the `Copy` trait[0m
+[1m[94m3[0m [1m[94m|[0m     let s2 = s1;
+  [1m[94m|[0m              [1m[94m--[0m [1m[94mvalue moved here[0m
+[1m[94m4[0m [1m[94m|[0m     println!("{}, world!", s1);
+  [1m[94m|[0m                            [1m[91m^^[0m [1m[91mvalue borrowed here after move[0m
+  [1m[94m|[0m
+<-- snip -->
 ```
 
 
@@ -649,17 +650,17 @@ takes_ownership(s);
 println!("{} is invalid now!", s);
 ```
 
-```
-error[E0382]: borrow of moved value: `s`
- --> src/main.rs:4:36
-  |
-2 |     let s = String::from("hello");
-  |         - move occurs because `s` has type `String`,
-              which does not implement the `Copy` trait
-3 |     takes_ownership(s);
-  |                     - value moved here
-4 |     println!("{} is invalid now!", s);
-  |                                    ^ value borrowed here after move
+```ansi
+[1m[91merror[E0382][0m[1m: borrow of moved value: `s`[0m
+ [1m[94m--> [0msrc/main.rs:4:36
+  [1m[94m|[0m
+[1m[94m2[0m [1m[94m|[0m     let s = String::from("hello");
+  [1m[94m|[0m         [1m[94m-[0m [1m[94mmove occurs because `s` has type `String`,
+              which does not implement the `Copy` trait[0m
+[1m[94m3[0m [1m[94m|[0m     takes_ownership(s);
+  [1m[94m|[0m                     [1m[94m-[0m [1m[94mvalue moved here[0m
+[1m[94m4[0m [1m[94m|[0m     println!("{} is invalid now!", s);
+  [1m[94m|[0m                                    [1m[91m^[0m [1m[91mvalue borrowed here after move[0m
 ```
 
 ---
@@ -863,19 +864,20 @@ fn change(some_string: &String) {
 
 We get an error if we try to modify a reference.
 
-```
-error[E0596]: cannot borrow `*some_string` as mutable,
-              as it is behind a `&` reference
-
- --> src/main.rs:8:5
-  |
-7 | fn change(some_string: &String) {
-  |                        ------- help: consider changing this
-                                   to be a mutable reference: `&mut String`
-8 |     some_string.push_str(", world");
-  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `some_string` is a `&` reference,
-                                         so the data it refers to cannot
-                                         be borrowed as mutable
+```ansi
+[1m[91merror[E0596][0m[1m: cannot borrow `*some_string` as mutable,
+              as it is behind a `&` reference[0m
+ [1m[94m--> [0msrc/main.rs:8:5
+  [1m[94m|[0m
+[1m[94m8[0m [1m[94m|[0m     some_string.push_str(", world");
+  [1m[94m|[0m     [1m[91m^^^^^^^^^^^[0m [1m[91m`some_string` is a `&` reference,
+                                 so it cannot be borrowed as mutable[0m
+  [1m[94m|[0m
+[1m[96mhelp[0m: consider changing this to be a mutable reference
+  [1m[94m|[0m
+[1m[94m7[0m [1m[94m| [0mfn change(some_string: &[92mmut [0mString) {
+  [1m[94m|[0m                         [92m+++[0m
+<-- snip -->
 ```
 
 * Just like variables, references are immutable by default
@@ -945,17 +947,17 @@ let r2 = &mut s;
 println!("{}, {}", r1, r2);
 ```
 
-```
-error[E0499]: cannot borrow `s` as mutable more than once at a time
- --> src/main.rs:5:14
-  |
-4 |     let r1 = &mut s;
-  |              ------ first mutable borrow occurs here
-5 |     let r2 = &mut s;
-  |              ^^^^^^ second mutable borrow occurs here
-6 |
-7 |     println!("{}, {}", r1, r2);
-  |                        -- first borrow later used here
+```ansi
+[1m[91merror[E0499][0m[1m: cannot borrow `s` as mutable more than once at a time[0m
+ [1m[94m--> [0msrc/main.rs:4:14
+  [1m[94m|[0m
+[1m[94m3[0m [1m[94m|[0m     let r1 = &mut s;
+  [1m[94m|[0m              [1m[94m------[0m [1m[94mfirst mutable borrow occurs here[0m
+[1m[94m4[0m [1m[94m|[0m     let r2 = &mut s;
+  [1m[94m|[0m              [1m[91m^^^^^^[0m [1m[91msecond mutable borrow occurs here[0m
+[1m[94m5[0m [1m[94m|[0m     println!("{}, {}", r1, r2);
+  [1m[94m|[0m                        [1m[94m--[0m [1m[94mfirst borrow later used here[0m
+<-- snip -->
 ```
 
 
@@ -1037,19 +1039,20 @@ println!("{}, {}, and {}", r1, r2, r3);
 
 # Mutable and Immutable References
 
-```
-error[E0502]: cannot borrow `s` as mutable because
-              it is also borrowed as immutable
- --> src/main.rs:6:14
-  |
-4 |     let r1 = &s; // no problem
-  |              -- immutable borrow occurs here
-5 |     let r2 = &s; // no problem
-6 |     let r3 = &mut s; // BIG PROBLEM
-  |              ^^^^^^ mutable borrow occurs here
-7 |
-8 |     println!("{}, {}, and {}", r1, r2, r3);
-  |                                -- immutable borrow later used here
+```ansi
+[1m[91merror[E0502][0m[1m: cannot borrow `s` as mutable because
+              it is also borrowed as immutable[0m
+ [1m[94m--> [0msrc/main.rs:6:14
+  [1m[94m|[0m
+[1m[94m4[0m [1m[94m|[0m     let r1 = &s; // no problem
+  [1m[94m|[0m              [1m[94m--[0m [1m[94mimmutable borrow occurs here[0m
+[1m[94m5[0m [1m[94m|[0m     let r2 = &s; // no problem
+[1m[94m6[0m [1m[94m|[0m     let r3 = &mut s; // BIG PROBLEM
+  [1m[94m|[0m              [1m[91m^^^^^^[0m [1m[91mmutable borrow occurs here[0m
+[1m[94m7[0m [1m[94m|[0m
+[1m[94m8[0m [1m[94m|[0m     println!("{}, {}, and {}", r1, r2, r3);
+  [1m[94m|[0m                                [1m[94m--[0m [1m[94mimmutable borrow later used here[0m
+<-- snip -->
 ```
 
 
@@ -1121,16 +1124,18 @@ fn dangle() -> &String {
 
 # Constraint: No Dangling References
 
-```
-error[E0106]: missing lifetime specifier
- --> src/main.rs:5:16
-  |
-5 | fn dangle() -> &String {
-  |                ^ expected named lifetime parameter
-  |
-  = help: this function's return type contains a borrowed value,
+```ansi
+[1m[91merror[E0106][0m[1m: missing lifetime specifier[0m
+ [1m[94m--> [0msrc/main.rs:5:16
+  [1m[94m|[0m
+[1m[94m5[0m [1m[94m|[0m fn dangle() -> &String {
+  [1m[94m|[0m                [1m[91m^[0m [1m[91mexpected named lifetime parameter[0m
+  [1m[94m|[0m
+  [1m[94m= [0m[1mhelp[0m: this function's return type contains a borrowed value,
     but there is no value for it to be borrowed from
-help: consider using the `'static` lifetime
+[1m[96mhelp[0m: consider using the `'static` lifetime,
+      but this is uncommon unless you're returning a borrowed value
+      from a `const` or a `static`
 <-- snip -->
 ```
 

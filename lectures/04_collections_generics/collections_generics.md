@@ -262,18 +262,19 @@ println!("The vector is: {vec_ref:?}");
 
 # `Vec` and References
 
-```
-error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immutable
- --> src/main.rs:6:5
-  |
-4 |     let vec_ref = &v;
-  |                   -- immutable borrow occurs here
-5 |
-6 |     v.push(6);
-  |     ^^^^^^^^^ mutable borrow occurs here
-7 |
-8 |     println!("The vector is: {vec_ref:?}");
-  |                               ------- immutable borrow later used here
+```ansi
+[1m[91merror[E0502][0m[1m: cannot borrow `v` as mutable
+because it is also borrowed as immutable[0m
+ [1m[94m--> [0msrc/main.rs:6:5
+  [1m[94m|[0m
+[1m[94m4[0m [1m[94m|[0m     let vec_ref = &v;
+  [1m[94m|[0m                   [1m[94m--[0m [1m[94mimmutable borrow occurs here[0m
+[1m[94m5[0m [1m[94m|[0m
+[1m[94m6[0m [1m[94m|[0m     v.push(6); // `push` takes a mutable reference!
+  [1m[94m|[0m     [1m[91m^^^^^^^^^[0m [1m[91mmutable borrow occurs here[0m
+[1m[94m7[0m [1m[94m|[0m
+[1m[94m8[0m [1m[94m|[0m     println!("The vector is: {vec_ref:?}");
+  [1m[94m|[0m                               [1m[94m-------[0m [1m[94mimmutable borrow later used here[0m
 ```
 
 
@@ -309,8 +310,6 @@ something _inside_ `v`.
 
 # `Vec` and References
 
-If we try to run this:
-
 ```rust
 let mut v = vec![1, 2, 3, 4, 5];
 let first = &v[0];
@@ -318,16 +317,17 @@ v.push(6);
 println!("The first element is: {first}");
 ```
 
-```
-error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immutable
- --> src/main.rs:4:5
-  |
-3 |     let first = &v[0];
-  |                  - immutable borrow occurs here
-4 |     v.push(6);
-  |     ^^^^^^^^^ mutable borrow occurs here
-5 |     println!("The first element is: {first}");
-  |                                      ----- immutable borrow later used here
+```ansi
+[1m[91merror[E0502][0m[1m: cannot borrow `v` as mutable
+because it is also borrowed as immutable[0m
+ [1m[94m--> [0msrc/main.rs:4:5
+  [1m[94m|[0m
+[1m[94m3[0m [1m[94m|[0m     let first = &v[0];
+  [1m[94m|[0m                  [1m[94m-[0m [1m[94mimmutable borrow occurs here[0m
+[1m[94m4[0m [1m[94m|[0m     v.push(6);
+  [1m[94m|[0m     [1m[91m^^^^^^^^^[0m [1m[91mmutable borrow occurs here[0m
+[1m[94m5[0m [1m[94m|[0m     println!("The first element is: {first}");
+  [1m[94m|[0m                                      [1m[94m-----[0m [1m[94mimmutable borrow later used here[0m
 ```
 
 
@@ -336,16 +336,17 @@ error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immuta
 
 # `Vec` and References
 
-```
-error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immutable
- --> src/main.rs:4:5
-  |
-3 |     let first = &v[0];
-  |                  - immutable borrow occurs here
-4 |     v.push(6);
-  |     ^^^^^^^^^ mutable borrow occurs here
-5 |     println!("The first element is: {first}");
-  |                                      ----- immutable borrow later used here
+```ansi
+[1m[91merror[E0502][0m[1m: cannot borrow `v` as mutable
+because it is also borrowed as immutable[0m
+ [1m[94m--> [0msrc/main.rs:4:5
+  [1m[94m|[0m
+[1m[94m3[0m [1m[94m|[0m     let first = &v[0];
+  [1m[94m|[0m                  [1m[94m-[0m [1m[94mimmutable borrow occurs here[0m
+[1m[94m4[0m [1m[94m|[0m     v.push(6);
+  [1m[94m|[0m     [1m[91m^^^^^^^^^[0m [1m[91mmutable borrow occurs here[0m
+[1m[94m5[0m [1m[94m|[0m     println!("The first element is: {first}");
+  [1m[94m|[0m                                      [1m[94m-----[0m [1m[94mimmutable borrow later used here[0m
 ```
 
 * You cannot mutate a vector while references to its elements exist
@@ -438,18 +439,19 @@ for elem in &v {
 
 # `Vec` and Mutation
 
-```
-error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immutable
- --> src/main.rs:7:13
-  |
-4 |     for elem in &v {
-  |                 --
-  |                 |
-  |                 immutable borrow occurs here
-  |                 immutable borrow later used here
-...
-7 |             v.insert(0, 42);
-  |             ^^^^^^^^^^^^^^^ mutable borrow occurs here
+```ansi
+[1m[91merror[E0502][0m[1m: cannot borrow `v` as mutable
+because it is also borrowed as immutable[0m
+ [1m[94m--> [0msrc/main.rs:7:13
+  [1m[94m|[0m
+[1m[94m4[0m [1m[94m|[0m     for elem in &v {
+  [1m[94m|[0m                 [1m[94m--[0m
+  [1m[94m|[0m                 [1m[94m|[0m
+  [1m[94m|[0m                 [1m[94mimmutable borrow occurs here[0m
+  [1m[94m|[0m                 [1m[94mimmutable borrow later used here[0m
+[1m[94m...[0m
+[1m[94m7[0m [1m[94m|[0m             v.insert(0, 42);
+  [1m[94m|[0m             [1m[91m^^^^^^^^^^^^^^^[0m [1m[91mmutable borrow occurs here[0m
 ```
 
 * Again, you are not allowed to mutate vectors while holding a reference!
@@ -795,14 +797,17 @@ let s1 = String::from("hello");
 let h = s1[0];
 ```
 
-```
-error[E0277]: the type `String` cannot be indexed by `{integer}`
- --> src/main.rs:3:13
-  |
-3 |     let h = s1[0];
-  |             ^^^^^ `String` cannot be indexed by `{integer}`
-  |
-  = help: the trait `Index<{integer}>` is not implemented for `String`
+```ansi
+[1m[91merror[E0277][0m[1m: the type `str` cannot be indexed by `{integer}`[0m
+   [1m[94m--> [0msrc/main.rs:3:16
+    [1m[94m|[0m
+[1m[94m  3[0m [1m[94m|[0m     let h = s1[0];
+    [1m[94m|[0m                [1m[91m^[0m [1m[91mstring indices are ranges of `usize`[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mhelp[0m: the trait `SliceIndex<str>` is not implemented for `{integer}`
+    [1m[94m= [0m[1mnote[0m: you can use `.chars().nth()` or `.bytes().nth()`
+<-- snip -->
+    [1m[94m= [0m[1mnote[0m: required for `String` to implement `Index<{integer}>`
 ```
 
 * Why won't Rust allow indexing into `String`?
@@ -1407,38 +1412,38 @@ println!("The largest char is {}",
 
 We get an error:
 
-```
-error[E0369]: binary operation `>` cannot be applied to type `&T`
- --> src/main.rs:4:17
-  |
-4 |         if item > largest {
-  |            ---- ^ ------- &T
-  |            |
-  |            &T
-  |
-help: consider restricting type parameter `T`
-  |
-1 | fn largest<T: std::cmp::PartialOrd>(list: &[T]) -> &T {
-  |             ++++++++++++++++++++++
+```ansi
+[1m[91merror[E0369][0m[1m: binary operation `>` cannot be applied to type `&T`[0m
+ [1m[94m--> [0msrc/main.rs:4:17
+  [1m[94m|[0m
+[1m[94m4[0m [1m[94m|[0m         if item > largest { largest = item; }
+  [1m[94m|[0m            [1m[94m----[0m [1m[91m^[0m [1m[94m-------[0m [1m[94m&T[0m
+  [1m[94m|[0m            [1m[94m|[0m
+  [1m[94m|[0m            [1m[94m&T[0m
+  [1m[94m|[0m
+[1m[96mhelp[0m: consider restricting type parameter `T` with trait `PartialOrd`
+  [1m[94m|[0m
+[1m[94m1[0m [1m[94m| [0mfn largest<T[92m: std::cmp::PartialOrd[0m>(list: &[T]) -> &T {
+  [1m[94m|[0m             [92m++++++++++++++++++++++[0m
 ```
 
 
 ---
 
 
-```
-error[E0369]: binary operation `>` cannot be applied to type `&T`
- --> src/main.rs:4:17
-  |
-4 |         if item > largest {
-  |            ---- ^ ------- &T
-  |            |
-  |            &T
-  |
-help: consider restricting type parameter `T`
-  |
-1 | fn largest<T: std::cmp::PartialOrd>(list: &[T]) -> &T {
-  |             ++++++++++++++++++++++
+```ansi
+[1m[91merror[E0369][0m[1m: binary operation `>` cannot be applied to type `&T`[0m
+ [1m[94m--> [0msrc/main.rs:4:17
+  [1m[94m|[0m
+[1m[94m4[0m [1m[94m|[0m         if item > largest { largest = item; }
+  [1m[94m|[0m            [1m[94m----[0m [1m[91m^[0m [1m[94m-------[0m [1m[94m&T[0m
+  [1m[94m|[0m            [1m[94m|[0m
+  [1m[94m|[0m            [1m[94m&T[0m
+  [1m[94m|[0m
+[1m[96mhelp[0m: consider restricting type parameter `T` with trait `PartialOrd`
+  [1m[94m|[0m
+[1m[94m1[0m [1m[94m| [0mfn largest<T[92m: std::cmp::PartialOrd[0m>(list: &[T]) -> &T {
+  [1m[94m|[0m             [92m++++++++++++++++++++++[0m
 ```
 
 * We cannot just compare any two `&T` to each other
@@ -1542,13 +1547,13 @@ fn main() {
 
 If we try to compile this, we get an error
 
-```
-error[E0308]: mismatched types
- --> src/main.rs:7:38
-  |
-7 |     let wont_work = Point { x: 5, y: 4.0 };
-  |                                      ^^^ expected integer,
-                                             found floating-point number
+```ansi
+[1m[91merror[E0308][0m[1m: mismatched types[0m
+ [1m[94m--> [0msrc/main.rs:7:38
+  [1m[94m|[0m
+[1m[94m7[0m [1m[94m|[0m     let wont_work = Point { x: 5, y: 4.0 };
+  [1m[94m|[0m                                      [1m[91m^^^[0m [1m[91mexpected integer,
+                                             found floating-point number[0m
 ```
 
 

@@ -125,19 +125,20 @@ This should look familiar to people who have taken / are taking 15-150!
 
 # The Compiler's Suggestion
 
-```
-error[E0072]: recursive type `List` has infinite size
- --> src/main.rs:1:1
-  |
-1 | enum List {
-  | ^^^^^^^^^
-2 |     Cons(i32, List),
-  |               ---- recursive without indirection
-  |
-help: insert some indirection (e.g., a `Box`, `Rc`, or `&`) to break the cycle
-  |
-2 |     Cons(i32, Box<List>),
-  |               ++++    +
+```ansi
+[1m[91merror[E0072][0m[1m: recursive type `List` has infinite size[0m
+ [1m[94m--> [0msrc/main.rs:1:1
+  [1m[94m|[0m
+[1m[94m1[0m [1m[94m|[0m enum List {
+  [1m[94m|[0m [1m[91m^^^^^^^^^[0m
+[1m[94m2[0m [1m[94m|[0m     Cons(i32, List),
+  [1m[94m|[0m               [1m[94m----[0m [1m[94mrecursive without indirection[0m
+  [1m[94m|[0m
+[1m[96mhelp[0m: insert some indirection (e.g., a `Box`, `Rc`, or `&`) to break the cycle
+  [1m[94m|[0m
+[1m[94m2[0m [1m[94m| [0m    Cons(i32, [92mBox<[0mList[92m>[0m),
+  [1m[94m|[0m               [92m++++[0m    [92m+[0m
+<-- snip -->
 ```
 
 * The compiler is complaining because we've defined a type with _infinite size_.
@@ -191,11 +192,11 @@ enum List {
 
 The compiler gives an error with a helpful suggestion:
 
-```
-help: insert some indirection (e.g., a `Box`, `Rc`, or `&`) to break the cycle
-  |
-2 |     Cons(i32, Box<List>),
-  |               ++++    +
+```ansi
+[1m[96mhelp[0m: insert some indirection (e.g., a `Box`, `Rc`, or `&`) to break the cycle
+  [1m[94m|[0m
+[1m[94m2[0m [1m[94m| [0m    Cons(i32, [92mBox<[0mList[92m>[0m),
+  [1m[94m|[0m               [92m++++[0m    [92m+[0m
 ```
 
 * The suggestion is to use a `Box<List>`
@@ -697,15 +698,19 @@ println!("CSM dropped before the end of the scope");
 
 # Manual Drop
 
-```
-error[E0040]: explicit use of destructor method
-  --> src/main.rs:16:7
-   |
-16 |     c.drop();
-   |     --^^^^--
-   |     | |
-   |     | explicit destructor calls not allowed
-   |     help: consider using `drop` function: `drop(c)`
+```ansi
+[1m[91merror[E0040][0m[1m: explicit use of destructor method[0m
+  [1m[94m--> [0msrc/main.rs:18:9
+   [1m[94m|[0m
+[1m[94m18[0m [1m[94m|[0m     csm.drop();
+   [1m[94m|[0m         [1m[91m^^^^[0m [1m[91mexplicit destructor calls not allowed[0m
+   [1m[94m|[0m
+[1m[96mhelp[0m: consider using `drop` function
+   [1m[94m|[0m
+[1m[94m18[0m [91m- [0m    csm[91m.drop()[0m;
+[1m[94m18[0m [92m+ [0m    [92mdrop([0mcsm[92m)[0m;
+   [1m[94m|[0m
+<-- snip -->
 ```
 
 * Rust won't let you explicitly call the drop trait method
@@ -829,19 +834,20 @@ let c = Cons(4, Box::new(a));
 
 # Single Ownership
 
-```
-error[E0382]: use of moved value: `a`
-  --> src/main.rs:11:30
-   |
-9  |     let a = Cons(5, Box::new(Cons(10, Box::new(Nil))));
-   |         - move occurs because `a` has type `List`,
-   |           which does not implement the `Copy` trait
-   |
-10 |     let b = Cons(3, Box::new(a));
-   |                              - value moved here
-11 |     let c = Cons(4, Box::new(a));
-   |                              ^ value used here after move
-
+```ansi
+[1m[91merror[E0382][0m[1m: use of moved value: `a`[0m
+  [1m[94m--> [0msrc/main.rs:12:30
+   [1m[94m|[0m
+[1m[94m 9[0m [1m[94m|[0m     let a = Cons(5, Box::new(Cons(10, Box::new(Nil))));
+   [1m[94m|[0m         [1m[94m-[0m [1m[94mmove occurs because `a` has type `List`,[0m
+   [1m[94m|[0m           [1m[94mwhich does not implement the `Copy` trait[0m
+[1m[94m10[0m [1m[94m|[0m
+[1m[94m11[0m [1m[94m|[0m     let b = Cons(3, Box::new(a));
+   [1m[94m|[0m                              [1m[94m-[0m [1m[94mvalue moved here[0m
+[1m[94m12[0m [1m[94m|[0m     let c = Cons(4, Box::new(a));
+   [1m[94m|[0m                              [1m[91m^[0m [1m[91mvalue used here after move[0m
+   [1m[94m|[0m
+<-- snip -->
 ```
 
 
@@ -850,15 +856,16 @@ error[E0382]: use of moved value: `a`
 
 # Single Ownership
 
-```
-error[E0382]: use of moved value: `a`
-  --> src/main.rs:11:30
-   |
-10 |     let b = Cons(3, Box::new(a));
-   |                              - value moved here
-11 |     let c = Cons(4, Box::new(a));
-   |                              ^ value used here after move
-
+```ansi
+[1m[91merror[E0382][0m[1m: use of moved value: `a`[0m
+  [1m[94m--> [0msrc/main.rs:12:30
+   [1m[94m|[0m
+<-- snip -->
+[1m[94m11[0m [1m[94m|[0m     let b = Cons(3, Box::new(a));
+   [1m[94m|[0m                              [1m[94m-[0m [1m[94mvalue moved here[0m
+[1m[94m12[0m [1m[94m|[0m     let c = Cons(4, Box::new(a));
+   [1m[94m|[0m                              [1m[91m^[0m [1m[91mvalue used here after move[0m
+<-- snip -->
 ```
 * `Cons` needs to **own** the data it holds
 * `a` was already moved into `b` when we try to create `c`

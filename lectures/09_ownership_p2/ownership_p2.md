@@ -862,18 +862,19 @@ Ask audience!!
 # Vector Pop
 
 
-```
-error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immutable
- --> src/main.rs:6:5
-  |
-4 |     let x = &v[3]; // Get a reference to the last element
-  |              - immutable borrow occurs here
-5 |
-6 |     v.pop(); // Remove the last element in `v`
-  |     ^^^^^^^ mutable borrow occurs here
-7 |
-8 |     println!("{}", x); // What is `x`?
-  |                    - immutable borrow later used here
+```ansi
+[1m[91merror[E0502][0m[1m: cannot borrow `v` as mutable
+              because it is also borrowed as immutable[0m
+ [1m[94m--> [0msrc/main.rs:6:5
+  [1m[94m|[0m
+[1m[94m4[0m [1m[94m|[0m     let x = &v[3]; // Get a reference to the last element
+  [1m[94m|[0m              [1m[94m-[0m [1m[94mimmutable borrow occurs here[0m
+[1m[94m5[0m [1m[94m|[0m
+[1m[94m6[0m [1m[94m|[0m     v.pop(); // Remove the last element in `v`
+  [1m[94m|[0m     [1m[91m^^^^^^^[0m [1m[91mmutable borrow occurs here[0m
+[1m[94m7[0m [1m[94m|[0m
+[1m[94m8[0m [1m[94m|[0m     println!("{}", x); // What is `x`?
+  [1m[94m|[0m                    [1m[94m-[0m [1m[94mimmutable borrow later used here[0m
 ```
 
 * `x` is invalid! `&v[3]` could now be any value ⇒ undefined behavior
@@ -912,18 +913,19 @@ println!("{}", x); // What is `x`?
 
 Why isn't this okay???
 
-```
-error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immutable
- --> src/main.rs:6:5
-  |
-4 |     let x = &v[3]; // Get a reference to the last element
-  |              - immutable borrow occurs here
-5 |
-6 |     v.push(5); // Instead of popping, let's push!
-  |     ^^^^^^^^^ mutable borrow occurs here
-7 |
-8 |     println!("{}", x); // What is `x`?
-  |                    - immutable borrow later used here
+```ansi
+[1m[91merror[E0502][0m[1m: cannot borrow `v` as mutable
+              because it is also borrowed as immutable[0m
+ [1m[94m--> [0msrc/main.rs:6:5
+  [1m[94m|[0m
+[1m[94m4[0m [1m[94m|[0m     let x = &v[3]; // Get a reference to the last element
+  [1m[94m|[0m              [1m[94m-[0m [1m[94mimmutable borrow occurs here[0m
+[1m[94m5[0m [1m[94m|[0m
+[1m[94m6[0m [1m[94m|[0m     v.push(5); // Instead of popping, let's push!
+  [1m[94m|[0m     [1m[91m^^^^^^^^^[0m [1m[91mmutable borrow occurs here[0m
+[1m[94m7[0m [1m[94m|[0m
+[1m[94m8[0m [1m[94m|[0m     println!("{}", x); // What is `x`?
+  [1m[94m|[0m                    [1m[94m-[0m [1m[94mimmutable borrow later used here[0m
 ```
 
 
@@ -961,18 +963,19 @@ class: image-right image-width-35
 
 # Mutating Vectors
 
-```
-error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immutable
- --> src/main.rs:6:5
-  |
-4 |     let x = &v[3]; // Get a reference to the last element
-  |              - immutable borrow occurs here
-5 |
-6 |     v.push(5); // Instead of popping, let's push!
-  |     ^^^^^^^^^ mutable borrow occurs here
-7 |
-8 |     println!("{}", x); // What is `x`?
-  |                    - immutable borrow later used here
+```ansi
+[1m[91merror[E0502][0m[1m: cannot borrow `v` as mutable
+              because it is also borrowed as immutable[0m
+ [1m[94m--> [0msrc/main.rs:6:5
+  [1m[94m|[0m
+[1m[94m4[0m [1m[94m|[0m     let x = &v[3]; // Get a reference to the last element
+  [1m[94m|[0m              [1m[94m-[0m [1m[94mimmutable borrow occurs here[0m
+[1m[94m5[0m [1m[94m|[0m
+[1m[94m6[0m [1m[94m|[0m     v.push(5); // Instead of popping, let's push!
+  [1m[94m|[0m     [1m[91m^^^^^^^^^[0m [1m[91mmutable borrow occurs here[0m
+[1m[94m7[0m [1m[94m|[0m
+[1m[94m8[0m [1m[94m|[0m     println!("{}", x); // What is `x`?
+  [1m[94m|[0m                    [1m[94m-[0m [1m[94mimmutable borrow later used here[0m
 ```
 
 Even though this error may seem unreasonable, the borrow checker is actually preventing you from making a hard-to-find mistake!
@@ -1951,19 +1954,22 @@ let slot2 = &v[1];
 
 # Arrays and Slices: Problem
 
-```
-error[E0502]: cannot borrow `v` as immutable because it is also borrowed as mutable
-  --> src/main.rs:9:18
-   |
-8  |     let slot1 = &mut v[0];
-   |                      - mutable borrow occurs here
-9  |     let slot2 = &v[1];
-   |                  ^ immutable borrow occurs here
-10 |     *slot1 += *slot2;
-   |     ---------------- mutable borrow later used here
-   |
-   = help: use `.split_at_mut(position)` to obtain
-           two mutable non-overlapping sub-slices
+```ansi
+[1m[91merror[E0502][0m[1m: cannot borrow `v` as immutable
+              because it is also borrowed as mutable[0m
+ [1m[94m--> [0msrc/main.rs:6:18
+  [1m[94m|[0m
+[1m[94m4[0m [1m[94m|[0m     let slot1 = &mut v[0];
+  [1m[94m|[0m                      [1m[94m-[0m [1m[94mmutable borrow occurs here[0m
+[1m[94m5[0m [1m[94m|[0m
+[1m[94m6[0m [1m[94m|[0m     let slot2 = &v[1];
+  [1m[94m|[0m                  [1m[91m^[0m [1m[91mimmutable borrow occurs here[0m
+[1m[94m7[0m [1m[94m|[0m
+[1m[94m8[0m [1m[94m|[0m     *slot1 += *slot2;
+  [1m[94m|[0m     [1m[94m----------------[0m [1m[94mmutable borrow later used here[0m
+  [1m[94m|[0m
+  [1m[94m= [0m[1mhelp[0m: use `.split_at_mut(position)` to obtain
+          two mutable non-overlapping sub-slices
 ```
 
 * Let's break down the permissions

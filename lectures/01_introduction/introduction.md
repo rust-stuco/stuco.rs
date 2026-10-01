@@ -387,10 +387,10 @@ fn main() {
 
 To build your project, use `cargo build`.
 
-```
+```ansi
 $ cargo build
-   Compiling hello_cargo v0.1.0 (<path>/hello_cargo)
-    Finished dev [unoptimized + debuginfo] target(s) in 1.00s
+[1m[92m   Compiling[0m hello_cargo v0.1.0 (/projects/hello_cargo)
+[1m[92m    Finished[0m `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
 ```
 
 * This creates an executable file at `target/debug/hello_cargo`
@@ -407,11 +407,11 @@ $ cargo build
 
 To run your project, use `cargo run`.
 
-```
+```ansi
 $ cargo run
-   Compiling hello_cargo v0.1.0 (file:///projects/hello_cargo)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.42s
-     Running `target/debug/hello_cargo`
+[1m[92m   Compiling[0m hello_cargo v0.1.0 (/projects/hello_cargo)
+[1m[92m    Finished[0m `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+[1m[92m     Running[0m `target/debug/hello_cargo`
 Hello, world!
 ```
 
@@ -426,10 +426,10 @@ Hello, world!
 
 To check your code for syntax and type errors, use `cargo check`
 
-```
+```ansi
 $ cargo check
-   Checking hello_cargo v0.1.0 (file:///projects/hello_cargo)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.42s
+[1m[92m    Checking[0m hello_cargo v0.1.0 (/projects/hello_cargo)
+[1m[92m    Finished[0m `dev` profile [unoptimized + debuginfo] target(s) in 0.12s
 ```
 
 * Much faster than `cargo build` since it doesn't build the executable
@@ -500,18 +500,20 @@ fn main() {
 
 When we try to compile, we get this error message:
 
-```
-error[E0384]: cannot assign twice to immutable variable `x`
- --> src/main.rs:4:5
-  |
-2 |     let x = 5;
-  |         -
-  |         |
-  |         first assignment to `x`
-  |         help: consider making this binding mutable: `mut x`
-3 |     println!("The value of x is: {x}");
-4 |     x = 6;
-  |     ^^^^^ cannot assign twice to immutable variable
+```ansi
+[1m[91merror[E0384][0m[1m: cannot assign twice to immutable variable `x`[0m
+ [1m[94m--> [0msrc/main.rs:4:5
+  [1m[94m|[0m
+[1m[94m2[0m [1m[94m|[0m     let x = 5;
+  [1m[94m|[0m         [1m[94m-[0m [1m[94mfirst assignment to `x`[0m
+[1m[94m3[0m [1m[94m|[0m     println!("The value of x is: {x}");
+[1m[94m4[0m [1m[94m|[0m     x = 6;
+  [1m[94m|[0m     [1m[91m^^^^^[0m [1m[91mcannot assign twice to immutable variable[0m
+  [1m[94m|[0m
+[1m[96mhelp[0m: consider making this binding mutable
+  [1m[94m|[0m
+[1m[94m2[0m [1m[94m| [0m    let [92mmut [0mx = 5;
+  [1m[94m|[0m         [92m+++[0m
 ```
 
 * Let's follow the compiler's advice!
@@ -536,11 +538,7 @@ fn main() {
 }
 ```
 
-When we run the program now, we now get this:
-
 ```
-$ cargo run
-    <-- snip -->
 The value of x is: 5
 The value of x is: 6
 ```
@@ -642,24 +640,23 @@ class: image-right image-width-25
 
 # Aside: Shadowing vs Mutability
 
-Mutability:
-
 ```rust
 let mut spaces = "   ";
 spaces = spaces.len();
 ```
 
-```
-  |
-2 |     let mut spaces = "   ";
-  |                      ----- expected due to this value
-3 |     spaces = spaces.len();
-  |              ^^^^^^^^^^^^ expected `&str`, found `usize`
-  |
+```ansi
+  [1m[94m|[0m
+[1m[94m2[0m [1m[94m|[0m     let mut spaces = "   ";
+  [1m[94m|[0m                      [1m[94m-----[0m [1m[94mexpected due to this value[0m
+[1m[94m3[0m [1m[94m|[0m     spaces = spaces.len();
+  [1m[94m|[0m              [1m[91m^^^^^^^^^^^^[0m [1m[91mexpected `&str`,
+                              found `usize`[0m
 ```
 
 * Expected one _type_, got something else
-    * We'll talk about types in a few slides!
+
+<!-- We'll talk about types in a few slides! -->
 
 
 ---
@@ -1167,16 +1164,18 @@ fn plus_one(x: i32) -> i32 {
 
 We get this error:
 
-```
-error[E0308]: mismatched types
- --> src/main.rs:7:24
-  |
-1 | fn plus_one(x: i32) -> i32 {
-  |    --------            ^^^ expected `i32`, found `()`
-  |    |
-  |    implicitly returns `()` as its body has no tail or `return` expression
-2 |     x + 1;
-  |          - help: remove this semicolon to return this value
+```ansi
+[1m[91merror[E0308][0m[1m: mismatched types[0m
+ [1m[94m--> [0msrc/main.rs:6:24
+  [1m[94m|[0m
+[1m[94m6[0m [1m[94m|[0m fn plus_one(x: i32) -> i32 {
+  [1m[94m|[0m    [1m[94m--------[0m            [1m[91m^^^[0m [1m[91mexpected `i32`, found `()`[0m
+  [1m[94m|[0m    [1m[94m|[0m
+  [1m[94m|[0m    [1m[94mimplicitly returns `()` as its body has no tail or `return` expression[0m
+[1m[94m7[0m [1m[94m|[0m     x + 1;
+  [1m[94m|[0m          [1m[94m-[0m [1m[94mhelp: remove this semicolon to return this value[0m
+
+[1mFor more information about this error, try `rustc --explain E0308`.[0m
 ```
 
 
@@ -1215,26 +1214,21 @@ class: image-right image-width-25
 
 <img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
-# `if` Expressions
-
-`if` expressions must condition on a boolean expression.
+# `if` Conditions Must Be `bool`
 
 ```rust
-fn main() {
-    let number = 3;
-
-    if number {
-        println!("number was three");
-    }
+let number = 3;
+if number {
+    println!("number was three");
 }
 ```
 
-```
-error[E0308]: mismatched types
- --> src/main.rs:4:8
-  |
-4 |     if number {
-  |        ^^^^^^ expected `bool`, found integer
+```ansi
+[1m[91merror[E0308][0m[1m: mismatched types[0m
+ [1m[94m--> [0msrc/main.rs:3:8
+  [1m[94m|[0m
+[1m[94m3[0m [1m[94m|[0m     if number {
+  [1m[94m|[0m        [1m[91m^^^^^^[0m [1m[91mexpected `bool`, found integer[0m
 ```
 
 

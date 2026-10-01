@@ -1217,28 +1217,22 @@ thread::spawn(|| {
 
 # Capturing Values in Threads
 
-```
-error[E0373]: closure may outlive the current function, but it borrows `v`, which is owned by the current function
- --> src/main.rs:6:19
-  |
-6 |     thread::spawn(|| {
-  |                   ^^ may outlive borrowed value `v`
-7 |         println!("Here's a vector: {:?}", v);
-  |                                           - `v` is borrowed here
-  |
-
-note: function requires argument type to outlive `'static`
- --> src/main.rs:6:5
-  |
-6 | /     thread::spawn(|| {
-7 | |         println!("Here's a vector: {:?}", v);
-8 | |     });
-  | |______^
-
-help: to force the closure to take ownership of `v` (and any other referenced variables), use the `move` keyword
-  |
-6 |     thread::spawn(move || {
-  |                   ++++
+```ansi
+[1m[91merror[E0373][0m[1m: closure may outlive the current function, but it borrows `v`, which
+              is owned by the current function[0m
+ [1m[94m--> [0msrc/main.rs:6:19
+  [1m[94m|[0m
+[1m[94m6[0m [1m[94m|[0m     thread::spawn(|| {
+  [1m[94m|[0m                   [1m[91m^^[0m [1m[91mmay outlive borrowed value `v`[0m
+[1m[94m7[0m [1m[94m|[0m         println!("Here's a vector: {:?}", v);
+  [1m[94m|[0m                                           [1m[94m-[0m [1m[94m`v` is borrowed here[0m
+<-- snip -->
+[1m[96mhelp[0m: to force the closure to take ownership of `v` (and any other referenced
+      variables), use the `move` keyword
+  [1m[94m|[0m
+[1m[94m6[0m [1m[94m| [0m    thread::spawn([92mmove [0m|| {
+  [1m[94m|[0m                   [92m++++[0m
+<-- snip -->
 ```
 
 * In other words, what if `v` goes out of scope while the thread is still running?
@@ -1431,21 +1425,22 @@ let t2 = thread::spawn(|| {
 
 # Multiple Thread Access
 
-```
-error[E0373]: closure may outlive the current function, but it borrows
-              `data`, which is owned by the current function
-  --> src/main.rs:7:28
-   |
-7  |     let t1 = thread::spawn(|| {
-   |                            ^^ may outlive borrowed value `data`
-8  |         let mut data_guard = data.lock().unwrap();
-   |                              ---- `data` is borrowed here
-   |
-help: to force the closure to take ownership of `data` (and any other
-      referenced variables), use the `move` keyword
-   |
-7  |     let t1 = thread::spawn(move || {
-   |                            ++++
+```ansi
+[1m[91merror[E0373][0m[1m: closure may outlive the current function, but it borrows `data`,
+              which is owned by the current function[0m
+  [1m[94m--> [0msrc/main.rs:7:28
+   [1m[94m|[0m
+[1m[94m 7[0m [1m[94m|[0m     let t1 = thread::spawn(|| {
+   [1m[94m|[0m                            [1m[91m^^[0m [1m[91mmay outlive borrowed value `data`[0m
+[1m[94m 8[0m [1m[94m|[0m         let mut data_guard = data.lock().unwrap();
+   [1m[94m|[0m                              [1m[94m----[0m [1m[94m`data` is borrowed here[0m
+<-- snip -->
+[1m[96mhelp[0m: to force the closure to take ownership of `data` (and any other referenced
+      variables), use the `move` keyword
+   [1m[94m|[0m
+[1m[94m 7[0m [1m[94m| [0m    let t1 = thread::spawn([92mmove [0m|| {
+   [1m[94m|[0m                            [92m++++[0m
+<-- snip -->
 ```
 
 

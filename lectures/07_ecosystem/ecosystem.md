@@ -413,16 +413,14 @@ pub fn criterion_benchmark(c: &mut Criterion) {
 
 Run the benchmark with `cargo bench`:
 
-```
+```ansi
 $ cargo bench
-
-Benchmarking fib 20: Warming up for 3.0000 s
-Benchmarking fib 20: Collecting 100 samples in estimated 5.0329 s (475k iterations)
+<-- snip -->
 Benchmarking fib 20: Analyzing
-
-fib 20                  time:   [10.404 µs 10.413 µs 10.422 µs]
-Found 10 outliers among 100 measurements (10.00%)
-  10 (10.00%) high mild
+[38;5;2mfib 20[0m                  time:   [[2m25.748 µs[0m [1m26.515 µs[0m [2m27.506 µs[0m]
+[38;5;3mFound 16 outliers among 100 measurements (16.00%)[0m
+  2 (2.00%) high mild
+  14 (14.00%) high severe
 ```
 
 <!--
@@ -479,19 +477,19 @@ This is from our homework solutions!
 
 Upon rerunning `cargo bench`, `criterion` compares it with our previous run:
 
-```
+```ansi
 $ cargo bench
-
-Benchmarking fib 20: Warming up for 3.0000 s
-Benchmarking fib 20: Collecting 100 samples in estimated 5.0000 s (2.2B iterations)
+<-- snip -->
 Benchmarking fib 20: Analyzing
-
-fib 20                  time:   [2.2469 ns 2.2633 ns 2.2841 ns]
-                        change: [-99.978% -99.978% -99.978%] (p = 0.00 < 0.05)
-                        Performance has improved.
+[38;5;2mfib 20[0m                  time:   [[2m9.8414 ns[0m [1m9.9367 ns[0m [2m10.043 ns[0m]
+                        change: [[2m-99.968%[0m [38;5;2m[1m-99.966%[0m[0m [2m-99.964%[0m] (p = 0.00 < 0.05)
+                        Performance has [38;5;2mimproved[0m.
+[38;5;3mFound 4 outliers among 100 measurements (4.00%)[0m
+  3 (3.00%) high mild
+  1 (1.00%) high severe
 ```
 
-- `change: [-99.978% -99.978% -99.978%] (p = 0.00 < 0.05)`
+- `change: [-99.968% -99.966% -99.964%] (p = 0.00 < 0.05)`
   - This is a statistically significant improvement!
 
 <!--
