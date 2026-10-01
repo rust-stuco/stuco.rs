@@ -31,10 +31,6 @@ items = [
     "https://www.youtube.com/watch?v=JIvKgSyvtxI&list=PLZaoyhMXgBzoM9bfb5pyUOT3zjnaDdSEP",
 ]
 
-[homework]
-name = "GrepLab"
-slug = "greplab"
-
 [[extras]]
 title = "Rust's Module System"
 url = "https://www.sheshbabu.com/posts/rust-module-system/"
