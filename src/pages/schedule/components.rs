@@ -102,8 +102,11 @@ fn WeekRow(
     let mut button_ref = use_signal(|| None::<std::rc::Rc<MountedData>>);
 
     // Slides and homework always occupy the row, so revealing them never shifts the layout.
-    let slides_class = content_class(slides_revealed, show_upcoming);
-    let homework_class = content_class(homework_revealed, false);
+    let slides_class = content_class(slides_revealed, show_upcoming.then_some("opacity-50"));
+    let homework_class = content_class(
+        homework_revealed,
+        show_upcoming.then_some("opacity-50 [&_a]:text-foreground [&_a]:pointer-events-none"),
+    );
     let assignments = &week.assignments;
 
     let handle_click = move |_| {
@@ -186,13 +189,11 @@ fn WeekRow(
     }
 }
 
-fn content_class(revealed: bool, show_upcoming: bool) -> &'static str {
+fn content_class(revealed: bool, upcoming_class: Option<&'static str>) -> &'static str {
     if revealed {
         ""
-    } else if show_upcoming {
-        "opacity-60"
     } else {
-        "invisible"
+        upcoming_class.unwrap_or("invisible")
     }
 }
 
