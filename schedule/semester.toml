@@ -63,11 +63,11 @@ week = "smart_pointers"
 date = 2026-11-05
 
 [[weeks]]
-week = "unsafe"
+week = "parallelism"
 date = 2026-11-12
 
 [[weeks]]
-week = "parallelism"
+week = "concurrency"
 date = 2026-11-19
 
 [[breaks]]
@@ -75,5 +75,5 @@ name = "Thanksgiving"
 date = 2026-11-26
 
 [[weeks]]
-week = "concurrency"
+week = "unsafe"
 date = 2026-12-03

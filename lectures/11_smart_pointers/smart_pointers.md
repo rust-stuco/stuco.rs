@@ -1439,4 +1439,4 @@ If you are interested, here is some more content that explains this in more dept
 layout: none
 ---
 
-<EndingSlide next-lecture="Unsafe" />
+<EndingSlide next-lecture="Parallelism" />

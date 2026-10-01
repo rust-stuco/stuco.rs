@@ -1,5 +1,5 @@
 title = "Parallelism"
-slides = "13_parallelism"
+slides = "12_parallelism"
 rustlings = ["threads"]
 book_chapters = ["ch16-00-concurrency"]
 

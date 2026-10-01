@@ -56,12 +56,12 @@ jobs:
       # This deck uses shared and lecture-local images, exercising both Windows workspace links.
       - name: Build a representative lecture deck
         run: |
-          npm run build -- 14_concurrency
+          npm run build -- 14_unsafe
           if ($LASTEXITCODE -ne 0) {
-            throw "Slidev failed to build 14_concurrency"
+            throw "Slidev failed to build 14_unsafe"
           }
 
-          $index = "dist/14_concurrency/deck/index.html"
+          $index = "dist/14_unsafe/deck/index.html"
           if (-not (Test-Path $index -PathType Leaf)) {
             throw "Slidev did not create $index"
           }
