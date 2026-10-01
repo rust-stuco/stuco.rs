@@ -31,6 +31,61 @@ class: communism
 
 ---
 
+# Review: Traits
+
+```rust
+trait Shape {
+    fn area(&self) -> f32;
+    fn print(&self) { println!("My area is {}", self.area()); } // Default
+}
+
+impl Shape for Rectangle {
+    fn area(&self) -> f32 { self.height * self.width }
+}
+```
+
+* A _trait_ defines behavior that types can implement, but it is not a type itself
+* `trait Student: Person` means implementing `Student` also requires `Person`
+* `#[derive]` writes the obvious implementation, if every field implements the trait too
+
+---
+
+# Review: Trait Bounds
+
+```rust
+fn notify<T: Summary>(item: &T) { ... }
+fn notify(item: &impl Summary) { ... } // Same idea, shorter
+
+fn make() -> impl Display { 5 } // Caller only knows it's `Display`
+```
+
+* A generic function can only use what its bounds allow
+  * `mystery<T>` had no bounds, so all it could do was return `x`
+* `impl Trait` as an argument: the _caller_ picks the type
+* `impl Trait` as a return type: the _function_ picks one type and hides it
+
+---
+
+# Why Doesn't `largest` Compile?
+
+```rust
+fn largest<T>(list: &[T]) -> &T {
+    let mut largest = &list[0];
+    for item in list {
+        if item > largest {
+            largest = item;
+        }
+    }
+    largest
+}
+```
+
+* `T` could be any type, so Rust can't assume that `>` works on it
+* Fix: add a bound, `fn largest<T: PartialOrd>(list: &[T]) -> &T`
+* `PartialOrd` rather than `Ord`, so `f64` works too (`NaN` makes floats only partially ordered)
+
+---
+
 # Today: Modules and Testing
 
 * Modules, Packages, and Crates
@@ -39,7 +94,6 @@ class: communism
 * Testing
   * Unit Testing
   * Integration Testing
-* Code Review
 
 ---
 
@@ -194,7 +248,7 @@ testing the program easier
 * "Project" is a very overloaded term
   * More meaningful in the context of an _IDE_
 * "Program"
-  * Ask the mathematicians ¯\\_(ツ)_/¯
+  * Ask the mathematicians ¯\\\_(ツ)\_/¯
 
 ---
 layout: section
@@ -318,7 +372,7 @@ fn main() {
 
 # Modules as Files
 
-In addition to declaring modules _within_ files, creating a file named `module_name.rs` declares a corresponding module named `module_name`.
+In addition to declaring modules _within_ files, we can move a module's contents into its own file named `module_name.rs`.
 
 ```sh
 src
@@ -327,6 +381,7 @@ src
 ```
 
 * Allows us to represent our module structure in the file system
+* The parent module must still declare it with `mod module_name;`, or the file is ignored
 * Let's try moving the `kitchen` module to its own file!
 
 ---
@@ -450,11 +505,6 @@ src
 │  ├── mod.rs
 │  ├── seats.rs
 │  └── tables.rs
-├── garden
-│  ├── dirt.rs
-│  ├── mod.rs
-│  ├── plants.rs
-│  └── water.rs
 ├── kitchen
 │  ├── dish_washer.rs
 │  ├── mod.rs
@@ -476,10 +526,6 @@ src
 │  ├── guests.rs
 │  ├── seats.rs
 │  └── tables.rs
-├── garden
-│  ├── dirt.rs
-│  ├── plants.rs
-│  └── water.rs
 ├── kitchen
 │  ├── dish_washer.rs
 │  ├── oven.rs
@@ -487,7 +533,6 @@ src
 ├── bathroom.rs
 ├── dining_room.rs
 ├── kitchen.rs
-├── garden.rs
 └── lib.rs
 ```
 
@@ -513,7 +558,7 @@ You don't really need to explain the discussions in here, leave it for intereste
 
 Even with our file system changes, the module tree stays the same!
 
-```rust
+```text
 crate restaurant
 ├── mod kitchen: pub(crate)
 │   ├── fn examine_ingredients: pub(self)
@@ -536,8 +581,8 @@ To use any item in a module, we need to know its _path_, just like a filesystem.
 
 There are two types of paths:
 
-* An _absolute path_ is the full path starting from the crate root
-* A _relative path_ starts from the current module and use `self`, `super`, or an identifier in the current module
+* An _absolute path_ is the full path starting from the crate root, beginning with `crate` (or the name of an external crate)
+* A _relative path_ starts from the current module and uses `self`, `super`, or an identifier in the current module
 * Components of paths are separated by double colons (`::`)
 
 ---
@@ -556,6 +601,7 @@ This is saying:
   * In the submodule `stove`
     * Call the function `cook`
 * This is a path relative to the current module (in this case, the root)
+* The equivalent absolute path is `crate::kitchen::stove::cook()`
 
 ---
 
@@ -736,7 +782,7 @@ Make sure the mention that the paths are now relative to outside package directo
 
 # Accessing Library from Binary
 
-We treat our library crate as an _external_ crate, with the same name as our package.
+We treat our library crate as an _external_ crate, named after our package (with any `-` replaced by `_`).
 
 ###### restaurant/src/main.rs
 
@@ -755,7 +801,7 @@ fn main() {
 
 We can also construct relative paths that begin in the parent module with `super`.
 
-```rust
+```text
 crate restaurant
 ├── mod kitchen: pub(crate)
 │   ├── fn examine_ingredients: pub(self)
@@ -777,7 +823,7 @@ pub fn cook() {
 
 # Privacy
 
-```rust
+```text
 mod kitchen: pub(crate)
 ├── fn examine_ingredients: pub(self)
 └── mod stove: pub
@@ -795,7 +841,7 @@ pub fn cook() {
 
 * `examine_ingredients` does not need to be public in this case
 * `stove` can access anything in its parent module `kitchen`
-  * Note that privacy only applies upwards, not downwards
+  * Child modules can see private items in their ancestors, but parents cannot see private items in their children
 
 <!--
 Child modules can access anything the parent module has access to, but not the other way around.
@@ -875,36 +921,59 @@ In Rust, a test is a function annotated with the `#[test]` attribute.
 ###### src/lib.rs
 
 ```rust
+pub fn add(left: u64, right: u64) -> u64 {
+    left + right
+}
+
 #[cfg(test)]
 mod tests {
+    use super::*;
+
     #[test]
     fn it_works() {
-        let result = 2 + 2;
+        let result = add(2, 2);
         assert_eq!(result, 4);
     }
 }
 ```
 
-* After running `cargo new adder --lib`, this code will be in `src/lib.rs`
-
 ---
 
 # Writing Tests
 
-Let's break this down.
+Let's break down the test that `cargo new adder --lib` generated.
 
 ```rust
 #[test]
 fn it_works() {
-    let result = 2 + 2;
+    let result = add(2, 2);
     assert_eq!(result, 4);
 }
 ```
 
 * The `#[test]` attribute indicates that this is a test function
-* We set up the value `result` by adding `2 + 2`
+* We set up the value `result` by calling `add(2, 2)`
 * We use the `assert_eq!` macro to assert that `result` is correct
 * We don't need to return anything, since not panicking _is_ the test!
+
+---
+
+# Why `use super::*`?
+
+```rust
+mod tests {
+    use super::*; // Bring the parent module's items into scope
+
+    #[test]
+    fn it_works() {
+        assert_eq!(add(2, 2), 4);
+    }
+}
+```
+
+* `tests` is a child module, so `add` is not in its scope automatically
+  * `super` is the parent module, and `*` is the glob import from earlier
+* Glob imports are usually discouraged, but `use super::*` in test modules is idiomatic
 
 ---
 
@@ -914,20 +983,20 @@ We run tests with `cargo test`.
 
 ```
 $ cargo test
-   Compiling adder v0.1.0 (file:///projects/adder)
-    Finished test [unoptimized + debuginfo] target(s) in 0.57s
+   Compiling adder v0.1.0 (/projects/adder)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.57s
      Running unittests src/lib.rs (target/debug/deps/adder-92948b65e88960b4)
 
 running 1 test
 test tests::it_works ... ok
 
-test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; <-- snip -->
 
    Doc-tests adder
 
 running 0 tests
 
-test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; <-- snip -->
 ```
 
 ---
@@ -940,7 +1009,7 @@ Let's break down the output of `cargo test`.
 running 1 test
 test tests::it_works ... ok
 
-test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; <-- snip -->
 ```
 
 * We see `test result: ok`, meaning we have passed all the tests
@@ -961,11 +1030,33 @@ You may have seen something similar to this in your homework:
 
 running 0 tests
 
-test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; <-- snip -->
 ```
 
-* All of the code examples in documentation comments are treated as tests!
+* Rust code examples in a library's documentation comments are run as tests!
+  * Except blocks marked `ignore` or written in another language, like `text`
 * This is useful for keeping your docs and code in sync
+
+---
+
+# Writing Documentation Tests
+
+Documentation comments start with `///`, and code blocks inside them are doc tests.
+
+````rust
+/// Adds two numbers together.
+///
+/// ```
+/// let sum = adder::add(2, 2);
+/// assert_eq!(sum, 4);
+/// ```
+pub fn add(left: u64, right: u64) -> u64 {
+    left + right
+}
+````
+
+* Doc tests use your library from the outside, so they need the full path `adder::add`
+* `cargo test --doc` runs only the doc tests
 
 ---
 
@@ -1018,15 +1109,9 @@ test tests::another ... FAILED
 test tests::exploration ... ok
 
 failures:
+<-- snip -->
 
----- tests::another stdout ----
-thread 'tests::another' panicked at 'Make this test fail', src/lib.rs:10:9
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-
-failures:
-    tests::another
-
-test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: FAILED. 1 passed; 1 failed; <-- snip -->
 
 error: test failed, to rerun pass `--lib`
 ```
@@ -1039,7 +1124,9 @@ error: test failed, to rerun pass `--lib`
 failures:
 
 ---- tests::another stdout ----
-thread 'tests::another' panicked at 'Make this test fail', src/lib.rs:10:9
+
+thread 'tests::another' panicked at src/lib.rs:10:9:
+Make this test fail
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
 
@@ -1051,7 +1138,7 @@ test result: FAILED. 1 passed; 1 failed; <-- snip -->
 error: test failed, to rerun pass `--lib`
 ```
 
-* Instead of `ok`, we get that the result of `tests:another` is `FAILED`
+* Instead of `ok`, we get that the result of `tests::another` is `FAILED`
 
 ---
 
@@ -1074,6 +1161,8 @@ fn larger_can_hold_smaller() {
     assert!(larger.can_hold(&smaller));
 }
 ```
+
+* `Rectangle`, `add_two`, and the other helpers in the next few examples come from [Chapter 11 of the Rust Book](https://doc.rust-lang.org/book/ch11-01-writing-tests.html)
 
 <!--
 Say in lecture that `assert!` will give you a nicer error message
@@ -1101,9 +1190,11 @@ If `add_two(2)` somehow evaluated to `5`, we would get this output:
 
 ```
 ---- tests::it_adds_two stdout ----
-thread 'tests::it_adds_two' panicked at 'assertion failed: `(left == right)`
-  left: `4`,
- right: `5`', src/lib.rs:11:9
+
+thread 'tests::it_adds_two' panicked at src/lib.rs:11:9:
+assertion `left == right` failed
+  left: 4
+ right: 5
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 ```
 
@@ -1132,7 +1223,7 @@ fn greeting_contains_name() {
 
 # `#[should_panic]`
 
-If you want test that your code (correctly) panics, you can use `#[should_panic]`:
+If you want to test that your code (correctly) panics, you can use `#[should_panic]`:
 
 ```rust
 #[test]
@@ -1178,12 +1269,12 @@ fn it_works() -> Result<(), String> {
 
 `cargo test` compiles your code in test mode and runs the resulting test binary.
 
-* By default, it will run all tests in parallel and will not print any test output
+* By default, it runs all tests in parallel and captures their output, only showing the output of failed tests
 * Other testing configurations are available
 * _Note that you can run `cargo test --help`, and `cargo test -- --help` for help_
 
 <!--
-Formally, "capturing" means that is won't display any `println!`s or error messages.
+Formally, "capturing" means that it won't display any `println!`s or error messages.
 
 Parallel stuff leads into next slide...
 -->
@@ -1194,7 +1285,7 @@ Parallel stuff leads into next slide...
 
 * Suppose each of your tests all write to some shared file on disk
   * All tests write to a file `output.txt`
-* They later assert that the file still contains that data they wrote
+* They later assert that the file still contains the data they wrote
 * You probably don't want all of them to run at the same time!
 
 ---
@@ -1226,8 +1317,8 @@ cargo test -- --no-capture
 cargo test -- --show-output
 ```
 
-* `--no-capture` will print the full output of every test that is run
-* Using `--show-output` will only show the output of passed tests
+* `--no-capture` prints each test's output live, as it runs
+* `--show-output` also shows the captured output of passed tests once they finish (failed tests' output is always shown)
 * With 1000 tests, this might become verbose!
 * If only we could only run a subset of the tests...
 
@@ -1239,7 +1330,7 @@ Note that `cargo test` will show the print output of failed tests
 
 # Running Tests by Name
 
-Let's say we have 1000 tests, but only one is named `one_hundred`. We can run `cargo test one_hundred` to only run  the `one_hundred` test.
+Let's say we have 1000 tests, but only one is named `one_hundred`. We can run `cargo test one_hundred` to only run the `one_hundred` test.
 
 ```
 $ cargo test one_hundred
@@ -1247,7 +1338,7 @@ $ cargo test one_hundred
 running 1 test
 test tests::one_hundred ... ok
 
-test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 999 filtered out; finished in 0.00s
+test result: ok. 1 passed; <-- snip --> 999 filtered out; finished in 0.00s
 ```
 
 * Notice how there are now `999 filtered out` tests, these were the tests that didn't match the name `one_hundred`
@@ -1265,10 +1356,10 @@ running 2 tests
 test tests::add_three_and_two ... ok
 test tests::add_two_and_two ... ok
 
-test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 998 filtered out; finished in 0.00s
+test result: ok. 2 passed; <-- snip --> 998 filtered out; finished in 0.00s
 ```
 
-* If you want an exact name, use `cargo test {name} -- --exact`
+* If you want an exact match, pass the full path: `cargo test tests::one_hundred -- --exact`
 
 ---
 
@@ -1388,87 +1479,86 @@ adder
 
 # Integration Tests
 
-Since we are now external to our own library, we must import everything as if it were a 3rd-party crate.
+Each file in `tests/` is compiled as its own crate, so we must import our library as if it were a 3rd-party crate.
 
 ###### adder/tests/integration_test.rs
 
 ```rust
-use adder;
+use adder::add_two;
 
 #[test]
 fn it_adds_two() {
-    assert_eq!(4, adder::add_two(2));
+    assert_eq!(4, add_two(2));
 }
 ```
 
-* Note that we don't need to annotate anything with `#[cfg(tests)]`
-* We run test files using the name of the integration test file, like
+* Note that we don't need to annotate anything with `#[cfg(test)]`
+* `cargo test` runs every integration test; to run a single file, use
 `cargo test --test integration_test`
 
 ---
 
-<!--
-# Submodules in Integration Tests
+# Sharing Code Between Integration Tests
 
-As you add more integration tests, you might want to make more files in the `tests` directory to help organize them.
+What if several test files need the same helper functions?
 
-* You can use submodules in the `tests` directory just like in the `src` directory
+* Because every file directly inside `tests/` is its own crate, a `tests/common.rs` file becomes a test crate too:
 
-// Comment this below:
-You can treat the `tests` directory almost exactly the same as the `src` directory, and you can
-also use the alternate module file naming that we talked about earlier in the lecture.
+```
+$ cargo test
+<-- snip -->
+     Running tests/common.rs (target/debug/deps/common-c6398a39389184f1)
+
+running 0 tests
+```
+
+* `common` shows up in the output even though it has no tests!
 
 ---
 
-# Submodules in Integration Tests
+# Sharing Code Between Integration Tests
 
-Using the alternate naming convention with `common/mod.rs` tells Rust not to treat the `common` module as an integration test file.
+Cargo only compiles files directly inside `tests/` as test crates, so we can use `tests/common/mod.rs` instead.
 
+<div class="columns">
+<div>
+
+```text
+tests
+├── common
+│   └── mod.rs
+└── integration_test.rs
 ```
-├── Cargo.lock
-├── Cargo.toml
-├── src
-│   └── lib.rs
-└── tests
-    ├── common
-    │   └── mod.rs
-    └── integration_test.rs
-```
 
----
+</div>
+<div>
 
-# Submodules in Integration Tests
-
-Here is an example of using `common` in an integration test:
-
-```
-└── tests
-    ├── common
-    │   └── mod.rs
-    └── integration_test.rs
-```
+###### tests/integration_test.rs
 
 ```rust
-use adder;
-
 mod common;
 
 #[test]
-fn it_adds_two() {
+fn it_adds() {
     common::setup();
-    assert_eq!(4, adder::add_two(2));
+    assert_eq!(adder::add(2, 2), 4);
 }
 ```
 
+</div>
+</div>
+
+* Unlike in `src/`, `common.rs` and `common/mod.rs` are **not** interchangeable here!
+
 ---
--->
 
 # Integration Tests for Binary Crates
 
-We cannot create integration tests for a binary crate.
+Integration tests cannot `use` items from a binary crate.
 
-* Binary crates do not expose their functions
-* This is why most binary crates will be paired with a library crate, even if they don't _need_ to expose any functions
+* Only library crates expose items that other crates can import
+* Integration tests can still run the binary itself: Cargo sets the `CARGO_BIN_EXE_<name>` environment variable to its path
+* This is why most binary crates keep their logic in a library crate, with a thin `main.rs`
 
 ---
 
@@ -1482,4 +1572,4 @@ We cannot create integration tests for a binary crate.
 layout: none
 ---
 
-<EndingSlide next-lecture="Crates, Closures, and Iterators" />
+<EndingSlide next-lecture="The Rust Ecosystem" />
