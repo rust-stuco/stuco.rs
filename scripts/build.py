@@ -27,23 +27,23 @@ LECTURES = [
     "09_ownership_p2",
     "10_lifetimes",
     "11_smart_pointers",
-    "12_unsafe",
-    "13_parallelism",
-    "14_concurrency",
+    "12_parallelism",
+    "13_concurrency",
+    "14_unsafe",
 ]
 
 HOMEWORKS = [
-    "homeworks/week1/primerlab",
-    "homeworks/week2/getownedlab",
-    "homeworks/week3/cardlab",
-    "homeworks/week4/multilab",
-    "homeworks/week5/pokerlab",
-    "homeworks/week5-ec/summarylab",
-    "homeworks/week6/greplab",
-    "homeworks/week8/iterlab",
-    "homeworks/week10/splitlab",
-    "homeworks/week11/filterlab",
-    "homeworks/week13/rowlab",
+    "primerlab",
+    "getownedlab",
+    "cardlab",
+    "multilab",
+    "pokerlab",
+    "summarylab",
+    "greplab",
+    "iterlab",
+    "splitlab",
+    "rowlab",
+    "filterlab",
 ]
 
 
@@ -103,7 +103,7 @@ def main() -> None:
     require_file(OUTPUT / "syllabus.pdf", b"%PDF-")
 
     for homework in HOMEWORKS:
-        source = ROOT / homework
+        source = ROOT / "homeworks" / homework / homework
         slug = source.name
         destination = OUTPUT / "hw" / slug
         target = ROOT / "target/homework-docs" / slug
