@@ -39,7 +39,6 @@ class: communism
 * Testing
   * Unit Testing
   * Integration Testing
-* Code Review
 
 ---
 
@@ -59,10 +58,10 @@ As your programs get larger, the organization of the code becomes increasingly i
 
 Rust implements a number of organizational features, collectively referred to as the _module system_.
 
-* **Packages**: A Cargo feature that lets you build, test, and share crates
-* **Crates**: A tree of modules that produces a library or executable
-* **Modules**: Lets you control the organization, scope, and privacy of paths
 * **Paths**: A way of naming an item, such as a struct, function, or module
+* **Modules**: Lets you control the organization, scope, and privacy of paths
+* **Crates**: A tree of modules that produces a library or executable
+* **Packages**: A Cargo feature that lets you build, test, and share crates
 
 <!--
 Paths are what we've been calling namespaces this whole time basically
@@ -122,6 +121,20 @@ A package is a bundle of one or more crates.
 
 ---
 
+# Example: `cargo`
+
+Cargo is itself a Rust package that ships with installations of Rust!
+
+* Contains the binary crate that compiles to the executable `cargo`
+* Contains a library crate that the `cargo` binary depends on
+
+<!--
+It is typical for binary executables in Rust to be thin wrappers around library crates as that makes
+testing the program easier
+-->
+
+---
+
 # `cargo new`
 
 Let's walk through what happens when we create a package with `cargo new`.
@@ -173,30 +186,6 @@ You _can_ have both lib.rs and main.rs
 -->
 
 ---
-
-# Example: `cargo`
-
-Cargo is itself a Rust package that ships with installations of Rust!
-
-* Contains the binary crate that compiles to the executable `cargo`
-* Contains a library crate that the `cargo` binary depends on
-
-<!--
-It is typical for binary executables in Rust to be thin wrappers around library crates as that makes
-testing the program easier
--->
-
----
-
-# Aside: Package vs Project vs Program
-
-* "Package" is the only term of these three with a formal definition in Rust
-* "Project" is a very overloaded term
-  * More meaningful in the context of an _IDE_
-* "Program"
-  * Ask the mathematicians ¯\\_(ツ)_/¯
-
----
 layout: section
 ---
 
@@ -210,7 +199,7 @@ _Modules_ let us organize code within a crate for readability and easy reuse.
 
 * Modules are collections of _items_
   * Items are functions, structs, traits, etc.
-* Similar to C++ namespaces.
+* Similar to C++ namespaces
 * Allows us to control the privacy of items
 * Mitigates namespace collisions
 * Here is a [cheat sheet](https://doc.rust-lang.org/book/ch07-02-defining-modules-to-control-scope-and-privacy.html) from the Rust Book!
@@ -267,6 +256,8 @@ fn main() {
 
 # Using Modules
 
+By default, all module items are private in Rust!
+
 To use items outside of a module, we must declare them as `pub`.
 
 ###### src/main.rs
@@ -283,8 +274,6 @@ fn main() {
     kitchen::cook();
 }
 ```
-
-* By default, all module items are private in Rust
 
 <!--
 In fact, generally everything is private by default in Rust
@@ -425,8 +414,6 @@ src
 └── main.rs
 ```
 
-* The Rust book says that having kitchen.rs is more idiomatic than kitchen/mod.rs, but ultimately this is a stylistic choice.
-
 <!--
 Connor and also Terrance prefers `mod.rs`
 Ben prefers named modules files
@@ -559,22 +546,6 @@ This is saying:
 
 ---
 
-# Using Paths
-
-###### src/main.rs
-
-```rust
-mod kitchen;
-
-fn main() {
-    kitchen::stove::cook();
-}
-```
-
-* Not too hard to write...
-
----
-
 # Using Verbose Paths
 
 What if we had a deeper module tree?
@@ -668,7 +639,7 @@ annoying, so it is good practice to only bring in what you actually need.
 
 ---
 
-# Aside: Binary and Library Crate Paths
+# Binary and Library Crate Paths
 
 In the past examples, we were using a binary crate (`src/main.rs`). All the same principles apply to using a library crate.
 
@@ -685,7 +656,7 @@ src
 
 ---
 
-# Aside: Binary and Library Crate Paths
+# Binary and Library Crate Paths
 
 ```
 src
