@@ -412,8 +412,6 @@ pub fn goldbach(n: u32) -> u32 {
 }
 ```
 
-- How do we test/profile the _performance_ of our code?
-
 ---
 
 # Performance Profiling: Timer
@@ -756,6 +754,35 @@ layout: section
 ---
 
 # **Kahoot!**
+
+---
+
+# Midsemester Grades
+
+- **The late deadline for homework is October 19, 2026 11:59 PM ET**
+  - We have to submit midsemester grades after the break!
+  - So we CANNOT accept submissions past this point
+- Midsemester grade cutoffs
+  - P or S $\ \ge 500$
+  - R $\qquad < 500$
+- Talk to us ASAP if this is a concern
+  - We may email and/or track you down if you're not passing 🫵
+
+---
+
+# Sneak Peek: Choose a Track
+
+- After the break, you can choose to do ONE of these for credit:
+  - **Track A:** Traditional guided labs (like what you've done so far)
+  - **Track B:** Student-defined project
+- If you're interested in Track B, start brainstorming some ideas!
+- More info will be posted later
+
+---
+layout: section
+---
+
+# Enjoy your break!!!
 
 ---
 layout: none
