@@ -34,8 +34,8 @@ class: communism
 # Today: The Rust Ecosystem
 
 - The Rust Toolchain: `rustup`, `clippy`, `rustfmt`, `rustdoc`
-- Performance and analysis: Criterion, Flamegraphs
 - Error handling crates: `anyhow` vs `thiserror`
+- Performance and analysis: Criterion, Flamegraphs
 - Kahoot!
 
 ---
@@ -227,6 +227,163 @@ class: image-full
 ---
 
 <img class="slide-image-full" style="--image-size: 0.75;" src="../images/week7/rand-docs.png">
+
+---
+layout: section
+---
+
+# **Error Handling**
+
+---
+
+# Error Handling
+
+- In lecture 5, we talked about how to handle errors on your own
+  - Hopefully you know what `Result<T, E>` is...
+- Creating `MyError` types for `Result<T, MyError>` everywhere can create a lot of boilerplate and become cumbersome
+- It is usually easier and faster to use a third-party library that can help you manage errors better!
+
+---
+
+# Error Handling Libraries
+
+- `anyhow`
+  - "I don't want to care about error types"
+- `thiserror`
+  - "I want to easily define errors for my library"
+
+---
+
+# `anyhow`
+
+You can think about `anyhow` as a library that provides type-erased errors.
+
+```rust
+use anyhow::Result;
+
+fn get_cluster_info() -> Result<ClusterMap> {
+    let config = std::fs::read_to_string("cluster.json")?;
+    let map: ClusterMap = serde_json::from_str(&config)?;
+    Ok(map)
+}
+```
+
+- Remember how painful it was to define a proper error type?
+- `anyhow` provides `anyhow::Error`, a trait object based error type for easy idiomatic error handling in Rust applications
+- Allows you to use `?` wherever you want (a better `Box<dyn Error>`)
+
+<!--
+Don't worry too much about the `serde_json`, basically it is a **deserializer** that can read in a structure like JSON and convert it into a proper rust struct (in this case, a `ClusterMap` - whatever that is)
+-->
+
+---
+
+# `anyhow`: Attach context
+
+You can add a `with_context` to attach a context to any errors.
+
+```rust
+use anyhow::{Context, Result};
+
+fn main() -> Result<()> {
+    // <-- snip -->
+    it.detach().context("Failed to detach the important thing")?;
+
+    let content = std::fs::read(path)
+        .with_context(|| format!("Failed to read instrs from {}", path))?;
+    // <-- snip -->
+}
+```
+
+```
+Error: Failed to read instrs from ./path/to/instrs.json
+Caused by:
+    No such file or directory (os error 2)
+```
+
+---
+
+# `thiserror`
+
+`thiserror` provides a single, convenient derive macro for the standard library’s `std::error::Error` trait.
+
+```rust
+use thiserror::Error;
+
+#[derive(Error, Debug)]
+pub enum DataStoreError {
+    #[error("data store disconnected")]
+    Disconnect(#[from] io::Error),
+    #[error("the data for key `{0}` is not available")]
+    Redaction(String),
+    #[error("unknown data store error")]
+    Unknown,
+}
+```
+
+<!--
+`thiserror` is literally just that single derive macro!
+-->
+
+---
+
+# `thiserror`: Format Strings
+
+```rust
+#[derive(Error, Debug)]
+pub enum Error {
+    #[error("invalid rdo_lookahead_frames {0} (expected < {max})", max = i32::MAX)]
+    InvalidLookahead(u32),
+}
+```
+
+```rust
+#[derive(Error, Debug)]
+pub enum Error {
+    #[error("first letter must be lowercase but was {:?}", first_char(.0))]
+    WrongCase(String),
+
+    #[error("invalid index {idx}, expected at least {} and at most {}",
+                                                .limits.lo, .limits.hi)]
+    OutOfBounds { idx: usize, limits: Limits },
+}
+```
+
+<!--
+These are just example use cases. `thiserror` is a relatively simple crate to use!
+-->
+
+---
+
+# `thiserror`: To and `From`
+
+You can use `thiserror` to unify different error types!
+
+```rust
+#[derive(Error, Debug)]
+pub enum MyError {
+    Io(#[from] io::Error),
+    Glob(#[from] globset::Error),
+}
+```
+
+```rust
+#[derive(Error, Debug)]
+pub struct MyError {
+    msg: String,
+    #[source]  // optional if field name is `source`
+    source: anyhow::Error,
+}
+```
+
+---
+
+# Recap: [`anyhow`](https://docs.rs/anyhow/latest/anyhow/) vs [`thiserror`](https://docs.rs/thiserror/latest/thiserror/)
+
+- Use `anyhow` in **binaries**
+  - Good for type erasure and attaching dynamic context to errors
+- Use `thiserror` in **libraries**
+  - Good for creating error types
 
 ---
 layout: section
@@ -593,163 +750,6 @@ KEY OBSERVATIONS:
         reduces the number of reallocations needed
     - more time in the main algorithm, as opposed to overhead functions
 -->
-
----
-layout: section
----
-
-# **Error Handling**
-
----
-
-# Error Handling
-
-- In lecture 5, we talked about how to handle errors on your own
-  - Hopefully you know what `Result<T, E>` is...
-- Creating `MyError` types for `Result<T, MyError>` everywhere can create a lot of boilerplate and become cumbersome
-- It is usually easier and faster to use a third-party library that can help you manage errors better!
-
----
-
-# Error Handling Libraries
-
-- `anyhow`
-  - "I don't want to care about error types"
-- `thiserror`
-  - "I want to easily define errors for my library"
-
----
-
-# `anyhow`
-
-You can think about `anyhow` as a library that provides type-erased errors.
-
-```rust
-use anyhow::Result;
-
-fn get_cluster_info() -> Result<ClusterMap> {
-    let config = std::fs::read_to_string("cluster.json")?;
-    let map: ClusterMap = serde_json::from_str(&config)?;
-    Ok(map)
-}
-```
-
-- Remember how painful it was to define a proper error type?
-- `anyhow` provides `anyhow::Error`, a trait object based error type for easy idiomatic error handling in Rust applications
-- Allows you to use `?` wherever you want (a better `Box<dyn Error>`)
-
-<!--
-Don't worry too much about the `serde_json`, basically it is a **deserializer** that can read in a structure like JSON and convert it into a proper rust struct (in this case, a `ClusterMap` - whatever that is)
--->
-
----
-
-# `anyhow`: Attach context
-
-You can add a `with_context` to attach a context to any errors.
-
-```rust
-use anyhow::{Context, Result};
-
-fn main() -> Result<()> {
-    // <-- snip -->
-    it.detach().context("Failed to detach the important thing")?;
-
-    let content = std::fs::read(path)
-        .with_context(|| format!("Failed to read instrs from {}", path))?;
-    // <-- snip -->
-}
-```
-
-```
-Error: Failed to read instrs from ./path/to/instrs.json
-Caused by:
-    No such file or directory (os error 2)
-```
-
----
-
-# `thiserror`
-
-`thiserror` provides a single, convenient derive macro for the standard library’s `std::error::Error` trait.
-
-```rust
-use thiserror::Error;
-
-#[derive(Error, Debug)]
-pub enum DataStoreError {
-    #[error("data store disconnected")]
-    Disconnect(#[from] io::Error),
-    #[error("the data for key `{0}` is not available")]
-    Redaction(String),
-    #[error("unknown data store error")]
-    Unknown,
-}
-```
-
-<!--
-`thiserror` is literally just that single derive macro!
--->
-
----
-
-# `thiserror`: Format Strings
-
-```rust
-#[derive(Error, Debug)]
-pub enum Error {
-    #[error("invalid rdo_lookahead_frames {0} (expected < {max})", max = i32::MAX)]
-    InvalidLookahead(u32),
-}
-```
-
-```rust
-#[derive(Error, Debug)]
-pub enum Error {
-    #[error("first letter must be lowercase but was {:?}", first_char(.0))]
-    WrongCase(String),
-
-    #[error("invalid index {idx}, expected at least {} and at most {}",
-                                                .limits.lo, .limits.hi)]
-    OutOfBounds { idx: usize, limits: Limits },
-}
-```
-
-<!--
-These are just example use cases. `thiserror` is a relatively simple crate to use!
--->
-
----
-
-# `thiserror`: To and `From`
-
-You can use `thiserror` to unify different error types!
-
-```rust
-#[derive(Error, Debug)]
-pub enum MyError {
-    Io(#[from] io::Error),
-    Glob(#[from] globset::Error),
-}
-```
-
-```rust
-#[derive(Error, Debug)]
-pub struct MyError {
-    msg: String,
-    #[source]  // optional if field name is `source`
-    source: anyhow::Error,
-}
-```
-
----
-
-# Recap: [`anyhow`](https://docs.rs/anyhow/latest/anyhow/) vs [`thiserror`](https://docs.rs/thiserror/latest/thiserror/)
-
-- Use `anyhow` in **binaries**
-  - Good for type erasure and attaching dynamic context to errors
-- Use `thiserror` in **libraries**
-  - Good for creating error types
 
 ---
 layout: section
