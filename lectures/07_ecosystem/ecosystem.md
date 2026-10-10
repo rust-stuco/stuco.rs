@@ -759,12 +759,12 @@ layout: section
 
 # Midsemester Grades
 
-- **The late deadline for homework is October 19, 2026 11:59 PM ET**
+- **The late deadline for homework is October 18, 2026 11:59 PM ET**
   - We have to submit midsemester grades after the break!
   - So we CANNOT accept submissions past this point
 - Midsemester grade cutoffs
-  - P or S $\ \ge 500$
-  - R $\qquad < 500$
+  - P or S $\ \ge 450$
+  - R $\qquad < 450$
 - Talk to us ASAP if this is a concern
   - We may email and/or track you down if you're not passing 🫵
 
