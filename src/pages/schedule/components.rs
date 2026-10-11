@@ -35,6 +35,19 @@ pub(crate) fn Schedule() -> Element {
         div { class: "max-w-5xl mx-auto px-8",
             h1 { class: "text-6xl font-bold text-primary mb-6 text-center", "Schedule" }
             p { class: "text-2xl text-center font-bold mb-6", "{semester_name()}" }
+            div { class: "mb-6 rounded-sm border-2 border-primary px-6 py-5 text-center",
+                p { class: "text-primary",
+                    b { "The late submission deadline is Sunday, October 18 at 11:59 PM ET." }
+                    " 450+ points on "
+                    Link {
+                        to: crate::links::destination("/gradescope"),
+                        new_tab: true,
+                        class: "text-secondary underline",
+                        "Gradescope"
+                    }
+                    " are required to earn a passing midsemester grade. Please plan accordingly!"
+                }
+            }
             table { class: "w-full border-collapse",
                 thead {
                     tr { class: "border-b border-tertiary",
