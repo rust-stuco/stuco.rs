@@ -54,6 +54,16 @@ pub(super) fn Home() -> Element {
                             td { class: "py-2", "{format_staff_names(CURRENT_SEMESTER.tas)}" }
                         }
                         tr { class: "border-b border-white/10",
+                            td { class: "py-2 pr-4 font-bold text-primary", "Banner Artist" }
+                            td { class: "py-2",
+                                Link {
+                                    to: "https://vgen.co/childishcat",
+                                    class: "text-secondary hover:underline",
+                                    "Yujie Wu"
+                                }
+                            }
+                        }
+                        tr { class: "border-b border-white/10",
                             td { class: "py-2 pr-4 font-bold text-primary", "Lectures" }
                             td { class: "py-2",
                                 "Thursdays, 7-7:50 PM in "
