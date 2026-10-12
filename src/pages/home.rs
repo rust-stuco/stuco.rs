@@ -1,7 +1,7 @@
 use super::semesters::{CURRENT_SEMESTER, format_staff_names};
 use dioxus::prelude::*;
 
-const BACKGROUND: Asset = asset!("/assets/elixir-rust-cover.webp");
+const BACKGROUND: Asset = asset!("/assets/rust-banner.webp");
 
 #[component]
 pub(super) fn Home() -> Element {
