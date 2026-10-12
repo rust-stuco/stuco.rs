@@ -4,7 +4,7 @@ This course makes use of various third-party resources. We are very grateful to 
 
 ## Images
 
-- **Background illustration** by [Annie Ruygt](https://annieruygtillustration.com/), from [Fly.io](https://fly.io/phoenix-files/elixir-and-rust-is-a-good-mix/)
+- **Background illustration** by [Yujie Wu](https://vgen.co/childishcat), Fall 2026 student
 - **Ferris the Crab** - The official Rust mascot, by the Rust community
 - **Aquascope diagrams** - Generated with [Aquascope](https://cel.cs.brown.edu/aquascope/) by Brown University
 
