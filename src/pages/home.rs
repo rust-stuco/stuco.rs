@@ -42,7 +42,6 @@ pub(super) fn Home() -> Element {
                 " or equivalent low-level programming experience is expected."
             }
             div { class: "flex-1 p-4",
-                h2 { class: "text-3xl font-bold text-primary mb-4", "Course Info" }
                 table { class: "w-full border-collapse text-left",
                     tbody {
                         tr { class: "border-b border-white/10",
