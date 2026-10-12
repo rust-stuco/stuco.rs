@@ -160,7 +160,7 @@ html.dark {
 }
 
 .slidev-layout.communism {
-  background-image: url("../images/elixir-rust-cover.webp");
+  background-image: url("../images/rust-banner.webp");
   background-position: center;
   background-size: cover;
 }
