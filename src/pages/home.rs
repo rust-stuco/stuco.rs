@@ -33,13 +33,13 @@ pub(super) fn Home() -> Element {
                     class: "text-secondary hover:underline",
                     "most-loved language"
                 }
-                " among developers globally. This course provides a low-stress introduction to Rust, starting with its type system and unique ownership model. Students will then explore advanced Rust features such as lifetimes, closures, and smart pointers, before moving onto advanced Rust patterns such as parallelism, concurrency, and unsafe. "
+                " among developers globally. This course provides an introduction to Rust, starting with its type system and unique ownership model. Students then explore advanced Rust features such as lifetimes, closures, and smart pointers, before moving onto advanced Rust patterns such as parallelism, concurrency, and unsafe. "
                 Link {
                     to: "https://www.cs.cmu.edu/~15122/",
                     class: "text-secondary hover:underline",
                     "15-122"
                 }
-                " or equivalent low-level programming experience is expected."
+                " or low-level programming experience is expected."
             }
             div { class: "flex-1 p-4",
                 table { class: "w-full border-collapse text-left",

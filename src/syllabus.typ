@@ -102,9 +102,11 @@
 
 = Course Description
 
-This course is an introduction to the Rust programming language, a memory-safe systems programming language. We will cover a range of topics, from the Rust borrow checker to parallelism and the #rust("unsafe") keyword. Outside of lectures, there will be programming exercises (homework assignments) that students will need to complete in order to pass this course.
+#unstyled-link("https://rust-lang.org/", "Rust") is a systems programming language renowned for its memory-safe performance, rich type system, and developer-first tooling. Backed by rising usage in the tech industry, Rust has been consistently voted as the #unstyled-link("https://blog.rust-lang.org/2025/12/19/what-do-people-love-about-rust/", "most-loved language") among developers globally.
 
-This course is taught in Rust and you are not expected to have prior exposure to Rust. However, this course assumes knowledge of topics covered in *15-122* or equivalent experience with the C programming language. Knowledge of functional programming idioms taught in *15-150*, as well as knowledge of systems programming taught in *15-213* is a bonus, but not strictly required.
+This course provides an introduction to Rust, starting with its type system and unique ownership model. Students then explore advanced Rust features such as lifetimes, closures, and smart pointers, before moving onto advanced Rust patterns such as parallelism, concurrency, and #rust("unsafe").
+
+*15-122* or low-level programming experience is expected. Knowledge of functional programming idioms taught in *15-150*, as well as knowledge of systems programming taught in *15-213* is a bonus, but not strictly required.
 
 = Learning Objectives
 
