@@ -144,9 +144,9 @@ You can follow the steps from the official Rust #unstyled-link("https://www.rust
       [Week 8], [Closures and Iterators],
       [Week 9], [Lifetimes],
       [Week 10], [Smart Pointers & Trait Objects],
-      [Week 11], [Unsafe],
-      [Week 12], [Parallelism],
-      [Week 13], [Concurrency],
+      [Week 11], [Parallelism],
+      [Week 12], [Concurrency],
+      [Week 13], [Unsafe],
       table.hline(stroke: 1pt),
     )
   ]
