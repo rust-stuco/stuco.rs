@@ -1,7 +1,7 @@
 use crate::{links, pages::Route};
 use dioxus::prelude::*;
 
-const FERRIS: Asset = asset!("/assets/ferris.png");
+const LOGO: Asset = asset!("/assets/rust-logo.webp");
 
 pub(crate) const SHORT_LINKS: &[(&str, &str)] = &[
     ("/excusals", "Excusals"),
@@ -26,7 +26,7 @@ pub(crate) fn Navbar() -> Element {
                         to: Route::Home {},
                         class: "flex items-center gap-3 text-lg font-black tracking-wider whitespace-nowrap",
                         img {
-                            src: FERRIS,
+                            src: LOGO,
                             alt: "Home",
                             class: "size-8 shrink-0 rounded-sm transition-transform hover:scale-110 active:scale-95",
                         }
