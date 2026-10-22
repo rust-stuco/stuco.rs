@@ -35,9 +35,148 @@ class: communism
 
 # Today: Closures and Iterators
 
+- Review
 - Closures
 - Iterators
-- Crate Highlights
+
+
+---
+
+
+# Why Closures?
+
+Here's some code from the `anyhow` crate example in last lecture:
+
+```rust
+let content = std::fs::read(path)
+    .with_context(|| format!("Failed to read instrs from {}", path))?;
+```
+
+* `|| format!(...)` is a _closure_, a small function written inline
+* `with_context` only calls it if reading the file fails
+  * So we only build the error message when we actually need it
+* By the end of today, every piece of this line will make sense
+* But first, a review, since it's been two weeks!
+
+
+---
+
+
+# Review: When Does a Borrow End?
+
+Does this compile?
+
+```rust
+let mut s = String::from("hi");
+let r = &s;          // ─┐ `r` borrows `s`
+println!("{r}");     // ─┘ Last use of `r`
+s.push('!');         // ── `push` borrows `s` mutably
+```
+
+* Yes! A borrow ends at its **last use**, not at the end of the scope
+* The two borrows don't overlap, so there's no conflict
+* With `println!` moved below `push`, they would overlap and not compile
+  * Closures follow this same rule today
+
+
+---
+
+
+# Review: Move vs. `Copy`
+
+```rust
+let s1 = String::from("hi");
+let s2 = s1;          // `s1` is moved into `s2`
+// println!("{s1}");  // Error, `s1` was moved
+
+let n1 = 5;
+let n2 = n1;          // `i32` is `Copy`, so `n1` is copied
+println!("{n1}");     // OK
+```
+
+* Assigning or passing a value moves it, unless its type is `Copy`
+* `Copy` types: integers, `bool`, `char`, and shared references `&T`
+* Not `Copy`: `String`, `Vec`, and anything that owns heap data
+
+
+---
+
+
+# Review: `self`, `&self`, and `&mut self`
+
+```rust
+impl Counter {
+    fn get(&self) -> u32 { self.n }       // Borrows the counter
+    fn bump(&mut self) { self.n += 1; }   // Mutably borrows it
+    fn finish(self) -> u32 { self.n }     // Takes ownership of it
+}
+
+let mut c = Counter { n: 0 };  // `mut` needed to call `bump`
+c.bump();
+let n = c.finish();            // `c` can't be used after this
+```
+
+* `mut` on a binding is what allows `&mut` borrows of it
+* Calling a `self` method moves the value into the method
+
+
+---
+
+
+# Review: References and `*`
+
+```rust
+let x = 5;
+let r = &x;            // `r` is a `&i32` pointing at `x`
+assert_eq!(*r, 5);     // `*` follows the reference to the value
+// assert!(r == 5);    // Error, can't compare `&i32` with `i32`
+
+let mut y = 1;
+let m = &mut y;
+*m += 1;               // Write through a `&mut`
+```
+
+* `&` makes a reference, and `*` gets back the value it points to
+* A `&i32` and an `i32` are different types
+  * Iterators hand us references a lot today, so watch for this
+
+
+---
+
+
+# Review: Trait Bounds
+
+Three ways to say "any type that implements `Display`"
+
+```rust
+fn show<T: Display>(item: T) -> String { ... }
+
+fn show<T>(item: T) -> String where T: Display { ... }
+
+fn show(item: impl Display) -> String { ... }
+```
+
+* `where` is handy when bounds get long
+* `impl Trait` also works for return types, as in `fn make() -> impl Display`
+  * The caller only knows the returned type implements `Display`
+
+
+---
+
+
+# Review: Counting Types
+
+Write `|T|` for how many values a type `T` has
+
+| Type | Number of values |
+| --- | --- |
+| `()` | 1 |
+| `struct Pair(bool, bool)` | 2 × 2 = 4 |
+| `Option<bool>` | 1 + 2 = 3 |
+| `!` | 0 |
+
+* Structs multiply their fields, enums add their variants
+* `!` (never) has no values, since `loop {}` and `panic!` never produce one
 
 
 ---
@@ -89,9 +228,10 @@ let _ = add_one_v4(4);
 ```
 
 * `v1` is the equivalent function
-* We can remove type parameters in `v3`
-  * This is similar to eliding the type parameter in `let v = Vec::new()`
-* For `v4`, we can remove the `{}` since the body is only one line
+* We can remove the type annotations in `v3`
+  * Including the return type, since Rust infers both
+  * This is similar to eliding the type in `let v = Vec::new()`
+* For `v4`, we can remove the `{}` since the body is a single expression
 
 <!--
 Bad formatting on purpose to show similarities
@@ -151,14 +291,11 @@ let s = example_closure(String::from("hello"));
 let n = example_closure(5);
 ```
 
-* The first time we called `example_closure` with a `String`
-* Rust inferred the type of `example_closure` to be `String -> String`
-* Those types are now bound to the closure
-    * `example_closure(5)` will not type check
-
-<!--
-This is one of the main differences between Rust and a functional language like SML or OCaml, things generally are always ONE type, not fully polymorphic.
--->
+* Closures can't be generic, so each one has a single concrete signature
+* Here Rust infers it from the first call, `String -> String`
+  * So `example_closure(5)` will not type check
+* For any type, use a generic function, `fn identity<T>(x: T) -> T`
+* Unlike SML or OCaml, where `fn x => x` works on every type
 
 
 ---
@@ -169,8 +306,11 @@ This is one of the main differences between Rust and a functional language like 
 Closures can capture values from their environment in three ways:
 * Borrowing immutably
 * Borrowing mutably
-* Taking ownership
-    * _**Moving**_ the value into the closure
+* Taking ownership (_**moving**_ the value into the closure)
+
+Rust picks the least powerful one the body needs, in that order
+* It only moves a value if the body moves it, or if we ask with `move`
+* It captures individual struct fields, like `p.score`, not all of `p`
 
 
 ---
@@ -266,7 +406,7 @@ println!("After calling closure: {:?}", list);
 
 * A closure mutating its captured state is _equivalent_ to mutating _itself_
   * Calling `borrows_mutably` mutates the closure's internal state
-    * We'll discuss in the next section...
+    * We'll see why at the end of this section
 
 
 ---
@@ -307,6 +447,50 @@ After calling closure: [1, 2, 3, 7]
 
 
 ---
+class: image-right image-width-25
+---
+
+# Closure Borrowing Rules
+
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
+
+What if we print `list` between defining and calling the closure?
+
+```rust
+let mut list = vec![1, 2, 3];
+
+let mut borrows_mutably = || { list.push(7); };
+
+println!("Before calling closure: {:?}", list);
+borrows_mutably();
+println!("After calling closure: {:?}", list);
+```
+
+
+---
+
+
+# Closure Borrowing Rules
+
+```ansi
+error[E0502]: cannot borrow `list` as immutable
+ because it is also borrowed as mutable
+ --> src/main.rs:6:46
+  |
+4 |     let mut borrows_mutably = || { list.push(7); };
+  |                               --   ---- first borrow occurs due to
+  |                               |         use of `list` in closure
+  |                               |
+  |                               mutable borrow occurs here
+5 |
+6 |     println!("Before calling closure: {:?}", list);
+  |                                              ^^^^ immutable borrow occurs here
+7 |     borrows_mutably();
+  |     --------------- mutable borrow later used here
+```
+
+
+---
 
 
 # Closure Borrowing Rules
@@ -314,23 +498,15 @@ After calling closure: [1, 2, 3, 7]
 ```rust
 let mut list = vec![1, 2, 3];
 
-let mut borrows_mutably = || { list.push(7); };
-
-// println!("Before calling closure: {:?}", list); <-- Compiler error!
-borrows_mutably();
-println!("After calling closure: {:?}", list);
+let mut borrows_mutably = || { list.push(7); }; // ─┐ Closure borrows `list`
+// println!("{:?}", list);                      //  │ Error, overlaps the borrow
+borrows_mutably();                              // ─┘ Last use of the closure
+println!("After calling closure: {:?}", list); // ── OK, no overlap
 ```
 
-* Note how we can't have a `println!` before invoking `borrows_mutably`
-* Rust only considers the **invocation** a borrow, not the definition
-  * Closures are lazy in this sense
-
-<!--
-The lecturer should spell this out:
-
-* `borrows_mutably` isn't called again, so Rust knows the borrowing has ended
-  * This is why we are allowed to call `println!` after
--->
+* The closure borrows `list` when it is **defined**, not when it is called
+* That borrow lasts until the closure's last use, just like a reference
+* A `println!` inside the bracket overlaps the borrow, so it fails
 
 
 ---
@@ -395,9 +571,32 @@ println!("Mystery value is {}", mystery(5));
 ```
 
 * We can `move` values into closures instead of capturing references (borrowing)
-  * Note that you can't selectively `move` parameters, it's all or nothing
-* `move` semantics with closures are important for thread safety!
+  * `move` applies to every captured variable, not just some of them
+* The same idea lets a function return a closure
+  * `fn make_adder(n: i32) -> impl Fn(i32) -> i32 { move |x| x + n }`
 
+
+---
+
+
+# Moving Only Some Captures
+
+What if we want to move `greeting` but only borrow `name`?
+
+```rust
+let name = String::from("Ferris");
+let greeting = String::from("Hello");
+
+let name_ref = &name;  // Borrow `name` outside the closure
+let greet = move || println!("{greeting}, {name_ref}!");
+
+greet();
+println!("{name}");        // OK, the closure only owns a reference to `name`
+// println!("{greeting}"); // Error, `greeting` was moved into the closure
+```
+
+* `move` moves `name_ref` into the closure, and `name_ref` is just a reference
+* So `greeting` is owned by the closure, while `name` is only borrowed
 
 ---
 
@@ -417,31 +616,185 @@ fn main() {
 }
 ```
 
+* `move` is often needed when handing a closure to another thread
+
 
 ---
 
 
-# Case for `move`: Thread Safety
+# Why `move`?
+
+What if we borrow `list` instead?
 
 ```rust
 fn main() {
     let list = vec![1, 2, 3];
-    println!("Before defining closure: {:?}", list);
 
-    std::thread::spawn(move || println!("From thread: {:?}", list))
+    std::thread::spawn(|| println!("From thread: {:?}", list))
         .join()
         .unwrap();
 }
 ```
 
-* Why do we `move` instead of borrow?
-  * Child thread's `println!` only needs a reference to `list`...
-* Parent might drop `list` before the child thread runs
-  * Use after free in child thread! ☠️
+* The thread's `println!` only needs a reference to `list`...
 
-<!--
-It is super easy to make this mistake in other languages!
--->
+
+---
+
+
+# Why `move`?
+
+```ansi
+error[E0373]: closure may outlive the current function, but it borrows `list`,
+ which is owned by the current function
+ --> src/main.rs:4:24
+  |
+4 |     std::thread::spawn(|| println!("From thread: {:?}", list))
+  |                        ^^                               ---- `list` is
+  |                        |                                     borrowed here
+  |                        |
+  |                        may outlive borrowed value `list`
+  |
+note: function requires argument type to outlive `'static`
+<-- snip -->
+help: to force the closure to take ownership of `list`
+(and any other referenced variables), use the `move` keyword
+```
+
+
+---
+
+
+# Why `move`?
+
+* `spawn` doesn't know we `join` right away
+  * A spawned thread could keep running after `main`'s locals are dropped
+* So `spawn` only accepts closures that don't borrow local variables
+  * This is the `'static` requirement in the error, covered next week in Lifetimes
+* `move` gives the closure ownership of `list`, so nothing is borrowed
+* Without this rule, the thread could read `list` after it was freed ☠️
+  * A use-after-free that is easy to write in other languages!
+
+
+---
+
+
+# Borrowing in Threads: `thread::scope`
+
+```rust
+let mut list = vec![1, 2, 3];
+
+std::thread::scope(|s| {
+    s.spawn(|| println!("From thread: {:?}", list));
+    s.spawn(|| println!("Also from thread: {:?}", list));
+}); // All threads spawned in the scope are joined here
+
+list.push(4);
+```
+
+* `scope` guarantees every thread finishes before it returns
+* So these threads _can_ borrow `list`, and no `move` is needed
+* More on threads in the Parallelism and Concurrency lectures
+
+
+---
+
+
+# Closures Under the Hood
+
+```rust
+let greet = move |greeting: &str| println!("{greeting}, {name}!");
+```
+
+Rust turns this closure into roughly
+
+```rust
+struct Greet { name: String } // One field per captured variable
+
+impl Greet {
+    fn call(&self, greeting: &str) { println!("{greeting}, {}!", self.name); }
+}
+```
+
+* A closure is a value of an anonymous struct, with its captures as fields
+
+
+---
+
+
+# Function Pointers
+
+Functions are values too, and their type is a _function pointer_, written `fn`.
+
+```rust
+fn add_one(x: i32) -> i32 {
+    x + 1
+}
+
+fn do_twice(f: fn(i32) -> i32, arg: i32) -> i32 {
+    f(arg) + f(arg)
+}
+
+let answer = do_twice(add_one, 5); // 12
+```
+
+* `fn(i32) -> i32` is a real type, a pointer to any function with that signature
+
+
+---
+
+
+# Function Items and Function Pointers
+
+```rust
+let f = add_one;                  // `add_one`'s own unique type, 0 bytes
+let g: fn(i32) -> i32 = add_one;  // A function pointer, 8 bytes
+
+do_twice(|x| x * 2, 5);           // OK, the closure captures nothing
+
+let n = 3;
+// do_twice(|x| x * n, 5);        // Error, the closure captures `n`
+```
+
+* Every function has its own type, which converts to a `fn` pointer when needed
+* Closures that capture nothing also convert to `fn` pointers
+* Closures that capture something can't, since a pointer to code has nowhere to store `n`
+  * The `Fn` traits in the next section let us accept those too
+
+
+---
+
+
+# Counting Functions
+
+- Function types have a count too: `|fn(A) -> B| = |B|^|A|`
+    - Each of the `|A|` inputs can map to any of the `|B|` outputs
+    - Matches math, where the set of functions `A -> B` is written `B^A`
+- e.g. `fn(bool) -> bool` has `2² = 4` (ignoring side effects)
+
+```rust
+fn identity(x: bool) -> bool     { x }
+fn not(x: bool) -> bool          { !x }
+fn always_true(_: bool) -> bool  { true }
+fn always_false(_: bool) -> bool { false }
+```
+
+
+---
+
+
+# Counting Functions
+
+`|fn(!) -> T| = |T|^0 = 1`, meaning there's exactly one way to turn a `!` into a `T`
+
+```rust
+fn absurd<T>(x: !) -> T {
+    match x {} // `!` has no values, so no arms are needed
+}
+```
+
+* Intuition: when `!` coerces into a type, it's as if the compiler calls `absurd` for you
+    * `absurd` can never actually run, since there's no `!` value to call it with
 
 
 ---
@@ -496,10 +849,28 @@ The `FnMut` trait indicates a closure that _can_ mutate the captured values beca
 ---
 
 # `Fn`
-The `Fn` trait indicates ... everything else!
-  * Closures that don't move captured values out
-  * Closures that don't mutate captured values
-  * Closures that don't capture any values at all
+The `Fn` trait indicates closures that only read their captured values
+
+A closure is `Fn` only if **both** of these are true
+  * It doesn't move captured values out
+  * It doesn't mutate captured values
+
+Closures that capture nothing at all are always `Fn`
+
+---
+
+
+# Three Ways to Call
+
+| Body | Method | Trait |
+|---|---|---|
+| Moves a captured value out | `call_once(self)` | `FnOnce` |
+| Mutates a captured value | `call_mut(&mut self)` | `FnMut` |
+| Only reads captured values | `call(&self)` | `Fn` |
+
+* `self` uses up the closure, so it can only be called once
+* `&mut self` is why `borrows_mutably` needed `let mut`
+
 
 ---
 class: image-right image-width-45
@@ -509,16 +880,30 @@ class: image-right image-width-45
 
 <img class="slide-image" style="--image-size: 1;" src="../images/closure_traits.svg">
 
-Trait behavior is inherited by hierarcy
+Each circle is the set of closures that implement that trait
 
-* `FnMut` is also `FnOnce`
-  * If `FnMut` is implemented, so is `FnOnce`
-* `Fn` is also `FnMut` _and_ `FnOnce`
-  * If `Fn` is implemented, so is `FnMut` and `FnOnce`
+* Every `FnMut` closure is also `FnOnce`
+* Every `Fn` closure is also `FnMut` _and_ `FnOnce`
+* So `Fn` closures are a _subset_ of `FnMut` closures, which are a _subset_ of `FnOnce` closures
 
-<!--
-We can reason about why this is true... 
--->
+
+---
+
+
+# Why the Circles Nest
+
+In the standard library, the `Fn` traits are ordinary supertraits
+
+```rust
+trait FnOnce { ... }
+trait FnMut: FnOnce { ... }
+trait Fn: FnMut { ... }
+```
+
+* Same idea as `trait Student: Person` from lecture 5
+* If you can call a closure through `&self`, you can also call it through
+  * `&mut self`, since a `&mut` can do anything a `&` can
+  * `self`, by calling it once and then dropping it
 
 ---
 
@@ -531,23 +916,35 @@ A closure that moves captured values **out** of its body will _only_ implement `
 let my_str = String::from("x");
 
 // Returns `my_str`, moving it out of the closure
-let consume_and_return = move || my_str;
+let consume_and_return = || my_str;
+
+let s = consume_and_return();
+// consume_and_return(); // Error, `my_str` was already moved out
 ```
 
-* Why can this closure only be called once?
-  * It takes ownership of `my_str`, then gives ownership back to the caller
-  * `my_str` is no longer accessible to our closure after it's called!
-* A closure that takes ownership does so when it's _created_, not _called_
+* The first call moves `my_str` out to the caller
+  * Rust never implicitly clones it, so there's nothing left for a second call
+* Useful for actions that must happen exactly once, like closing a file
 
-<!--
-Rust never implicitly clones `my_str`, cannot be reused after move
 
-Use case for moving captured values out:
-  Transactions that should happen exactly once,
-  but the underlying resource can be reused for multiple transactions
+---
 
-Think of the resource as a database connection, socket connection, or file handle
--->
+
+# `move` vs. the `Fn` traits
+
+```rust
+let name = String::from("Ferris");
+let give_away = || name;            // No `move`, but only `FnOnce`
+
+let count = 5;
+let add = move |x: i32| x + count;  // `move`, but still `Fn`
+```
+
+* `move` decides how values are **captured** (by value), when the closure is _created_
+* The `Fn` traits depend on what the body **does** with them when it is _called_
+* These are independent
+  * `give_away` moves `name` out, so it's `FnOnce` even without `move`
+  * `add` owns `count` but only reads it, so it's `Fn`
 
 
 ---
@@ -566,7 +963,7 @@ All closures implement `FnOnce`, since all closures can be called once.
 
 # `unwrap_or_else`
 
-`unwrap_or_else` processes the `Result<T, E>` of a function.
+`unwrap_or_else` unwraps a `Result<T, E>`, computing a fallback from the error if needed.
 
 ```rust
 let count = |s: &str| s.len();
@@ -593,15 +990,15 @@ impl<T, E> Result<T, E> {
         F: FnOnce(E) -> T
     {
         match self {
-            Some(x) => x,
-            None => f(e),
+            Ok(t) => t,
+            Err(e) => f(e),
         }
     }
 }
 ```
 
 <!--
-Copied and pasted (and modified very slightly) from the standard library:
+Simplified from the standard library:
 https://doc.rust-lang.org/src/core/result.rs.html#1460-1465
 -->
 
@@ -622,11 +1019,9 @@ where
 
 * This method is generic over `F`
 * `F` is the type of the closure we provide when calling `unwrap_or_else`
-  * `F` must be able to be called once, take one argument, and return a `T` for `Option<T>`
-
-<!--
-Requiring `F: FnOnce(E) -> T` is **MORE GENERAL** than requiring one of the other function traits
--->
+  * `F` must be callable once, take the error `E`, and return the success type `T`
+* `FnOnce` is the _least_ restrictive bound here
+  * Every closure implements `FnOnce`, so callers can pass any closure with this signature
 
 
 ---
@@ -639,14 +1034,14 @@ Now let's observe the function body.
 ```rust
 {
     match self {
-        Some(x) => x,
-        None => f(e),
+        Ok(t) => t,
+        Err(e) => f(e),
     }
 }
 ```
 
-* If the `Option` is `Some`, then extract the inner value
-* Otherwise, call `f` once and return the value
+* If the `Result` is `Ok`, extract the inner value
+* Otherwise, call `f` once on the error and return its result
 * Note that `f` is not _required_ to only be `FnOnce` here
   * It is valid for `f` to be `FnMut` or `Fn`
 
@@ -728,26 +1123,14 @@ where
 
 # `Fn`
 
-The `Fn` trait is a superset of `FnOnce` and `FnMut`.
+Every `Fn` closure is also `FnMut` and `FnOnce`.
 
-* `Fn` applies to closures that:
-  * don't move captured values out of their body, 
-  * don't mutate captured values,
-  * or don't capture anything from their environment at all
-* Can be called more than once without mutating the environment
-* Use cases:
-  * Stateless operations without side effects
-    * Logging, pretty printing
-    * Predicates* for sorting, searching, filtering
-
-<!--
-Use case: Stateless operation without side effects
-  Example is logging
-
-BIG asterisk for predicates:
-They are usually `FnMut` in the standard library because that is more general,
-but in most cases we're passing in something that is `Fn`
--->
+* `Fn` applies to closures that don't move captured values out of their body **and** don't mutate them
+  * This includes closures that capture nothing at all
+* Can be called more than once without changing its captured values
+* `Fn` does not mean "pure", since an `Fn` closure can still print or write files
+* Use cases include logging, pretty printing, and predicates
+  * `std` usually asks for `FnMut` predicates since that accepts more closures, but the ones we pass are usually `Fn`
 
 
 ---
@@ -783,71 +1166,21 @@ assert!(!is_mascot("Ferrari"));  // false
 
 # `Fn`
 
-The `Fn` usually represents pure functions, which means it makes sense to pass them as inputs to other functions!
+Closures can be passed as arguments to other functions.
 
 ```rust
-fn reduce<F, T>(reducer: F, data: &[T]) -> Option<T>
+fn reduce<F, T>(reducer: F, data: Vec<T>) -> Option<T>
 where
     F: Fn(T, T) -> T,
-{
-    // <-- snip -->
-}
+{ /* <-- snip --> */ }
+
+let sum = reduce(|a, b| a + b, vec![1, 2, 3]); // Some(6)
 ```
 
-* We can specify the arguments and return types for `Fn`
-* Functions are values!
-
-<!--
-While this example is generic, we could've replaced `T` with a concrete type
--->
-
-
----
-
-
-# `fn` vs. `Fn`
-
-Rust also has function pointers, denoted `fn` (instead of `Fn`).
-
-```rust
-fn add_one(x: i32) -> i32 {
-    x + 1
-}
-
-fn do_twice(f: fn(i32) -> i32, arg: i32) -> i32 {
-    f(arg) + f(arg)
-}
-
-fn main() {
-    let answer = do_twice(add_one, 5);
-}
-```
-
-* `fn` is a **type*** that implements all 3 closure traits `Fn`, `FnMut`, and `FnOnce`
-
-<!--
-It's not really a type, they are just function pointers that know the signatures of the code they
-are pointing to
--->
-
-
----
-
-
-# `fn` vs. `Fn`
-
-- Function types have a count too: `|fn(A) -> B| = |B|^|A|`
-    - e.g. `fn(bool) -> bool` has `2² = 4` (ignoring side effects): `x`, `!x`, `true`, and `false`
-    - `|fn(!) -> T| = |T|^0 = 1`, meaning there's exactly one way to turn a `!` into a `T`
-
-```rust
-fn absurd<T>(x: !) -> T {
-    match x {} // `!` has no values, so no arms are needed
-}
-```
-
-* Intuition: when `!` coerces into a type, it's as if the compiler calls `absurd` for you
-    * `absurd` can never actually run, since there's no `!` value to call it with
+* `Fn(T, T) -> T` gives the closure's argument and return types
+* Each closure has a unique type, so we take a generic `F`
+  * To store different closures together, use `Box<dyn Fn(T, T) -> T>`
+* `std` has this as `Iterator::reduce`, with an `FnMut` bound
 
 
 ---
@@ -861,14 +1194,16 @@ fn absurd<T>(x: !) -> T {
 * `FnOnce` - call at least once, environment may be consumed
 * `FnMut` - call multiple times, environment may change
 * `Fn` - call multiple times, environment doesn't change
+* Function pointers (`fn`) implement all three traits
 
 
 ---
-
+layout: section
+---
 
 # **Iterators**
 
-* Sorry functional haters... it's show time!
+Sorry functional haters... it's show time!
 
 
 ---
@@ -908,27 +1243,18 @@ pub trait Iterator {
 
 # `type Item`
 
-What's going on with the `type Item`?
-
 ```rust
 pub trait Iterator {
     type Item;
 
     fn next(&mut self) -> Option<Self::Item>;
-
-    // <-- methods with default implementations elided -->
+    // <-- default methods elided -->
 }
 ```
 
-* This is an _associated type_
-* To define `Iterator` you must define the `Item` you're iterating over
-* _Different from generic types!_
-  * There can only be one way to iterate over something
-
-<!--
-For example, if I have a vector / list of `i32` integers, the only way I should be able to iterate
-over them is by `i32`s. It doesn't make sense to also allow iterating via strings or something like that.
--->
+* `Item` is an _associated type_, which every iterator must define
+* `Iterator` can only be implemented once per type, so there's one `Item`
+* A `String` still has several iterators, like `s.chars()` and `s.bytes()`
 
 
 ---
@@ -960,16 +1286,36 @@ impl Iterator for Fibonacci {
 
     fn next(&mut self) -> Option<Self::Item> {
         let current = self.curr;
-
+        let new_next = current.checked_add(self.next)?;
         self.curr = self.next;
-        self.next = current + self.next;
-
-        // No endpoint to a Fibonacci sequence - `Some` is always returned.
+        self.next = new_next;
         Some(current)
     }
 }
 ```
-* Notice `Self::Item` is aliased to `u32`
+
+* A plain `+` would overflow after 46 numbers and panic
+* `checked_add` returns `None` instead, and `?` ends the iterator
+
+
+---
+
+
+# Using `Fibonacci`
+
+```rust
+let mut fib = Fibonacci { curr: 0, next: 1 };
+assert_eq!(fib.next(), Some(0));
+assert_eq!(fib.next(), Some(1));
+assert_eq!(fib.next(), Some(1));
+
+let fib = Fibonacci { curr: 0, next: 1 };
+for x in fib.take(10) { print!("{x} "); } // 0 1 1 2 3 5 8 13 21 34
+```
+
+* We start it like any struct, with the first two numbers
+* We only wrote `next`, but `take`, `map`, `filter`, and the rest come for free
+  * They're default methods on `Iterator`, like the ones from lecture 5
 
 
 ---
@@ -998,60 +1344,40 @@ assert_eq!(v1_iter.next(), None);
 ---
 
 
-# `Vec` Iterators
+# `for` Loops Are Syntax Sugar
+
+The compiler rewrites `for val in v1.iter() { ... }` into roughly
 
 ```rust
-let v1 = vec![1, 2, 3];
-
-for val in v1.iter() {
-    println!("Got: {}", val);
-}
-
-for val in &v1 {
+let mut iter = IntoIterator::into_iter(v1.iter());
+while let Some(val) = iter.next() {
     println!("Got: {}", val);
 }
 ```
 
-* These do the same thing!
-  * Note that this is _not_ syntax sugar
-* We saw this code before in lecture 4
-  * Except now we explicitly create the iterator that Rust did for us
-
-<!--
-Be clear that `val` has type `&i32`, NOT `i32`.
-
-Students can think about this like syntactic sugar, but it is actually not identical.
-
-A is syntactic sugar for B if the compiler rewrites A as B
-If it were syntax sugar, `for val in &v1` would be written as `for val in v1.iter()`
-
-`.iter()` is an actual method on `Vec` that returns an `Iter` object that can iterate over references
-to the vector.
-
-At the same time, `IntoIterator` is implemented for `&'a Vec<T>` which also iterates over references
-to the vector.
--->
+* `for` calls `into_iter` on whatever comes after `in`
+* `into_iter` comes from the `IntoIterator` trait, for types that can _become_ iterators
+  * Calling `into_iter` on an iterator just gives back the same iterator
+* `while let` is like `if let`, but loops until the pattern stops matching
 
 
 ---
 
 
-# Syntactic Sugar: `for` loops
+# `Vec` Iterators
 
 ```rust
 let v1 = vec![1, 2, 3];
 
-for val in v1.iter() {
-    println!("Got: {}", val);
-}
+for val in v1.iter() { println!("Got: {}", val); }
 
-let mut v1_iter = v1.iter();
-while let Some(val) = v1_iter.next() {
-    println!("Got: {}", val);
-}
+for val in &v1 { println!("Got: {}", val); }
 ```
 
-* The `for` loop _is_ syntax sugar
+* Both loops do the same thing, and in both `val` is a `&i32`
+* The second calls `IntoIterator::into_iter(&v1)`
+  * That gives the same iterator type as `v1.iter()`
+* We saw `for val in &v1` in lecture 4, and now we know how it works
 
 
 ---
@@ -1089,25 +1415,16 @@ println!("{:?}", vec);
 let mut vec = vec![1, 2, 3];
 
 let mut mutable_iter = vec.iter_mut();
-while let Some(val) = mutable_iter.next() {
-    *val += 1;
-}
+while let Some(val) = mutable_iter.next() { *val += 1; }
 
-for val in vec.iter_mut() {
-    *val += 1;
-}
+for val in vec.iter_mut() { *val += 1; }
 
-for val in &mut vec {
-    *val += 1;
-}
+for val in &mut vec { *val += 1; }
 ```
 
 * All of these do the same thing!
-
-<!--
-Again, be clear that the very last example with `&mut vec` is NOT syntax sugar for the two things
-above. You can _think_ of it like syntax sugar, but they are different.
--->
+* `for val in &mut vec` calls `IntoIterator::into_iter(&mut vec)`
+  * That gives the same iterator type as `vec.iter_mut()`
 
 
 ---
@@ -1118,19 +1435,15 @@ above. You can _think_ of it like syntax sugar, but they are different.
 If we want an iterator to iterate over _owned_ values, we usually use `into_iter()`.
 
 ```rust
-let mut vec = vec![1, 2, 3];
-
-let owned_iter = vec.into_iter(); // vec is *consumed*
-for val in owned_iter {
-    println!("I own {}", val);
-}
-
-// owned_iter has been consumed
+let vec = vec![1, 2, 3];
+for val in vec.into_iter() { println!("I own {}", val); } // `vec` is consumed
 ```
 
-* To make an iterator that owns its values we have `into_iter()`
-* `into_iter()` is the sole method on the `IntoIterator` trait
-* This is what the `for` loops are actually consuming
+| Call | Items | Same as |
+|---|---|---|
+| `v.iter()` | `&T` | `for x in &v` |
+| `v.iter_mut()` | `&mut T` | `for x in &mut v` |
+| `v.into_iter()` | `T` | `for x in v`, the "consuming" loop from lecture 4 |
 
 
 ---
@@ -1150,30 +1463,33 @@ let total: i32 = v1_iter.sum(); // `.sum()` consumes `v1_iter`
 assert_eq!(total, 6);
 ```
 
-* Most of these functions _consume_ iterators
+* `sum` is a **consumer**, which calls `next` until it gets `None`
+* `sum` takes `self`, so `v1_iter` is used up and can't be used again
 
 
 ---
 
 
-# Other consuming functions
+# Consumers vs. Adapters
 
-- `fn sum(self)`
-- `fn max(self)`
-- `fn count(self)`
-- `fn map(self, f: F)`
-- `fn filter(self, predicate: P)`
-- `fn fold(self, init: B, f: F)`
-- `fn collect(self)`
-  - Coming soon...
-- Many, many more!
+Iterator methods come in two kinds:
+
+| | Consumers | Adapters |
+|---|---|---|
+| What they do | Call `next` until the iterator is done | Wrap the iterator in a new one |
+| Return | A final value | Another (lazy) iterator |
+| Examples | `sum`, `max`, `count`, `fold`, `collect` | `map`, `filter`, `skip`, `take` |
+
+* Both kinds take `self`, but calling an adapter doesn't call `next`
+* Adapters do nothing until a consumer (or a `for` loop) drives them
+* Many, many more of both in the [`Iterator` docs](https://doc.rust-lang.org/std/iter/trait.Iterator.html)!
 
 
 ---
 class: image-right image-width-25
 ---
 
-# Producing Iterators
+# Iterator Adapters
 
 <img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_not_desired_behavior.svg">
 
@@ -1193,7 +1509,7 @@ Mention that ferris is not confused but is trying to point out something to us..
 ---
 
 
-# Producing Iterators
+# Iterator Adapters
 
 ```ansi
 [1m[33mwarning[0m[1m: unused `Map` that must be used[0m
@@ -1207,15 +1523,15 @@ Mention that ferris is not confused but is trying to point out something to us..
 <-- snip -->
 ```
 
-* Zero-cost abstractions at work
-* Rust won't make us pay for our iterator until we use it
-  * It will compile and warn us of unused data
+* `map` only builds a `Map` iterator, and the closure never runs
+* Iterators are _lazy_, so no work happens until something consumes them
+  * The code compiles, but Rust warns us that we built an iterator and never used it
 
 
 ---
 
 
-# Producing Iterators
+# Driving Adapters
 
 ```rust
 let v2: Vec<i32> = (1..4).map(|x| x + 1).collect();
@@ -1227,10 +1543,69 @@ println!("{:?}", v2);
 [2, 3, 4]
 ```
 
-* We use `collect()` to tell Rust we're done modifying our iterator and want to convert our changes to a `Vec`
-* `collect` is a super common method on iterators
-  * If you don't use `collect`, no computation is performed
-  * `collect` is the method that executes all of the desired operations!
+* `map` is the adapter, `collect` is the consumer that drives it
+* `collect` gathers the items into a collection
+  * The `Vec<i32>` annotation tells it which collection to build
+  * The turbofish works too, as in `.collect::<Vec<i32>>()`
+* Named functions work in place of closures, like `.map(String::from)`
+
+
+---
+
+
+# `collect` Can Build Many Types
+
+```rust
+let s: String = vec!['h', 'i'].into_iter().collect(); // "hi"
+let m: HashMap<&str, i32> = vec![("a", 1), ("b", 2)].into_iter().collect();
+
+let nums: Result<Vec<i32>, _> = ["1", "2"].iter().map(|s| s.parse()).collect();
+let bad: Result<Vec<i32>, _> = ["1", "x"].iter().map(|s| s.parse()).collect();
+// nums is Ok([1, 2]), bad is Err(..)
+```
+
+* `collect` builds any type that implements the `FromIterator` trait
+* The type annotation (or turbofish) picks which one
+* Collecting `Result`s into `Result<Vec<_>, _>` stops at the first `Err`
+  * Like `?` from lecture 5, but for a whole iterator
+
+
+---
+
+
+# Driving Adapters
+
+Any consumer drives the adapters before it, not just `collect`:
+
+```rust
+let total: i32 = (1..4).map(|x| x + 1).sum();        // 9
+let evens = (1..10).filter(|x| x % 2 == 0).count();  // 4
+
+for x in (1..10).skip(2).take(3) {                   // `for` drives it too
+    print!("{x} ");                                  // 3 4 5
+}
+```
+
+* Adapters can be chained, with each one wrapping the previous iterator
+* Nothing runs until the consumer at the end starts calling `next`
+* Iterator chains are a _zero-cost abstraction_
+  * They compile to code as fast as the equivalent hand-written loop
+
+
+---
+
+
+# More Adapters
+
+| Adapter | Example | Result |
+|---|---|---|
+| `take_while` | `(1..10).take_while(\|x\| *x < 4)` | `1, 2, 3` |
+| `step_by` | `(0..10).step_by(3)` | `0, 3, 6, 9` |
+| `enumerate` | `"ab".chars().enumerate()` | `(0, 'a'), (1, 'b')` |
+| `cloned` | `vec![1, 2].iter().cloned()` | `1, 2` (owned, not `&i32`) |
+
+* `(0..)` is a range with no end, an infinite iterator
+  * Laziness makes it safe, as long as something like `take` stops it
 
 
 ---
@@ -1270,7 +1645,8 @@ fn filter_by(list: Vec<i32>, val: i32) -> Vec<i32> {
 <-- snip -->
 ```
 
-* Some iterator functions take a reference instead of ownership
+* `filter`'s closure gets a _reference_ to each item, here `&i32`
+  * `filter` hands the item on if it passes, so the closure can only look at it
 
 
 ---
@@ -1280,6 +1656,7 @@ class: image-right image-width-25
 # Filter
 
 <img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_happy.svg">
+
 ```rust
 list.into_iter().filter(|&x| x == val).collect()
 ```
@@ -1289,7 +1666,24 @@ or
 ```rust
 list.into_iter().filter(|x| *x == val).collect()
 ```
-* We either explicitly match on the reference or dereference
+* We either match on the reference with `&x`, or dereference with `*x`
+* Closure parameters are patterns, like in `match`
+  * `|(i, x)|` takes apart a tuple, e.g. from `enumerate`
+
+
+---
+
+
+# Filter After `iter()`
+
+```rust
+let twos: Vec<&i32> = list.iter().filter(|x| **x == val).collect();
+```
+
+* `iter()` already yields `&i32`
+* `filter` adds another reference, so the closure gets a `&&i32`
+* So we need two dereferences, `**x`, or the pattern `|&&x|`
+* The compiler's "consider dereferencing" hint tells you how many `*` to add
 
 
 ---
@@ -1305,11 +1699,13 @@ for x in iter.take(5) {
 }
 ```
 
-* You can read this as:
-  * Print first 5 square numbers
+* You can read this as
+  * Print the first 5 square numbers
   * Skipping 0
-  * Only divisible by 3
-* _Note that `filter` doesn't need a dereference for `%`_
+  * Only those divisible by 3
+* `y` is a `&i32`, but `&i32 % i32` exists, so `y % 3` needs no `*`
+  * There's no `&i32 == i32`, which is why `filter` needed `*x` earlier
+
 
 
 ---
@@ -1340,11 +1736,11 @@ Filter { iter: Skip { iter: Map { iter: 0..100 }, n: 1 } }
 
 # Iterator Recap
 
-* Iterators is an extremely powerful structure in Rust
+* Iterators are an extremely powerful tool in Rust
 * View the [`std` library](https://doc.rust-lang.org/std/iter/trait.Iterator.html) for more info on `Iterator` methods
 * Rules regarding closures and ownership still apply
 * Iterators are _lazy_
-  * Remember to use `.collect()`!
+  * Remember to consume them, with a `for` loop or a consumer like `collect` or `sum`!
 
 
 ---
