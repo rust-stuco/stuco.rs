@@ -128,6 +128,9 @@ html.dark .slidev-layout h1 strong {
 
 .slidev-layout p {
   line-height: 1.5;
+}
+
+.slidev-layout p:not(.slidev-vclick-hidden) {
   opacity: 1 !important;
 }
 

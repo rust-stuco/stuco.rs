@@ -308,7 +308,12 @@ Closures can capture values from their environment in three ways:
 * Borrowing mutably
 * Taking ownership (_**moving**_ the value into the closure)
 
+<v-click>
+
 Rust picks the least powerful one the body needs, in that order
+
+</v-click>
+
 * It only moves a value if the body moves it, or if we ask with `move`
 * It captures individual struct fields, like `p.score`, not all of `p`
 
@@ -722,6 +727,41 @@ impl Greet {
 ---
 
 
+# Counting Functions
+
+- Function types have a count too: `|fn(A) -> B| = |B|^|A|`
+    - Each of the `|A|` inputs can map to any of the `|B|` outputs
+    - Matches math, where the set of functions `A -> B` is written `B^A`
+- e.g. `fn(bool) -> bool` has `2² = 4` (ignoring side effects)
+
+```rust
+fn identity(x: bool) -> bool     { x }
+fn not(x: bool) -> bool          { !x }
+fn always_true(_: bool) -> bool  { true }
+fn always_false(_: bool) -> bool { false }
+```
+
+
+---
+
+
+# Counting Functions
+
+`|fn(!) -> T| = |T|^0 = 1`, meaning there's exactly one way to turn a `!` into a `T`
+
+```rust
+fn absurd<T>(x: !) -> T {
+    match x {} // `!` has no values, so no arms are needed
+}
+```
+
+* Intuition: when `!` coerces into a type, it's as if the compiler calls `absurd` for you
+    * `absurd` can never actually run, since there's no `!` value to call it with
+
+
+---
+
+
 # Function Pointers
 
 Functions are values too, and their type is a _function pointer_, written `fn`.
@@ -763,39 +803,10 @@ let n = 3;
 
 
 ---
-
-
-# Counting Functions
-
-- Function types have a count too: `|fn(A) -> B| = |B|^|A|`
-    - Each of the `|A|` inputs can map to any of the `|B|` outputs
-    - Matches math, where the set of functions `A -> B` is written `B^A`
-- e.g. `fn(bool) -> bool` has `2² = 4` (ignoring side effects)
-
-```rust
-fn identity(x: bool) -> bool     { x }
-fn not(x: bool) -> bool          { !x }
-fn always_true(_: bool) -> bool  { true }
-fn always_false(_: bool) -> bool { false }
-```
-
-
+layout: section
 ---
 
-
-# Counting Functions
-
-`|fn(!) -> T| = |T|^0 = 1`, meaning there's exactly one way to turn a `!` into a `T`
-
-```rust
-fn absurd<T>(x: !) -> T {
-    match x {} // `!` has no values, so no arms are needed
-}
-```
-
-* Intuition: when `!` coerces into a type, it's as if the compiler calls `absurd` for you
-    * `absurd` can never actually run, since there's no `!` value to call it with
-
+# **The `Fn` traits**
 
 ---
 
@@ -809,12 +820,6 @@ fn absurd<T>(x: !) -> T {
 * It could also have captured nothing to begin with!
 * The properties a closure has determines the function _trait_ it implements
 
-
----
-layout: section
----
-
-# **The `Fn` traits**
 
 
 ---
