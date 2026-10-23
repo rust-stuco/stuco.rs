@@ -29,7 +29,7 @@ mod fibonacci_tests {
     fn test_never_finishes() {
         let mut fib = Fibonacci::default();
         // We can't go too high otherwise we'll overflow
-        for _ in 0..91 {
+        for _ in 0..45 {
             fib.next();
         }
         assert_ne!(fib.next(), None);
@@ -343,7 +343,7 @@ mod fib_fun_tests {
 
     #[test]
     fn test_read_the_docs_zero_input() {
-        assert_eq!(Vec::<usize>::new(), read_the_docs(0));
+        assert_eq!(Vec::<u32>::new(), read_the_docs(0));
     }
 
     #[test]
