@@ -4,8 +4,8 @@
 /// in the sequence? You will want to store that information in this struct.
 #[derive(Clone)]
 pub struct Fibonacci {
-    curr: usize,
-    next: usize,
+    curr: u32,
+    next: u32,
 }
 
 impl Default for Fibonacci {
@@ -17,7 +17,7 @@ impl Default for Fibonacci {
 
 impl Fibonacci {
     /// Create a new `Fibonacci` struct starting with the given `start` and `next` values.
-    pub fn new(start: usize, next: usize) -> Self {
+    pub fn new(start: u32, next: u32) -> Self {
         Fibonacci { curr: start, next }
     }
 }
@@ -25,7 +25,7 @@ impl Fibonacci {
 /// Implement the `Iterator` trait for `Fibonacci`!
 impl Iterator for Fibonacci {
     /// What should iterated type be?
-    type Item = usize;
+    type Item = u32;
 
     /// Advances the iterator and returns the next Fibonacci number in the sequence.
     ///

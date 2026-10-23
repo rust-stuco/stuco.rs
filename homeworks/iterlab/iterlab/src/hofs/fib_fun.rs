@@ -26,7 +26,7 @@ use crate::iterators::fibonacci::Fibonacci;
 /// Make sure to `use` the correct things!
 ///
 /// By re-using some code from other modules, our reference solution fits in 1 line!
-pub fn sum_fib_range(start: usize, end: usize) -> usize {
+pub fn sum_fib_range(start: usize, end: usize) -> u32 {
     todo!()
 }
 
@@ -41,7 +41,7 @@ pub fn sum_fib_range(start: usize, end: usize) -> usize {
 /// And since 0 is going to end up being the first of the `m` numbers anyways,
 /// don't do `0 / 0`, and just return 0 instead.
 ///
-/// Return these numbers as a vector of `usize`.
+/// Return these numbers as a vector of `u32`.
 ///
 /// You will probably want to implement [`sum_fib_range`] before implementing this.
 ///
@@ -97,6 +97,6 @@ pub fn sum_fib_range(start: usize, end: usize) -> usize {
 ///
 /// Note that our reference solution is 6 short lines
 /// (which means we have at least 5 chained methods)!
-pub fn read_the_docs(n: usize) -> Vec<usize> {
+pub fn read_the_docs(n: usize) -> Vec<u32> {
     todo!()
 }

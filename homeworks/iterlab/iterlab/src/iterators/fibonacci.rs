@@ -16,7 +16,7 @@ impl Default for Fibonacci {
 
 impl Fibonacci {
     /// Create a new `Fibonacci` struct starting with the given `start` and `next` values.
-    pub fn new(start: usize, next: usize) -> Self {
+    pub fn new(start: u32, next: u32) -> Self {
         todo!()
     }
 }

@@ -343,7 +343,7 @@ mod fib_fun_tests {
 
     #[test]
     fn test_read_the_docs_zero_input() {
-        assert_eq!(Vec::<usize>::new(), read_the_docs(0));
+        assert_eq!(Vec::<u32>::new(), read_the_docs(0));
     }
 
     #[test]

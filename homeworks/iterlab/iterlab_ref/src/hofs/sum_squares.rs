@@ -18,7 +18,7 @@
 /// from Rust by Example.
 ///
 /// _Please_ don't look at this website until you have read the rest of this file.
-pub fn sum_of_squared_odd_numbers_bad(largest_square: usize) -> usize {
+pub fn sum_of_squared_odd_numbers_bad(largest_square: u32) -> u32 {
     // Imperative approach
 
     // Declare accumulator variable
@@ -54,7 +54,7 @@ pub fn sum_of_squared_odd_numbers_bad(largest_square: usize) -> usize {
 /// # use iterlab_ref::hofs::sum_squares::sum_of_squared_odd_numbers;
 /// assert_eq!(35, sum_of_squared_odd_numbers(30));
 /// ```
-pub fn sum_of_squared_odd_numbers(largest_square: usize) -> usize {
+pub fn sum_of_squared_odd_numbers(largest_square: u32) -> u32 {
     // Functional approach
     (0..)
         .map(|n| n * n) // All natural numbers squared
