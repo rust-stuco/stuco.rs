@@ -59,7 +59,7 @@ impl Card {
     ///   * `"club"`
     ///   * `"heart"`
     ///   * `"spade"`
-    /// * `rank` - A number from 1-13 representing the rank:
+    /// * `rank` - A number from 2-14 representing the rank:
     ///   * 2-10: Number cards
     ///   * 11: Jack
     ///   * 12: Queen
