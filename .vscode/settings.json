@@ -1,11 +1,9 @@
 {
-    "editor.formatOnSave": true,
+    "editor.formatOnSave": false,
     // Agrees with .editorconfig, but needed for some reason
     "files.insertFinalNewline": true,
     // Get the extension to recognize Tailwind in Dioxus' RSX
-    "tailwindCSS.experimental.classRegex": [
-        "class: \"(.*)\""
-    ],
+    "tailwindCSS.experimental.classRegex": ["class: \"(.*)\""],
     "tailwindCSS.includeLanguages": {
         "rust": "html"
     },
@@ -13,11 +11,11 @@
     "files.readonlyInclude": {
         "assets/tailwind.css": true,
         "**/*.schema.json": true,
-        "Cargo.lock": true,
+        "Cargo.lock": true
     },
     "files.watcherExclude": {
         "assets/tailwind.css": true,
         "**/*.schema.json": true,
-        "Cargo.lock": true,
+        "Cargo.lock": true
     }
 }

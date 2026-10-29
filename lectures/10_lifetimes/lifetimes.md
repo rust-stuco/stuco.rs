@@ -971,7 +971,7 @@ struct Ref<'a, T: 'a>(&'a T);
 ```
 
 * `Ref` contains a reference, with a lifetime of `'a`, to a generic type `T`
-* The syntax `&'a T` specifies that the argument of type `T` has a lifetime of `'a`. 
+* The syntax `&'a T` specifies that the argument of type `T` has a lifetime of `'a`.
 * `'a` is determined by the lifetime of the argument passed by the caller.
 * The bound `T: 'a` specifies that any reference _in_ `T` must outlive `'a`.
 
@@ -1135,35 +1135,6 @@ If time allows, explain the difference between `const` and `static`.
 
 ---
 
-# `'static` Memory Leaks
-
-There is a third way: we can create `'static` values by _leaking memory_.
-
-```rust
-fn random_vec() -> &'static [usize; 100] {
-    let mut rng = rand::thread_rng();
-    let mut boxed = Box::new([0; 100]);
-    boxed.try_fill(&mut rng).unwrap();
-    Box::leak(boxed)
-}
-
-let first: &'static [usize; 100] = random_vec();
-let second: &'static [usize; 100] = random_vec();
-assert_ne!(first, second)
-```
-
-* Box::leak returns a reference to the heap data and prevents `Drop` from being called.
-* This allows us to _dynamically_ create a `'static` reference
-* _Note that leaking memory is NOT undefined behavior!_
-
-<!--
-Make sure to explain that leaking memory is NOT UNDEFINED BEHAVIOR. Memory corruption cannot happen
-just because memory has been leaked. On most operating systems nowadays, if you start running out of
-memory the OS is just going to kill your process.
--->
-
----
-
 # The `'static` Bound
 
 `'static` can also be used as a type bound. However...
@@ -1192,13 +1163,8 @@ fn print_it(input: impl Debug + 'static) {
 }
 
 fn main() {
-    // `i` is owned and contains no references,
-    // thus it has a 'static bound.
     let i = 5;
     print_it(i);
-
-    // Oops, `&i` only has the lifetime defined by
-    // the scope of main, so it's not 'static.
     print_it(&i);
 }
 ```
@@ -1254,9 +1220,8 @@ fn main() {
 
 ```rust
 fn print_with_static_bound(v: impl Debug + 'static) {
-println!("{:?}", v);
+    println!("{:?}", v);
 }
-
 
 fn main() {
     let v: Vec<i32> = vec![1,2,3];
@@ -1274,9 +1239,8 @@ class: image-right image-width-20
 
 ```rust
 fn print_with_static_bound(v: impl Debug + 'static) {
-println!("{:?}", v);
+    println!("{:?}", v);
 }
-
 
 fn main() {
     let v: Vec<i32> = vec![1,2,3];
@@ -1284,46 +1248,48 @@ fn main() {
 }
 ```
 
---- 
-
-# Review
-
-* Rust has lifetimes to prevent dangling references
-* The borrow checker will ensure that lifetimes are always valid
-* Rust will allow you elide lifetime annotations in some situations
-
 ---
 
-# Further Reading
+# Another Perspective
 
-* You can find some more examples here: [Rust By Example](https://doc.rust-lang.org/rust-by-example/scope/lifetime.html)
-* If you want to go _really_ in depth, read the Rustonomicon chapters on [lifetimes](https://doc.rust-lang.org/nomicon/lifetimes.html)
+* Thinking about lifetimes as regions of code can be confusing
+* Instead, can we think about lifetimes as regions of valid memory?
+  * This is another valid interpretation!
 
 ---
 
 # Another Perspective
 
-[**What is 'a lifetime?**](https://www.youtube.com/watch?v=gRAVZv7V91Q)
+```rs
+fn longest<'a>(s1: &'a str, s2: &'a str) -> &'a str;
 
-* This is a great video made by `leddoo` that explains another way to think about lifetimes!
-* Instead of lifetimes as regions of code or scopes, what if we thought about lifetimes as regions of memory?
-* Let's watch it together!
+fn main() {
+    let x: &'x str = "A";
+    let y: &'y str = "B";
+    let z: &'z str = "C";
+
+    let l1: &'l1 str = longest(x, y);
+    let l2: &'l2 str = longest(l1, z);
+}
+```
 
 ---
 
-# Watch Party
+# Another Perspective
 
-[**What is 'a lifetime?**](https://www.youtube.com/watch?v=gRAVZv7V91Q)
+How about this one?
+
+```rs
+fn longest<'s1, 's2, 'out>(s1: &'s1 str, s2: &'s2 str) -> &'out str;
+```
 
 ---
 
-# What is `'a` lifetime?
+# Recap
 
-Some quick points:
-
-* Thinking about lifetimes as regions of code can be confusing
-* Instead, think about lifetimes as regions of valid memory
-* Both interpretations are valid!
+* Rust has lifetimes to prevent dangling references
+* The borrow checker will ensure that lifetimes are always valid
+* Rust will allow you elide lifetime annotations in some situations
 
 ---
 layout: none
