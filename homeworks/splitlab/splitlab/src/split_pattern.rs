@@ -33,7 +33,7 @@ where
     ///
     /// Should panic if the delimiter is empty (length 0).
     fn next(&mut self) -> Option<Self::Item> {
-        todo!("Implement me!")
+        todo!("Implement me for bonus points!")
     }
 }
 
