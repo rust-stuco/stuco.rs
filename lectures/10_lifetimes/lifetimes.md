@@ -45,24 +45,49 @@ We've used the term "lifetime" a few times before, and today we're going to expl
 
 # Lifetimes
 
-Lifetimes are all about references, and **nothing** else.
+Lifetimes are all about _borrows_.
 
 * Informal definition:
-**Lifetimes provide a way for Rust to validate pointers at compile time**
+**Lifetimes provide a way for Rust to validate references at compile time**
 
 * Formal definition:
 **Lifetimes are named regions of code that a reference must be valid for**
 
-* Remember that references are just pointers with constraints!
+* Recall from the Ownership lecture:
+  * "The scope of a reference **ends at the last point it is used**"
+  * "The specific term for reference scopes are _lifetimes_"
 
 ---
 
-# Lifetimes and References vs Traits and Generics
+# Why Do We Need Lifetimes?
 
-Lifetimes are similar to trait bounds on generic types.
+Recall from Error Handling and Traits that Rust's type system is _affine_:
 
-* Traits ensure that a generic type has the behavior we want
-* Lifetimes ensure that references are valid for as long as we need them to be
+```rust
+fn dup<T>(x: T) -> (T, T) {
+    (x, x) // error: use of moved value: `x`
+}
+```
+
+* A value can be used at most once, so ownership alone prevents double frees
+* But borrowing with `&x` doesn't count as a use, and `&T` is `Copy`
+  * We can copy a reference as many times as we want...
+* Something must stop those copies from outliving the value they point to
+  * That something is lifetimes!
+
+---
+
+# Lifetimes vs. Generics
+
+Lifetimes are a kind of generic parameter, similar to the `T` in `Vec<T>`.
+
+* A type parameter `T` lets one function work with many types
+* A lifetime parameter `'a` lets one function work with references of many lifetimes
+* Recall `fn same<T>(a: T, b: T)`: one `T` forces both arguments to be the same type
+* Similarly, one `'a` on two references ties their lifetimes together
+* Unlike `T`, lifetimes are **not** monomorphized
+  * They only exist at compile time, and are erased afterward
+  * No extra copies of functions, and no runtime cost!
 
 ---
 class: image-right image-width-25
@@ -108,8 +133,8 @@ fn main() {
   [1m[94m|[0m                       [1m[94m-[0m [1m[94mborrow later used here[0m
 ```
 
-* The value that `r` refers to has gone out of scope before we could use it
-* The scope of `r` is "larger" than the scope of `x`
+* `x` is dropped at the end of the inner scope...
+* ...but `r` still refers to `x` when we print it
 
 ---
 class: image-right image-width-25
@@ -119,21 +144,19 @@ class: image-right image-width-25
 
 <img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
-The Rust compiler's borrow checker will compare scopes to determine whether all borrows are valid.
+The Rust compiler's borrow checker compares how long each borrow is used against how long the borrowed value lives.
 
 Here is the same code, but with a lifetime diagram:
 
 ```rust
 fn main() {
-    let r;                // ---------+-- 'a
-                          //          |
-    {                     //          |
-        let x = 5;        // -+-- 'b  |
-        r = &x;           //  |       |
-    }                     // -+       |
-                          //          |
-    println!("r: {}", r); //          |
-}                         // ---------+
+    let r;
+    {
+        let x = 5;        // ─┐ x
+        r = &x;           //  │ ─┐ 'a
+    }                     // ─┘  │
+    println!("r: {}", r); //    ─┘
+}
 ```
 
 ---
@@ -144,22 +167,22 @@ class: image-right image-width-20
 
 <img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_does_not_compile.svg">
 
-The borrow checker will compare the "size" of the two lifetimes
+The borrow checker compares two different regions:
 
 ```rust
 fn main() {
-    let r;                // ---------+-- 'a
-    {                     //          |
-        let x = 5;        // -+-- 'b  |
-        r = &x;           //  |       |
-    }                     // -+       |
-    println!("r: {}", r); //          |
-}                         // ---------+
+    let r;
+    {
+        let x = 5;        // ─┐ x
+        r = &x;           //  │ ─┐ 'a
+    }                     // ─┘  │
+    println!("r: {}", r); //    ─┘
+}
 ```
 
-* `r` has a lifetime of `'a`
-* `r` refers to a variable with lifetime `'b`
-* Rejects because `'b` is shorter than `'a`
+* `x`'s scope: ends when `x` is dropped at the inner `}`
+* `'a`: the borrow `&x`, from its creation to the last use of `r`
+* Rejects because `x` does not _outlive_ `'a`
 
 ---
 class: image-right image-width-25
@@ -173,17 +196,61 @@ We can fix this code by removing the scope.
 
 ```rust
 fn main() {
-    let r;                // --+-- 'a
-                          //   |
-    let x = 5;            // ----------+- 'b 
-    r = &x;               //   |       |
-                          //   |       |
-    println!("r: {}", r); //   |       |
-                          // --+       |
-}                         // ----------+
+    let r;
+    let x = 5;            // ─┐ x
+    r = &x;               //  │ ─┐ 'a
+    println!("r: {}", r); //  │ ─┘
+}                         // ─┘
 ```
 
-* `x` now "outlives" `r`, so `r` can reference `x`
+* `x` now outlives `'a`, so `r` can reference `x`
+
+---
+class: image-right image-width-25
+---
+
+# Lifetimes vs. Scope
+
+<img class="slide-image" style="--image-size: 0.75;" src="../images/ferris_happy.svg">
+
+We could also fix it by using `r` earlier.
+
+```rust
+fn main() {
+    let r;
+    {
+        let x = 5;            // ─┐ x
+        r = &x;               //  │ ─┐ 'a
+        println!("r: {}", r); //  │ ─┘
+    }                         // ─┘
+}
+```
+
+* `r` is in scope until the end of `main`, but `'a` ends at the last use of `r`
+* Recall from Closures and Iterators: a borrow ends at its **last use**, not at the end of the scope
+
+---
+
+# Story Time
+
+_Long ago, in the dark ages of 2018, a borrow lasted until the end of its scope._
+
+```rust
+let mut v = vec![1, 2, 3];
+let first = &v[0];
+println!("{}", first);
+v.push(4); // Error before Rust 2018!
+```
+
+* Rust used to have _lexical lifetimes_: a borrow lasted until the `}` of the scope it was declared in
+  * Programmers added extra `{ }` blocks just to end borrows early
+* Rust 2018 introduced _non-lexical lifetimes_ (NLL)
+  * The compiler tracks where each reference is last used instead
+  * This is the "last use" rule we've relied on since the Ownership lecture
+
+<!--
+NLL shipped with the 2018 edition in Rust 1.31, and was enabled for the 2015 edition in Rust 1.36.
+-->
 
 ---
 
@@ -290,6 +357,33 @@ fn longest(x: &str, y: &str) -> &str {
 * We will need to _annotate_ these references
 
 ---
+class: image-right image-width-20
+---
+
+# What Could Go Wrong?
+
+<img class="slide-image" style="--image-size: 0.9;" src="../images/ferris_does_not_compile.svg">
+
+Suppose Rust guessed that the result always borrows from `x`:
+
+```rust
+let s1 = String::from("short");
+let result;
+{
+    let s2 = String::from("much longer string");
+    result = longest(&s1, &s2); // Actually returns `s2`!
+}                               // `s2` is dropped and freed
+println!("{result}");           // Use after free!
+```
+
+* The borrow checker thinks `result` only borrows `s1`, so it allows this
+* Guessing `y` also fails, depending on the string lengths at runtime
+
+<!--
+References never free anything, so dangling references cause use-after-frees, never double frees.
+-->
+
+---
 
 # Lifetime Annotation Syntax
 
@@ -304,10 +398,9 @@ We can annotate lifetimes with generic parameters that start with a `'`, like `'
 &'world bool  // as long as it starts with a tick (')
 ```
 
-* Annotations do not change how long references live, they only describe the _relationship_ between lifetimes of references
-  * Think of `'a` as a lower bound for the lifetime of the reference
-  * `x: 'a i32` means `x` lives at least as long as some lifetime `'a`
-  * Borrow checker identifies if references share a lower bound
+* Annotations don't change how long references live, they only describe _relationships_ between lifetimes
+* `x: &'a i32`: `x` can only be used during `'a`, and the `i32` it refers to must be valid for all of `'a`
+* The borrow checker checks that borrowed values outlive their borrows
 
 ---
 class: image-right image-width-20
@@ -347,7 +440,7 @@ if x.len() > y.len() {
 ```
 
 * We return either `x` or `y`, which each have their own lifetimes
-* We want the returned reference to be valid as long as _both_ input references `x` and `y` are valid
+* The returned reference should only be valid while _both_ `x` and `y` are valid
 * So we want lifetimes of `x` and `y` to _outlive_ the returned lifetime
 
 <!--
@@ -391,8 +484,8 @@ We can extrapolate a lot from a function's signature, even without the body.
 fn longest<'a>(x: &'a str, y: &'a str) -> &'a str;
 ```
 
-* This function takes two string slices (`x` and `y`) that live at least as long as the lifetime `'a`
-* The string slice returned (the longer of `x` or `y`) will also live at least as long as `'a`
+* This function takes two string slices (`x` and `y`) that are both valid for at least the lifetime `'a`
+* The string slice returned (the longer of `x` or `y`) is also valid for `'a`, and cannot be used after `'a` ends
 
 ---
 
@@ -402,19 +495,17 @@ fn longest<'a>(x: &'a str, y: &'a str) -> &'a str;
 fn longest<'a>(x: &'a str, y: &'a str) -> &'a str;
 ```
 
-* When calling `longest`, the lifetime that is substituted for `'a` is the intersection of the lifetimes of `x` and `y`
+* When calling `longest`, the borrow checker picks a region for `'a` where both `x` and `y` are valid (the overlap of their lifetimes)
 * In practice, this means the lifetime returned by `longest` is the same as the **smaller** of the two input lifetimes
 
 <!--
 Be clear that functions do not "return" lifetimes, this is just for slide space.
 
-In general, the relationship between lifetimes and scope is total,
-basically they do not overlap in some parts but not in others.
+Lifetimes are not totally ordered: two lifetimes can partially overlap, with neither containing the other.
+That's why `'a` is really "the overlap", and only "the smaller one" when one lifetime contains the other.
 
-However, there are some cases where this might be the case, usually quite complex
-
-Note that the longest function doesn’t need to know exactly how long x and y will live, only that some scope can be substituted for 'a that will satisfy this signature.
-This is a more complicated topic that probably shouldn't be brought up.
+Just like the caller picks `T` for a generic function, the caller picks `'a`.
+`longest` doesn't need to know exactly how long x and y will live, only that some region can be substituted for 'a that satisfies this signature.
 -->
 
 ---
@@ -435,7 +526,7 @@ let string1 = String::from("long string is long");
 ```
 
 * `string1` is valid in the outer scope, `string2` is valid in the inner scope
-* `result` should only be  valid in the smaller scope (by our lifetime annotations)
+* `result` should only be valid in the smaller scope (by our lifetime annotations)
   * Since `println!` is in the smaller (inner) scope, this works!
 
 ---
@@ -532,7 +623,8 @@ let string1 = String::from("long string is long"); // Longer!
 println!("The longest string is {}", result);
 ```
 
-* Even though we know (as humans) that the reference will be valid, the compiler does not know
+* Even though we know (as humans) that the reference will be valid, the borrow checker rejects it
+* At the call site, the borrow checker only looks at `longest`'s _signature_, not its body
 
 <!--
 * We even told the compiler that the returned lifetime would be the same as the smaller of the input lifetimes!
@@ -540,7 +632,22 @@ println!("The longest string is {}", result);
 
 ---
 
-# Avoiding Lifetime Annotations
+# Signatures Are Contracts
+
+The borrow checker checks lifetimes one function at a time.
+
+```rust
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str;
+```
+
+* Inside `longest`: the body must return something valid for `'a`, and both `x` and `y` qualify
+* At the call site: the result may borrow from _either_ argument, so both must stay valid while it's used
+* The compiler doesn't run our code, so it can't know which branch will be taken
+* Recall trait bounds from Error Handling and Traits: a generic function can only rely on what its bounds promise, and callers only need to satisfy those bounds
+
+---
+
+# Annotating Only What We Need
 
 Suppose we wanted to always return the first input, `x`.
 
@@ -550,7 +657,9 @@ fn first<'a>(x: &'a str, y: &str) -> &'a str {
 }
 ```
 
-* We don't need to annotate `y` with `'a`, because the return value doesn't care about `y`'s lifetime
+* We don't need to annotate `y` with `'a`, because the return value never borrows from `y`
+* `y` still has a lifetime, we just didn't write it down
+  * We'll see how Rust fills it in soon!
 
 ---
 class: image-right image-width-20
@@ -560,24 +669,39 @@ class: image-right image-width-20
 
 <img class="slide-image" style="--image-size: 0.9;" src="../images/ferris_does_not_compile.svg">
 
-The lifetime of a return value _must_ match the lifetime of one of the inputs.
+A returned reference must borrow from one of the inputs.
 
 ```rust
 fn dangling<'a>(x: &str, y: &str) -> &'a str {
-
     let result = String::from("really long string");
-
-    // What lifetime would we give this `&str`?
-    result.as_str()
-
+    result.as_str() // What lifetime would this have?
 }
 ```
 
-* If it didn't depend on an input, then it would _always_ be a dangling reference!
+* `result` is dropped when `dangling` returns, so this would dangle
+* Exception: data that lives forever, like string literals (`'static`, later!)
 
 <!--
-In other words, all valid references must be _derived_ from other valid references.
+In other words, all valid references must be _derived_ from other valid references, or from data that is never freed.
+`fn f<'a>(x: &str, y: &str) -> &'a str { "literal" }` compiles!
 -->
+
+---
+
+# Lifetimes of Return Values
+
+Recall `dangle` from the Ownership lecture:
+
+```rust
+fn dangle() -> &String { // error[E0106]: missing lifetime specifier
+    let s = String::from("hello");
+    &s
+}
+```
+
+* There are no inputs, so there is nothing for the return value to borrow from
+* The compiler suggests `'static`, but `s` is still dropped when `dangle` returns
+* The real fix is to return an owned `String`
 
 ---
 
@@ -602,28 +726,32 @@ fn first_word(s: &str) -> &str {
 * There are no lifetime annotations here!
 
 <!--
-This is a function we saw back in week 2
+We saw `first_word`'s signature in the Ownership lecture when we introduced slices
 -->
 
 ---
 
-# Story Time
+# More Story Time
 
-_Long ago, in the dark ages of the 2010s, every reference needed an explicit lifetime._
+_In the dark ages before Rust 1.0, every returned reference needed an explicit lifetime._
 
 ```rust
 fn first_word<'a>(s: &'a str) -> &'a str {
 ```
 
-* Before Rust 1.0, every single `&` needed an explicit `'something` annotation
-* This became incredibly repetitive, and so the Rust team programmed the borrow checker to infer lifetime annotation patterns of certain situations
+* Lifetimes on inputs could already be left out, but not lifetimes on return values
+* This became incredibly repetitive, so in 2014 [RFC 141](https://rust-lang.github.io/rfcs/0141-lifetime-elision.html) added rules that fill in the most common patterns
 * These patterns are called the _lifetime elision rules_
+
+<!--
+RFC 141 surveyed the standard library: the new rules removed 87% of the lifetime annotations that were required at the time.
+-->
 
 ---
 
 # Lifetime Elision
 
-* Lifetime elision does not provide full inference, it will only infer when it is absolutely sure it is correct
+* Lifetime elision is not inference: the compiler fills in the signature using fixed rules, and gives an error if they don't determine every output lifetime
 * Lifetimes on function or method arguments are called **input lifetimes**, and lifetimes on return values are called **output lifetimes**
 * There are only 3 lifetime elision rules, the first for input lifetimes, the last two for output lifetimes
 
@@ -631,7 +759,7 @@ fn first_word<'a>(s: &'a str) -> &'a str {
 
 # Lifetime Elision Rule 1
 
-The first rule is that the compiler will assign a different lifetime to each parameter that is a reference.
+The first rule is that the compiler assigns a different lifetime parameter to each lifetime left out of the inputs.
 
 ```rust
 fn foo(x: &i32);
@@ -639,7 +767,12 @@ fn foo<'a>(x: &'a i32);
 
 fn bar(x: &i32, y: &i32, z: i32);
 fn bar<'a, 'b>(x: &'a i32, y: &'b i32, z: i32);
+
+fn baz(x: &&i32);
+fn baz<'a, 'b>(x: &'a &'b i32);
 ```
+
+* A reference to a reference has two lifetimes!
 
 ---
 
@@ -730,6 +863,8 @@ fn longest<'a, 'b>(x: &'a str, y: &'b str) -> &str;
 ```
 
 * The second rule doesn't apply here, because there is more than 1 input lifetime (`'a` and `'b`)
+
+* The third rule doesn't apply either, because there is no `&self`
 
 * Since Rust cannot figure out what to do, it gives a compiler error to the programmer so they can write the annotations themselves
 
