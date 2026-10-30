@@ -1,0 +1,16 @@
+disallowed-methods = [
+    { path = "std::mem::forget", reason = "violates problem constraints" },
+    { path = "std::boxed::Box::leak", reason = "violates problem constraints" },
+    { path = "std::boxed::Box::into_raw", reason = "violates problem constraints" },
+    { path = "std::rc::Rc::into_raw", reason = "violates problem constraints" },
+    { path = "std::vec::Vec::leak", reason = "violates problem constraints" },
+    { path = "std::vec::Vec::spare_capacity_mut", reason = "violates problem constraints" },
+    { path = "std::panic::catch_unwind", reason = "violates problem constraints" },
+    { path = "std::thread::spawn", reason = "violates problem constraints" },
+    { path = "std::process::exit", reason = "violates problem constraints" },
+    { path = "std::process::abort", reason = "violates problem constraints" },
+]
+disallowed-types = [
+    { path = "std::mem::ManuallyDrop", reason = "violates problem constraints" },
+    { path = "std::mem::MaybeUninit", reason = "violates problem constraints" },
+]
