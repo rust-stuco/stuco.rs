@@ -43,7 +43,8 @@ title = "Container Cheat Sheet"
 url = "https://docs.google.com/presentation/d/1q-c7UAyrUlM-eZyTo1pd8SZ0qwA_wYxmPZVOQkoDmH4/edit#slide=id.p"
 
 [homework]
-name = "Ownership Quiz"
+name = "BombLab"
+slug = "bomblab"
 
 [homework_alt]
 name = "Project Checkpoint 2"
