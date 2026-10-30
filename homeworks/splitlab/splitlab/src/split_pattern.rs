@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 /// A struct that represents split operations on a string.
 pub struct SplitPattern<'a, P> {
     /// The remainder of the string that has not yet been split.
