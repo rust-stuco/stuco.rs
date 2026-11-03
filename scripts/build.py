@@ -42,6 +42,7 @@ HOMEWORKS = [
     "greplab",
     "iterlab",
     "splitlab",
+    "bomblab",
     "rowlab",
     "filterlab",
 ]
