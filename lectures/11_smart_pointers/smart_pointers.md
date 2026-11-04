@@ -40,6 +40,7 @@ class: communism
     - The `Deref` trait
     - The `Drop` trait
     - `Rc<T>`
+    - `RefCell<T>`
 - Trait Objects
 
 
@@ -73,18 +74,8 @@ What is a _smart pointer?_
 * Data structures that act like a pointer (and that probably contain a pointer).
 * Contain additional metadata and capabilities beyond dereferencing
 * This concept is not unique to Rust (C++)
-
-
----
-
-
-# Surprise!
-
-We've actually seen several smart pointers, but we haven't called them as such.
-
-- `String`
-- `Vec<T>`
-- `Box<T>`
+* We've actually seen some already!
+  * `String`, `Vec<T>`, `Box<T>`
 
 <!--
 String, for example, stores its capacity as metadata and has the extra ability to ensure its data
@@ -291,11 +282,12 @@ Technically the compiler is allowed to store data of Boxes on the stack if it wa
 
 # When to use `Box<T>`
 
-* When you have a type of unknown size **at compile time** (like `List`)
+* When you have a type of unknown size **at compile time**
+  * Like a recursive data structure
 * When you have a large amount of data and want to transfer ownership
   * Transferring ownership of a pointer is faster than a large chunk of data
-* Trait Objects
-  * Coming soon...
+* Abstracting over types that implement a specific trait
+  * Known as **trait objects** - more on that later!
 
 <!--
 The reasoning for why transferring ownership is faster is that data
@@ -367,7 +359,7 @@ impl<T: ?Sized, A: Allocator> Deref for Box<T, A> {
 * What's surprising about this?
 
 <!--
-When doing `**self`, we are dereferencing a Box! This appears circular. 
+When doing `**self`, we are dereferencing a Box! This appears circular.
 -->
 
 ---
@@ -388,7 +380,7 @@ impl<T: ?Sized, A: Allocator> Deref for Box<T, A> {
 ```
 
 * Don't worry about the generics, just focus on the `deref()` method!
-* `Box<T>` is special: the compiler already knows how to dereference it. 
+* `Box<T>` is special: the compiler already knows how to dereference it.
 
 <!--
 This code is copied and pasted directly from the standard library
@@ -485,7 +477,7 @@ hello(&m);
 
 # Deref Coercion Rules
 
-The Rust compiler coerces mutable to immutable but not the reverse. 
+The Rust compiler coerces mutable to immutable but not the reverse.
 Suppose `T` is the _provided type_ and `U` is the _expected type_.
 Each type implements `Deref` for exactly one target type.
 
@@ -982,7 +974,7 @@ not the same as Rust references.
 * We don't know at compile-time which part will finish reading the data last
 * Only use for single-threaded scenarios
     * `Rc<T>` is not thread safe
-    * `Arc<T>` for multi-threaded (more on that soon)
+    * `Arc<T>` for multi-threaded (more on that in the Parallelism lecture)
 
 
 ---
@@ -1060,7 +1052,7 @@ count after c goes out of scope = 2
   * Read-only immutable references without lifetimes
 * Should be used when the last user of the data is unknown
 * Very low overhead for providing this capability
-  * O(1) increment/decrement of counter
+  * $O(1)$ increment/decrement of counter
   * Potential allocation/de-allocation on heap
 * Implemented using the `Drop` trait and `unsafe`!
   * Recommended watch: [Crust of Rust](https://www.youtube.com/watch?v=8O0Nt9qY_vo)
@@ -1071,19 +1063,58 @@ count after c goes out of scope = 2
 
 # `RefCell<T>` Spotted!
 
-Another single-threaded smart pointer you might encounter is `RefCell<T>`.
-
-* `RefCell` uses Rust’s lifetimes to implement “dynamic borrowing”
+* Single-threaded smart pointer
+* Uses Rust’s lifetimes to implement dynamic borrowing
+  * **Interior mutability** - mutate data even when there are immutable references to it
 * Instead of enforcing reference rules at compile-time, enforce at _runtime_
-    * Use `borrow()` to get a `&T`, or `borrow_mut()` to get a `&mut T`
-* A common pattern in graph-like structures is `Rc<RefCell<T>>`
-* Further reading: [Rust Book](https://doc.rust-lang.org/book/ch15-05-interior-mutability.html), [`std` docs](https://doc.rust-lang.org/std/cell/index.html), [Crust of Rust: Smart Pointers](https://www.youtube.com/watch?v=8O0Nt9qY_vo)
+  * Use `borrow()` to get a `&T`, or `borrow_mut()` to get a `&mut T`
+* Useful when you're sure your code obeys borrowing rules but the compiler is unable to guarantee that
 
 <!--
 * Any number of immutable (shared) references to the same data (`borrow`)
 * One mutable (exclusive) reference to data (`borrow_mut`)
 -->
 
+
+---
+
+# `Rc<RefCell<T>>`
+
+A common pattern in graph-like structures:
+
+```rust
+type NodePtr<T> = Rc<RefCell<GraphNode<T>>>;
+
+struct GraphNode<T> {
+    value: T,
+    neighbors: Vec<NodePtr>,
+}
+
+impl<T> GraphNode<T> {
+    fn new(value: T) -> Rc<RefCell<Self>> { /* ... */ }
+
+    fn add_neighbor(&mut self, neighbor: &NodePtr<T>) {
+        self.neighbors.push(Rc::clone(neighbor));
+    }
+}
+```
+
+* `Rc` enables multiple ownership, and `RefCell` enables interior mutability
+
+
+---
+
+# Danger: Memory Leaks
+
+* If the reference count never reaches zero, the owned value is *never dropped*
+  * Commonly caused by reference cycles
+* Break cycles using `Weak<T>`
+  * Points to the data without increasing the strong reference count
+  * Since it doesn't guarantee the data is still there, you cannot access the inner value directly
+
+<!--
+Preventing memory leaks is not one of Rust’s guarantees, so memory leaks are memory safe in Rust.
+-->
 
 ---
 layout: section
@@ -1186,7 +1217,6 @@ impl AveragedCollection {
 # Inheritance
 
 Most people will associate OOP with _inheritance_.
-
 
 * Inheritance is a mechanism in which an object can inherit elements from another object's definition
 * If you define OOP to require inheritance, then Rust is _not_ object-oriented
@@ -1418,20 +1448,6 @@ impl Screen {
 ---
 
 
-# Further Reading
-
-If you are interested, here is some more content that explains this in more depth:
-
-- [The Rust Book (Brown Edition)](https://rust-book.cs.brown.edu/ch18-02-trait-objects.html)
-    - Goes into more depth
-- [Crust of Rust: Dispatch and Fat Pointers](https://www.youtube.com/watch?v=xcygqF5LVmM)
-    - Explains how trait objects work under the hood (dynamic dispatch)
-    - _Applicable to understanding C++ objects as well!_
-
-
----
-
-
 # Recap
 
 - Smart Pointers
@@ -1439,8 +1455,21 @@ If you are interested, here is some more content that explains this in more dept
     - The `Deref` trait
     - The `Drop` trait
     - `Rc<T>`
+    - `RefCell<T>`
 - Trait Objects
 
+
+---
+
+# Homework
+
+- **Track A:** BombLab ***(NEW)***
+  - Defuse Dr. Evil's bomb and save Rust StuCo!
+  - No 15-213 knowledge required
+  - Conceptual: we want you to think about smart pointers and trait objects
+- **Track B:** Start your project
+  - Proposals are due tonight
+  - Keep an eye out for checkpoint sign-ups on Discord
 
 ---
 layout: none
