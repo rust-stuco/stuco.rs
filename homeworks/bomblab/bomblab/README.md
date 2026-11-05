@@ -16,49 +16,45 @@ Armed with your knowledge from this course, you are tasked to go undercover and 
 
 # Phase 1: Get Hired
 
-You find Dr. Evil's secret job listing on Handshake.
-
-*Henchperson Intern, The Lair (Fall 2026)*
-
-Like every tech company nowadays, The Lair screens applicants with an online assessment. Luckily, Dr. Evil hasn't heard of LeetCode or HackerRank yet, so this step should be quick and easy!
+You find Dr. Evil's secret job listing on Handshake. Like every tech company nowadays, applicants are screened with an online assessment.
 
 **Complete Dr. Evil's OA on [Gradescope](https://stuco.rs/gradescope)**, then report back here when you are done!
 
 # Phase 2: A Debug Vector
 
-You're hired! On day 1, Dr. Evil hands you your first task. Completing this will earn Dr. Evil's trust and grant you full access to The Lair.
+You're hired! On day 1, Dr. Evil hands you your first task. Completing it will earn Dr. Evil's trust, so you go along for now.
 
-After being defeated by 213, Dr. Evil hates GDB with a burning passion and now attaches `#[derive(Debug)]` to everything. The original plan was to store a status report of every system in The Lair for debugging purposes. But a [`Vec`] can only hold one type, and printing everything one at a time is driving Dr. Evil insane. "The previous intern tried converting everything to [`String`] first. They didn't last long here. I want to see *the real thing*."
+After being defeated by 213, Dr. Evil hates GDB with a burning passion and now attaches `#[derive(Debug)]` to everything. The original plan was to store a status report of every system for debugging purposes. But a [`Vec`] can only hold a single type, and printing everything one at a time is driving Dr. Evil insane. "The previous intern tried converting everything to [`String`] first. They didn't last long here. I want to see *the real thing*."
 
-In `debug_vec.rs`, **implement [`DebugVec`]**, a vector that holds values of any type that implements [`Debug`] and can print them all at once. Your solution shouldn't take more than a few lines of code.
+In `debug_vec.rs`, **implement [`DebugVec`]**, a vector that holds values of any type that implements [`Debug`] and can print them all at once. Your solution shouldn't need more than a few lines of code.
 
 To test this phase only, run
 ```sh
 cargo test debug
 ```
 
-**Hint:** What was mentioned in last few questions of phase 1 might be useful here.
+**Hint:** What was mentioned in the last few questions of phase 1 might be useful here.
 
 **Strong hint (only look if you are *completely* stuck):** Read [this](https://doc.rust-lang.org/book/ch18-02-trait-objects.html#listing-18-4).
 
 # Phase 3: Defuse the Bomb
 
-Impressed with your work, Dr. Evil grants you full access to The Lair and decides that you are ready for the ultimate task: planting the bomb. "Take this to the 98-008 lecture hall, and whatever you do, don't drop it on the way!"
+Impressed with your work, Dr. Evil decides that you are ready for the ultimate task: planting the bomb. "Take this to the 98-008 lecture hall, and whatever you do, don't drop it on the way!"
 
 You receive the [`Bomb`]. (Take a look at its code in `bomb.rs`; it is remarkably simple!)
 
-Then, you notice the detail Dr. Evil left out of the job. *The bomb acts like a dead man's switch.* It explodes the instant it is `drop`ped, so there is no safe place to let go of it. Now you know what really happened to the last intern. You are left with no choice but to defuse the bomb now. Dr. Evil chuckles smugly behind you...
+Then, you notice the detail Dr. Evil left out of the job. *The bomb acts like a dead man's switch.* It explodes the instant it is `drop`ped, so there is no safe place to let go of it. Now you know what really happened to the last intern. You are left with no choice but to try and defuse the bomb. Dr. Evil chuckles smugly behind you...
 
 In `defuser.rs`, **implement [`defuse`](defuser::defuse) so any bomb that is passed in never explodes.**
 
-**Constraint:** You may NOT use [`Box::leak`] or any functions we haven't mentioned in our lecture slides. No credit will be awarded for solutions that use such functions or circumvent the learning goal of this homework. *In particular, AI often suggests code that violates this constraint. You must solve this one yourself!*
+**Constraint:** You may NOT use [`Box::leak`] or anything we haven't mentioned in our lecture slides. No credit will be awarded for solutions that use such functions or circumvent the learning goal of this homework. *In particular, AI often suggests code that violates this constraint. You must solve this one yourself!*
 
 To test this phase only, run
 ```sh
 cargo test defuse
 ```
 
-**Hint:** What was mentioned in last few questions of phase 1 might be useful here.
+**Hint:** What was mentioned in the last few questions of phase 1 might be useful here.
 
 **Strong hint (only look if you are *completely* stuck):** Read [this](https://doc.rust-lang.org/book/ch15-06-reference-cycles.html).
 
