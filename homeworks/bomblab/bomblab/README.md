@@ -8,7 +8,7 @@ This lab consists of 3 phases, each worth 50 points. It is **more conceptual** t
 
 # The Mission
 
-Dr. Evil has gotten tired of terrorizing students with bombs in 15/18-213. Fed up with students easily disassembling code in GDB, Dr. Evil has upgraded from assembly to Rust. Now, there is word that 98-008 will be under attack soon. ~~Lives~~ Points are at stake!
+Dr. Evil has gotten tired of terrorizing students with bombs in 15/18-213. Fed up with students easily disassembling code in GDB, Dr. Evil has upgraded from assembly to Rust. Now, there is word that 98-008 will be under attack soon. (Could the fire alarms from lecture 10 be a sign...?) ~~Lives~~ Points are at stake!
 
 But Dr. Evil can't simply plant a bomb in person. The bomb needs someone who can walk into Gates without raising suspicion... someone like *you*. Sources say Dr. Evil is hiring an intern to do just that.
 
