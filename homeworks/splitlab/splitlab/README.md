@@ -94,7 +94,7 @@ _This bonus problem is worth 50 extra credit points. Feel free to skip it!_
 We can observe that our delimiters only need to have one operation: finding themselves inside a
 string!
 
-In `split_pattern.rs`, implement the `split_pattern` file which exposes a `Pattern` trait. This is a simplified version of the real `Pattern` trait in the standard library.
+In `split_pattern.rs`, implement the `SplitPattern` struct which exposes a `Pattern` trait. This is a simplified version of the real `Pattern` trait in the standard library.
 
 - 1:15:24 Generic delimiter (Delimiter trait)
 - ~~1:23:14 char length utf8~~
