@@ -34,3 +34,7 @@ items = [
 [[extras]]
 title = "Rust's Module System"
 url = "https://www.sheshbabu.com/posts/rust-module-system/"
+
+[homework_ec]
+name = "SummaryLab"
+slug = "summarylab"

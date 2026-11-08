@@ -22,14 +22,10 @@ items = [
     "https://www.youtube.com/watch?v=nVu4qrNzyqk&list=PLc7W4b0WHTAUAEAguiqpNa5H0QqXJIJI6",
 ]
 
-[homework]
-name = "PokerLab"
-slug = "pokerlab"
-
-[homework_ec]
-name = "SummaryLab"
-slug = "summarylab"
-
 [[extras]]
 title = "Rust Error Handling"
 url = "https://www.sheshbabu.com/posts/rust-error-handling/"
+
+[homework]
+name = "PokerLab"
+slug = "pokerlab"

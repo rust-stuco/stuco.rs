@@ -173,7 +173,7 @@ fn WeekRow(
                     HomeworkLinks { homework }
                 }
                 if let Some(homework) = &assignments.extra_credit {
-                    div { class: "mt-1",
+                    div {
                         span { class: "text-secondary text-sm", "EC: " }
                         HomeworkLinks { homework }
                     }
@@ -389,8 +389,7 @@ fn HomeworkLinks(homework: &'static Homework) -> Element {
         }
     } else {
         rsx! {
-            span { "{homework.name} " }
-            span { class: "text-sm", "(Gradescope)" }
+            span { "{homework.name}" }
         }
     }
 }
