@@ -6,9 +6,6 @@ use aggregation::AggregationResults;
 mod measurements;
 pub use measurements::WeatherStations;
 
-/// One billion.
-pub const BILLION: usize = 1_000_000_000;
-
 /// Given an iterator that yields measurements for weather stations, aggregate each weather
 /// station's data.
 ///

@@ -1,7 +1,9 @@
 //! The 1 billion row challenge! Except without interacting with any I/O!
 
 use criterion::{Criterion, black_box, criterion_group, criterion_main};
-use rowlab::{BILLION, WeatherStations, aggregate};
+use rowlab::{WeatherStations, aggregate};
+
+const BILLION: usize = 1_000_000_000;
 
 pub fn one_billion_row_challenge(c: &mut Criterion) {
     // Create the measurements iterator. In the real challenge, you would be reading these values
