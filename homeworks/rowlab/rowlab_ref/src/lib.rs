@@ -11,7 +11,7 @@ mod measurements;
 pub use measurements::WeatherStations;
 
 /// One billion.
-pub const BILLION: usize = 1_000_000_000;
+const BILLION: usize = 1_000_000_000;
 
 /// The number of rows each thread processes in chunks.
 ///

@@ -1,5 +1,8 @@
-use rowlab::{BILLION, WeatherStations, aggregate};
+use rowlab::{WeatherStations, aggregate};
 use std::time::Instant;
+
+/// One billion.
+const BILLION: usize = 1_000_000_000;
 
 fn main() {
     // Create the measurements iterator. In the real challenge, you would be reading these values
