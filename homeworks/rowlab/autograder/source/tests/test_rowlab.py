@@ -132,6 +132,19 @@ class RowLabTest(unittest.TestCase):
         criterion_output = run_cmd('cargo bench; echo "exit code: $?"')
         print(criterion_output[-5000:])
 
+        if "signal: 9" in criterion_output:
+            self.fail(
+                "Out of memory!\nThe benchmark used more than the "
+                "6.0 GB of memory available to the autograder.\n"
+                "Make sure you do not hold more data than you need at once."
+            )
+
+        exit_code = re.search(r"exit code: (\d+)\s*$", criterion_output)
+        if exit_code and exit_code.group(1) != "0":
+            self.fail(
+                f"`cargo bench` failed with exit code {exit_code.group(1)}, see the output above"
+            )
+
         # Find the `time` line with the 3 measurements in brackets.
         # This pattern looks for "time: [number s number s number s]" with flexible whitespace.
         # (Generated with the help of LLMs)
