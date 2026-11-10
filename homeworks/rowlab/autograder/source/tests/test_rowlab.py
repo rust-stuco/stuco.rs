@@ -88,9 +88,9 @@ class RowLabTest(unittest.TestCase):
             )
 
     @cargo_test(0.0, 0)
-    def test_build(self):
+    def test_0_build(self):
         """Build everything up front"""
-        return "cargo test --no-run"
+        return "cargo test --no-run && cargo bench --no-run"
 
     @cargo_test(1.0, 25)
     def test_mean(self):
