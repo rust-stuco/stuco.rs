@@ -1,6 +1,5 @@
 #![doc = include_str!("../README.md")]
 
-use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use std::sync::mpsc;
 use std::thread;
 
@@ -38,7 +37,7 @@ where
 {
     assert_eq!(BILLION % CHUNK_SIZE, 0);
     let num_chunks = BILLION / CHUNK_SIZE;
-    let mut chunk_results = Vec::with_capacity(num_chunks);
+    let mut results = AggregationResults::new();
 
     // Create an `mpsc` channel that threads will use to send their aggregation results back to the
     // main (current) thread.
@@ -62,6 +61,10 @@ where
 
                 tx.send(results)
             });
+
+            while let Ok(msg) = rx.try_recv() {
+                results.merge_aggregation(msg);
+            }
         }
     });
 
@@ -71,19 +74,8 @@ where
 
     // Collect the aggregation results.
     while let Ok(msg) = rx.recv() {
-        chunk_results.push(msg);
+        results.merge_aggregation(msg);
     }
 
-    // Once we have the results, use `rayon`'s `ParallelIterator` to combine all of them (reduce)
-    // into a single value.
-    // Note that you really don't need to (and probably shouldn't) do this. It's likely that the
-    // single-threaded version is faster, depending on how many chunks you have.
-    // This is just demonstrating the `rayon` library and how easy it is to parallelize things in
-    // Rust :D.
-    chunk_results
-        .into_par_iter()
-        .reduce(AggregationResults::new, |mut a, b| {
-            a.merge_aggregation(b);
-            a
-        })
+    results
 }
