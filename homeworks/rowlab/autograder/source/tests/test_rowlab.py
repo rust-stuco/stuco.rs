@@ -63,6 +63,8 @@ def run_cmd(cmd):
 
 
 class RowLabTest(unittest.TestCase):
+    bench_time = None
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -105,12 +107,10 @@ class RowLabTest(unittest.TestCase):
         """Testing everything"""
         return "cargo test -- --exact test_all"
 
-    @leaderboard("runtime", sort_order="asc")
-    def test_bench_rowlab(self, set_leaderboard_value=None):
+    @number(4.0)
+    @weight(0)
+    def test_bench_output(self):
         """Benchmarking with Criterion"""
-
-        # Even though this is not a test, we still have to prefix it with `test_` for the Gradsecope
-        # test suite to work properly.
 
         if not self.passed_clippy:
             self.fail(
@@ -128,7 +128,9 @@ class RowLabTest(unittest.TestCase):
                                 No change in performance detected.
         """
 
-        criterion_output = run_cmd("cargo bench")
+        print("Running `cargo bench`...\n")
+        criterion_output = run_cmd('cargo bench; echo "exit code: $?"')
+        print(criterion_output[-5000:])
 
         # Find the `time` line with the 3 measurements in brackets.
         # This pattern looks for "time: [number s number s number s]" with flexible whitespace.
@@ -141,14 +143,19 @@ class RowLabTest(unittest.TestCase):
         if not re_match:
             self.fail("Could not find `time` data in the expected Criterion format")
 
-        # We should have exactly 3 numbers in the `time` line output.
-        num_groups = len(re_match.groups())
-        if num_groups != 3:
-            self.fail(f"Expected 3 time measurements, found {num_groups}")
-
-        # Extract the middle number as the best estimate of execution time.
         try:
-            average_time = float(re_match.group(2))
-            set_leaderboard_value(average_time)
+            RowLabTest.bench_time = float(re_match.group(2))
         except ValueError:
             self.fail("Failed to convert '{}' to a float".format(re_match.group(2)))
+
+    @leaderboard("runtime", sort_order="asc")
+    def test_bench_rowlab(self, set_leaderboard_value=None):
+        """Leaderboard runtime"""
+
+        # Even though this is not a test, we still have to prefix it with `test_` for the Gradsecope
+        # test suite to work properly.
+
+        if RowLabTest.bench_time is None:
+            self.fail("Benchmark failed, see 'Benchmarking with Criterion' above")
+
+        set_leaderboard_value(RowLabTest.bench_time)
