@@ -11,7 +11,7 @@ RUN cp /autograder/source/run_autograder /autograder/run_autograder
 RUN chmod +x /autograder/run_autograder
 
 # Install Gradescope utilities for Python.
-RUN pip3 install gradescope-utils
+RUN pip3 install gradescope-utils tomli tomli-w
 
 # Set up Rust.
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
