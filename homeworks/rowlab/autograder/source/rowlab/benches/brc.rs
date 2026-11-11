@@ -6,6 +6,12 @@ use rowlab::{WeatherStations, aggregate};
 const BILLION: usize = 1_000_000_000;
 
 pub fn one_billion_row_challenge(c: &mut Criterion) {
+    // Show how many threads can run in parallel on this machine
+    match std::thread::available_parallelism() {
+        Ok(n) => println!("Available parallelism: {n}"),
+        Err(e) => println!("Available parallelism: unknown ({e})"),
+    }
+
     // Create the measurements iterator. In the real challenge, you would be reading these values
     // from a file on disk.
     let stations = WeatherStations::new();
