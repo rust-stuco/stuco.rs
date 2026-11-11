@@ -106,20 +106,20 @@ class RowLabTest(unittest.TestCase):
         """Testing mean"""
         return "cargo test -- --exact test_mean"
 
-    @cargo_test(2.0, 25)
+    @cargo_test(1.1, 25)
     def test_2_minmax(self):
         """Testing min and max"""
         return "cargo test -- --exact test_minmax"
 
-    @cargo_test(3.0, 25)
+    @cargo_test(1.2, 25)
     def test_3_all(self):
         """Testing everything"""
         return "cargo test -- --exact test_all"
 
-    @number(4.0)
-    @partial_credit(25)
-    def test_4_bench_output(self, set_score=None):
-        """Benchmarking with Criterion"""
+    @number(2.0)
+    @weight(25)
+    def test_4_bench_basic(self):
+        """Benchmarking (basic)"""
 
         if not self.passed_clippy:
             self.fail(
@@ -174,7 +174,6 @@ class RowLabTest(unittest.TestCase):
         # solution is correct.
         failed_tests = sorted(RowLabTest.REQUIRED_TESTS - RowLabTest.passed_tests)
         if failed_tests:
-            set_score(0)
             self.fail(
                 f"These tests did not pass: {', '.join(failed_tests)}\n"
                 "The benchmark gets 0 points and your runtime is not added to the leaderboard "
@@ -183,14 +182,30 @@ class RowLabTest(unittest.TestCase):
 
         RowLabTest.bench_time = bench_time
 
+    @number(2.1)
+    @partial_credit(0)
+    def test_5_bench_bonus(self, set_score=None):
+        """Benchmarking (bonus)"""
+
+        if RowLabTest.bench_time is None:
+            set_score(0)
+            self.fail("No extra credit points awarded")
+
+        bonus = max(round(-7 * RowLabTest.bench_time + 210), 0)
+        set_score(bonus)
+        if bonus > 0:
+            print(f"Awarded {bonus} extra credit points for performance. Well done!")
+        else:
+            self.fail("No extra credit points awarded")
+
     @leaderboard("runtime", sort_order="asc")
-    def test_5_bench_rowlab(self, set_leaderboard_value=None):
+    def test_6_bench_rowlab(self, set_leaderboard_value=None):
         """Leaderboard runtime"""
 
         # Even though this is not a test, we still have to prefix it with `test_` for the Gradsecope
         # test suite to work properly.
 
         if RowLabTest.bench_time is None:
-            self.fail("Benchmark failed, see 'Benchmarking with Criterion' above")
+            self.fail("Benchmark failed, see 'Benchmarking (basic)' above")
 
         set_leaderboard_value(RowLabTest.bench_time)
