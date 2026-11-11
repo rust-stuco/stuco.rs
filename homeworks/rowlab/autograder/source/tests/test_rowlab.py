@@ -35,6 +35,9 @@ def cargo_test(test_num, weight):
                     "Error detected! Please review the above to see what went wrong."
                 )
 
+            if self.passed_clippy:
+                RowLabTest.passed_tests.add(func.__name__)
+
         return test
 
     return cargo_test_wrapper
@@ -63,6 +66,12 @@ def run_cmd(cmd):
 
 
 class RowLabTest(unittest.TestCase):
+    # The graded tests that must pass for the benchmark to earn points and reach the leaderboard.
+    # `unittest` runs tests in alphabetical order, so the test names are numbered to make these run
+    # before the benchmark.
+    REQUIRED_TESTS = {"test_1_mean", "test_2_minmax", "test_3_all"}
+
+    passed_tests = set()
     bench_time = None
 
     def __init__(self, *args, **kwargs):
@@ -93,23 +102,23 @@ class RowLabTest(unittest.TestCase):
         return "cargo test --no-run && cargo bench --no-run"
 
     @cargo_test(1.0, 25)
-    def test_mean(self):
+    def test_1_mean(self):
         """Testing mean"""
         return "cargo test -- --exact test_mean"
 
     @cargo_test(2.0, 25)
-    def test_minmax(self):
+    def test_2_minmax(self):
         """Testing min and max"""
         return "cargo test -- --exact test_minmax"
 
-    @cargo_test(3.0, 50)
-    def test_all(self):
+    @cargo_test(3.0, 25)
+    def test_3_all(self):
         """Testing everything"""
         return "cargo test -- --exact test_all"
 
     @number(4.0)
-    @weight(0)
-    def test_bench_output(self):
+    @partial_credit(25)
+    def test_4_bench_output(self, set_score=None):
         """Benchmarking with Criterion"""
 
         if not self.passed_clippy:
@@ -157,12 +166,25 @@ class RowLabTest(unittest.TestCase):
             self.fail("Could not find `time` data in the expected Criterion format")
 
         try:
-            RowLabTest.bench_time = float(re_match.group(2))
+            bench_time = float(re_match.group(2))
         except ValueError:
             self.fail("Failed to convert '{}' to a float".format(re_match.group(2)))
 
+        # The benchmark still runs so students can see their time, but it only counts when the
+        # solution is correct.
+        failed_tests = sorted(RowLabTest.REQUIRED_TESTS - RowLabTest.passed_tests)
+        if failed_tests:
+            set_score(0)
+            self.fail(
+                f"These tests did not pass: {', '.join(failed_tests)}\n"
+                "The benchmark gets 0 points and your runtime is not added to the leaderboard "
+                "until every test passes."
+            )
+
+        RowLabTest.bench_time = bench_time
+
     @leaderboard("runtime", sort_order="asc")
-    def test_bench_rowlab(self, set_leaderboard_value=None):
+    def test_5_bench_rowlab(self, set_leaderboard_value=None):
         """Leaderboard runtime"""
 
         # Even though this is not a test, we still have to prefix it with `test_` for the Gradsecope
