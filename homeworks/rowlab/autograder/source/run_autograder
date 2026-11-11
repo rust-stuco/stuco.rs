@@ -6,6 +6,9 @@ cp -r /autograder/submission/src/. /autograder/source/rowlab/src
 # For this lab, we also want to copy the `Cargo.toml` file
 cp /autograder/submission/Cargo.toml /autograder/source/rowlab/Cargo.toml
 
+# Ignore any `[profile]` settings so every submission uses Cargo's default profiles.
+python3 /autograder/source/strip_profiles.py /autograder/source/rowlab/Cargo.toml
+
 # Run the test suite.
 cd /autograder/source
 python3 run_tests.py
