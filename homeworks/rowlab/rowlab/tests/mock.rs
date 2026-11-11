@@ -5,10 +5,10 @@ use rowlab::aggregate;
 
 /// Some sample weather stations.
 static STATIONS: [(&str, f64); 4] = [
-    ("Munich", 10.6),
+    ("Madrid", 15.0),
     ("Amsterdam", 10.2),
     ("Pittsburgh", -42.0),
-    ("Madison", 45.5),
+    ("Manama", 26.5),
 ];
 
 /// Checks if two floating points are almost equal to each other.
@@ -20,10 +20,14 @@ fn almost_equal(a: f64, b: f64, epsilon: f64) {
 
 #[test]
 fn test_mean() {
-    let measurements = (0..1000).map(|_| {
-        *STATIONS
-            .choose(&mut rand::rng())
-            .expect("`STATIONS` is not empty")
+    let measurements = (0..1000).map(|i| {
+        let (station, mean) = STATIONS[i % STATIONS.len()];
+        let offset = if (i / STATIONS.len()).is_multiple_of(5) {
+            4.0
+        } else {
+            -1.0
+        };
+        (station, mean + offset)
     });
 
     let res = aggregate(measurements);
