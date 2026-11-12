@@ -4,100 +4,65 @@
 
 This is the final assignment of the semester! Congrats on making it here.
 
+The goal here is to get familiar with **parallelism** in Rust, as well as put together everything you've learned over the past semester to write a program that has practical application in the real world!
+
+# Overview
+
 Your final task is to implement something similar to
-[The One Billion Row Challenge](https://www.morling.dev/blog/one-billion-row-challenge/). The goal
-here is to get familiar with parallelism in Rust, as well as put together everything you've learned
-over the past semester to write a program that has practical application in the real world!
+[The One Billion Row Challenge](https://www.morling.dev/blog/one-billion-row-challenge/)! Given a billion weather station measurements, find an efficient way to calculate the min, mean, and max temperature values of each station.
 
-We are not going to give that much guidance here, since at this point you should be familiar enough
-with Rust as a language that you can figure out everything on your own. Of course, we'll explain
-enough to get you started.
-
-**The description of the original challenge can be found
-[here](https://www.morling.dev/blog/one-billion-row-challenge/), so give it a quick read!**
-
-The main difference between this assignment and the real challenge is A) we are not writing Java,
-and B) instead of reading the data from a file / disk, we computationally generate the random data
-(in-memory) via an iterator.
-
-_The second difference is mainly because Gradescope does not support more than 6 GB of memory per
-autograder (1 billion rows is approximately 14 GB), which means the complete data cannot fit in
-memory. Asking you to interact with I/O while also dealing with parallelism seemed a bit too cruel
-for this assignment, so we modified the challenge slightly. That being said, we encourage you to
-take the code you write for this lab and try the real challenge yourself!_
-
-**For this lab, you are allowed to use third-party crates!** This means you will have to also submit
-your `Cargo.toml` file. See the [Submission](#submission) section for more information.
+There are two differences between this assignment and the real challenge: A) we are not writing Java (obviously!) and B) since Gradescope does not support more than 6 GB of memory per autograder (1 billion rows is approximately 14 GB), we generate the random data via an iterator instead of reading the data from a file.
 
 # Starter Code
 
-We have provided quite a lot of starter code for you to use! The two files that you should be
-modifying are `aggregation.rs` and `lib.rs`. You are allowed to modify `main.rs` and
-`measurements.rs` locally on your own computer, but the Gradescope autograder will be using the
-starter code for those two files. The other two files you should know about are `tests/mock.rs` as
-well as `benches/brc.rs`, which are explained in the next two sections.
+**First, implement the `todo!()`s in `aggregation.rs`**, which contains our recommended helper structs and methods for aggregating the data. You are allowed to rewrite anything, as long as the tests pass! We encourage you to change the fields of `AggregationResults`.
 
-`aggregation.rs` contains our recommended helper structs and methods for aggregating the data. You
-are allowed to completely rewrite everything except the function signature of `aggregate` and the
-struct definitions for `WeatherStations` and `AggregationResults` (but you are allowed to and
-encouraged to change the fields of `AggregationResults`).
+**Next, implement the `aggregate` function in `lib.rs`** to solve the core challenge. We have
+provided you with a naive single-threaded version of this challenge, but it times out on Gradescope. From here, it is up to you to make things faster! Feel free to use any third-party crates like `rayon`. See the [Optimization Advice](#optimization-advice) section for some hints.
 
-Once you have implemented the `todo!()`s in `aggregation.rs`, you can move on to `lib.rs`. We have
-provided you with a naive single-threaded version of this challenge. From here, it is up to you to
-make things faster! See the [Benchmarking](#benchmarking-and-leaderboard) section for some hints 🦀.
+You are allowed to modify `main.rs` and `measurements.rs` on your own computer, but the Gradescope autograder will be using the starter code for those two files.
 
 # Testing
 
-There are 3 integration tests located in `tests/mock.rs`. We will manually check your code for
-parallelism, and as long as you have integrated parallelism in some non-trivial manner, you will
-receive full credit if you pass the 3 tests.
+There are integration tests located in `tests/mock.rs` to assess correctness. If you make any changes to struct definitions or function signatures, make sure that you can still compile everything with `cargo test`!
 
-If you make any changes to struct definitions or function signatures, make sure that you can still
-compile everything with `cargo test`!
-
-# Benchmarking and Leaderboard
+# Benchmarking
 
 We have set up benchmarking via [Criterion](https://bheisler.github.io/criterion.rs/book/) for you.
+
 You can run `cargo bench` to see how long (on average) your `aggregate` function takes to aggregate
 1 billion rows. Note that the minimum number of samples it will run is 10, so if your code is
-**very** slow, you might just want to run the small timing program in `main.rs` via `cargo run`.
+**very** slow, you may just want to run the small timing program in `main.rs` via `cargo run`.
 
-There will also be a leaderboard on Gradescope! Compete to please Ferris with the fastest time. We
-will give you quite a lot of extra credit if you can beat Ferris (our reference solution) by some
-non-trivial amount. The top leaderboard finishers might get a huge amount of points 🦀🦀🦀🦀🦀
+The autograder will benchmark your solution using 4.0 CPU and 6.0 GB RAM, with up to 8 available cores. Pass all the tests without exceeding the memory limit to earn full credit and claim your spot on the **Gradescope leaderboard**!
 
-### Optimizations
+### Bonus: Can you beat Ferris?
 
-There are many, many ways to speed up a program like the one you need to implement. In fact, there
-is a whole field dedicated to speeding up this kind of program: when you have a `GROUP BY` clause in
-SQL, the relational database executing the SQL query is doing almost this exact aggregation! If you
-are interested in this, you should take CMU's
-[Databse Systems](https://15445.courses.cs.cmu.edu/spring2025/) course.
+_This bonus problem is worth many extra credit points. Feel free to skip it!_
 
-We won't go into detail here, but you are allowed to go online and look at all of the techniques
+Ferris has implemented a reference solution that requires 30 seconds of runtime, according to `cargo bench`.
+
+Beat this time to earn extra credit! The faster your solution, the higher your bonus and ranking on the leaderboard.
+
+### Optimization Advice
+
+There are many ways to speed up a program like this one. In fact, there
+is a whole field dedicated to such optimizations: when you have a `GROUP BY` clause in
+SQL, the relational database executing the SQL query is almost doing this exact aggregation! If you
+are interested in this, we recommend CMU's
+[Database Systems](https://15445.courses.cs.cmu.edu/) course.
+
+Since the original challenge involved reading from a file (interacting with I/O), not
+everything online will be applicable to this assignment. Your code will likely be bottlenecked by the input iterator, which is expected. Still, there's a lot of cool things on the
+Internet that you _can_ make use of.
+
+We won't go into detail here, but you are encouraged to go online and look at all of the techniques
 other people have used for this challenge. You can also read the
-[Rust Performance Book](https://nnethercote.github.io/perf-book/) online. Just make sure not to copy
-and paste anyone else's code without citing them first!
+[Rust Performance Book](https://nnethercote.github.io/perf-book/). Third-party crates like `rayon` can be very useful if used correctly! Be careful when trying to use SIMD, as you will be graded on the Gradescope Docker containers.
 
-For this assignment, we would actually encourage you to look at the reference solution after giving
-a good-faith attempt at designing an algorithm yourself. Our reference solution is purposefully not
-very well optimized, but it does show the syntax for using parallelism in Rust. We encourage you to
-play around with the code!
-
-Note that because the original challenge involved reading from a file (interacting with I/O), not
-everything online will be applicable to this assignment. Still, there's a lot of cool things on the
-internet that you _can_ make use of. Also, be careful when trying to use SIMD, as you will be graded
-on the Gradescope Docker containers.
-
-_That being said, if you really want to play around with I/O and perhaps some `unsafe`ty with system
-calls (like `mmap`), reach out to us! We might give permission for you to submit the real challenge
-if we think you are capable of it._
+After making a good-faith first attempt, you can also look at our reference solution, but note that it is purposefully not very well optimized.
 
 # Submission
-
-For this lab, you are allowed to use third-party crates! **This means that you must also submit your
-`Cargo.toml` file** (otherwise we wouldn't be able to compile your code). The `build.rs` build
-script will handle that for you
 
 ### Formatting and Style
 
