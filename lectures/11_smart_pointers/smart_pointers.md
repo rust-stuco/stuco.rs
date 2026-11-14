@@ -1087,11 +1087,11 @@ type NodePtr<T> = Rc<RefCell<GraphNode<T>>>;
 
 struct GraphNode<T> {
     value: T,
-    neighbors: Vec<NodePtr>,
+    neighbors: Vec<NodePtr<T>>,
 }
 
 impl<T> GraphNode<T> {
-    fn new(value: T) -> Rc<RefCell<Self>> { /* ... */ }
+    fn new(value: T) -> NodePtr<T> { /* ... */ }
 
     fn add_neighbor(&mut self, neighbor: &NodePtr<T>) {
         self.neighbors.push(Rc::clone(neighbor));
