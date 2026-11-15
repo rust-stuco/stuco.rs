@@ -36,13 +36,13 @@ You can run `cargo bench` to see how long (on average) your `aggregate` function
 
 The autograder will benchmark your solution using 4.0 CPU and 6.0 GB RAM, with up to 8 available cores. Pass all the tests without exceeding the memory limit to earn full credit and claim your spot on the **Gradescope leaderboard**!
 
-### Bonus: Can you beat Ferris?
+### Bonus: Can you beat Clarabelle?
 
 _This bonus problem is worth many extra credit points. Feel free to skip it!_
 
-Ferris has implemented a reference solution that requires 30 seconds of runtime, according to `cargo bench`.
+Clarabelle the Parallel Cow has implemented a solution that requires 30 seconds of runtime, according to `cargo bench`.
 
-Beat this time to earn extra credit! The faster your solution, the higher your bonus and ranking on the leaderboard.
+Ferris thinks that you can do better. Beat this time to earn extra credit! The faster your solution, the higher your bonus and ranking on the leaderboard.
 
 ### Optimization Advice
 
