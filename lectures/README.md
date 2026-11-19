@@ -172,7 +172,7 @@ The lecture slides are organized in directories with the format `NN_topic_name` 
 #### After Dark
 
 - `Weak<T>`
-- `CondVar`
+- `Condvar`
 - Implementation of:
   - `Arc<T>`
   - `Mutex<T>`

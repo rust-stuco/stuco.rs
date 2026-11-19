@@ -1605,9 +1605,15 @@ A lock being poisoned implies that the thread panicked while holding it
 There are shared state **primitives** other than `Arc<T>` and `Mutex<T>`:
 
 * `RwLock<T>`: a lock which can have concurrent *readers*
-* `CondVar<T>`: blocks a thread until a condition is met
-* `Barrier`: memory barrier where threads can wait for others to reach it
+* `Condvar`: blocks a thread until another thread notifies it (paired with a `Mutex<T>`)
+* `Barrier`: blocks threads until a set number of them have all reached it
 * [and more...](https://doc.rust-lang.org/std/sync/index.html)
+
+**Next lecture:** `tokio::sync::Semaphore` limits how many tasks can run at once. It isn't in `std`, but we'll meet `tokio` next time!
+
+<!--
+`std` briefly had an unstable `Semaphore`; it was deprecated in 1.7 ("easily confused with system semaphores and not used enough to pull its weight") and removed after 1.8. It never shipped on stable. A counting semaphore is easy to build from a `Mutex` and a `Condvar`.
+-->
 
 
 ---
