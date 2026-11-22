@@ -52,7 +52,7 @@ impl<T: Hash> BloomFilter<T> {
             hash = hasher.finish();
 
             // Set the bit corresponding to this hash value.
-            self.bitvector.set(hash as usize % size, true);
+            self.bitvector.set((hash % size as u64) as usize, true);
         }
     }
 
@@ -75,7 +75,7 @@ impl<T: Hash> BloomFilter<T> {
             hash = hasher.finish();
 
             // Set the bit corresponding to this hash value.
-            if !self.bitvector.get(hash as usize % size) {
+            if !self.bitvector.get((hash % size as u64) as usize) {
                 return false;
             }
         }
