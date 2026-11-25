@@ -85,6 +85,8 @@ When we say _prove_, we don't require anything extremely formal. You may write p
 
 We highly recommend brainstorming a solution with another student! You could make a new friend along the way :D
 
+**Fun fact:** Showing that Rust's borrowing system is *sound* requires a [34-page proof](https://people.mpi-sws.org/~dreyer/papers/rustbelt/paper.pdf) :0
+
 # Submission
 
 ### Formatting and Style
