@@ -46,16 +46,7 @@ Click this hyperlink to go to the writeup for
 
 
 
-# Challenge: Command Line Tool (Bonus)
-
-As a sneak peek, for the next homework
-we're going to ask you to implement the same command line tool as the one explained in the book
-[Chapter 12](https://doc.rust-lang.org/book/ch12-00-an-io-project.html).
-Since the book walks you through exactly how to do it,
-it will be much more straightforward compared to this homework.
-
-**_If you have ample time to spare_, and you want to get better at Rust,**
-**here is a challenge you can do now instead of next week's homework:**
+# Challenge: Command Line Tool
 
 Instead of just running preset tests, you can turn this crate into a binary that _actually_
 reads from the file system.
@@ -73,18 +64,7 @@ We don't have an autograder set up for this, so you'll mostly be on your own.
 We will still expect you to write your own test cases and have generally good documentation.
 
 If you do decide to do this challenge, let us know that you did and we'll
-manually grade it ourselves to determine how many points you will receive
-(the maximum points we would probably be willing to give out is triple that of a normal homework).
-
-To reiterate: Only do this if you have ample time to spare and you want to get better at Rust!
-**This is not a trivial task.**
-
-**If you decide to do this challenge, you can skip next week’s homework**, or rather,
-you can turn this in next week in place of the official next homework.
-It would still be a good idea to read through
-[Chapter 12](https://doc.rust-lang.org/book/ch12-00-an-io-project.html)
-since you should know how to write your own test cases and parse command line arguments.
-
+manually grade it ourselves to determine how many points you will receive.
 
 
 # Submission
