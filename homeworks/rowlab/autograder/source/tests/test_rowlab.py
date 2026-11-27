@@ -191,7 +191,7 @@ class RowLabTest(unittest.TestCase):
             set_score(0)
             self.fail("No extra credit points awarded")
 
-        bonus = max(round(-7 * RowLabTest.bench_time + 210), 0)
+        bonus = max(round(-5 * RowLabTest.bench_time + 150), 0)
         set_score(bonus)
         if bonus > 0:
             print(f"Awarded {bonus} extra credit points for performance. Well done!")
